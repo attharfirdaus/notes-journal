@@ -20,7 +20,8 @@ function loadSeen(): Set<string> {
   }
 }
 
-export function NotificationBell({ variant }: { variant: "sidebar" | "floating" }) {
+/** Polls once per app shell; toasts new notifications and returns the unread count. */
+export function useNotificationPoller(): number {
   const [unread, setUnread] = useState(0);
   const { toast } = useToast();
   const prefs = usePrefs();
@@ -47,17 +48,21 @@ export function NotificationBell({ variant }: { variant: "sidebar" | "floating" 
     void tick();
     const id = setInterval(tick, 60_000);
     const onVis = () => document.visibilityState === "visible" && void tick();
-    const onRead = () => void tick();
+    const onChange = () => void tick();
     document.addEventListener("visibilitychange", onVis);
-    window.addEventListener("tb:notifications-changed", onRead);
+    window.addEventListener("tb:notifications-changed", onChange);
     return () => {
       alive = false;
       clearInterval(id);
       document.removeEventListener("visibilitychange", onVis);
-      window.removeEventListener("tb:notifications-changed", onRead);
+      window.removeEventListener("tb:notifications-changed", onChange);
     };
   }, [toast, prefs.soundEffects]);
 
+  return unread;
+}
+
+export function NotificationBell({ unread, variant }: { unread: number; variant: "sidebar" | "topbar" }) {
   return (
     <Link
       href="/notifications"
@@ -66,7 +71,7 @@ export function NotificationBell({ variant }: { variant: "sidebar" | "floating" 
         "relative flex items-center gap-3 font-bold",
         variant === "sidebar"
           ? "rounded-2xl px-3 py-2.5 text-ink-soft hover:bg-soft hover:text-ink"
-          : "h-11 w-11 justify-center rounded-full border-2 border-line bg-card shadow-soft",
+          : "h-10 w-10 justify-center rounded-full hover:bg-soft",
       )}
     >
       <motion.span

@@ -32,7 +32,7 @@ export function NoteCard({ note, categories, tz, index }: { note: NoteCardData; 
           "block rounded-blob border-2 border-line p-4 shadow-soft transition",
           note.status === "archived" && "opacity-70",
         )}
-        style={{ background: `color-mix(in oklab, ${note.color} 55%, var(--card))` }}
+        style={{ background: `color-mix(in oklab, ${note.color} var(--note-mix), var(--card))` }}
       >
         <div className="flex items-start gap-2">
           <span className="text-2xl leading-none">{note.emoji}</span>

@@ -108,7 +108,7 @@ export default async function HomePage() {
                 key={n.id}
                 href={`/notes/${n.id}`}
                 className="rounded-2xl border-2 border-line p-3 font-bold shadow-soft transition hover:-translate-y-1 hover:rotate-1"
-                style={{ background: `color-mix(in oklab, ${n.color} 55%, var(--card))` }}
+                style={{ background: `color-mix(in oklab, ${n.color} var(--note-mix), var(--card))` }}
               >
                 <span className="mr-1.5 text-xl">{n.emoji}</span>
                 {n.title}

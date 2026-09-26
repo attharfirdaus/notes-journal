@@ -12,7 +12,7 @@ import {
 import {
   addItems, deleteItem, deleteNote, redetectCategories, reorderItems, setNoteCategories, updateItem, updateNote,
 } from "@/actions/notes";
-import { Button, Chip, IconButton, Modal, ProgressBar, Segmented, Textarea } from "@/components/ui";
+import { Button, Chip, IconButton, Modal, ProgressBar, Segmented } from "@/components/ui";
 import { useToast } from "@/components/toast";
 import { usePrefs } from "@/components/prefs";
 import { usePush } from "@/components/push";
@@ -197,7 +197,7 @@ export function NoteEditor(props: Props) {
       <motion.section
         layout
         className="rounded-[2rem] border-2 border-line p-5 shadow-soft"
-        style={{ background: `color-mix(in oklab, ${note.color} 45%, var(--card))` }}
+        style={{ background: `color-mix(in oklab, ${note.color} var(--note-mix), var(--card))` }}
       >
         <div className="flex items-start gap-3">
           <button
@@ -218,13 +218,13 @@ export function NoteEditor(props: Props) {
               className="w-full bg-transparent font-display text-2xl font-bold text-ink outline-none placeholder:text-ink-soft"
               placeholder="Untitled"
             />
-            <Textarea
+            <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               maxLength={2000}
-              rows={1}
+              rows={Math.min(6, Math.max(1, description.split("\n").length))}
               placeholder="Add a little description…"
-              className="mt-1 min-h-0 resize-none border-0 bg-transparent px-0 py-1 text-sm focus:border-0"
+              className="mt-1 w-full resize-none bg-transparent py-1 text-sm text-ink outline-none placeholder:text-ink-soft"
               aria-label="Description"
             />
           </div>

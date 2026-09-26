@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌰 Tuckbury
 
-## Getting Started
+> Tuck it away. Never forget.
 
-First, run the development server:
+Note taker dan jurnal harian dengan sidekick tupai. Fiturnya: list untuk segala hal, deteksi kategori otomatis, pengingat deadline (in-app dan push), jurnal dengan mood dan streak, tema dan vibe, pesan penyemangat, maskot yang berevolusi, focus timer dengan ambience, Year in Pixels, dan Time Capsule.
+
+Spesifikasi produk ada di [`docs/PRD.md`](docs/PRD.md).
+
+## Tech stack
+
+- **Next.js 16** (App Router, Server Actions, TypeScript) + **Tailwind CSS 4** + **motion**
+- **Supabase**: Postgres dengan Row Level Security, Auth (email + password + reset), `pg_cron` + `pg_net` untuk penjadwal reminder
+- **Web Push** (VAPID, `web-push`) + service worker, bisa di-install sebagai PWA
+- Hosting: **Vercel** (Hobby) + **Supabase** (Free)
+
+## Setup
+
+### 1. Supabase
+
+1. Buat project baru di [supabase.com](https://supabase.com). Region yang dekat dengan user (misalnya Singapore) memberi latency terendah.
+2. Buka **SQL Editor**, paste seluruh isi [`supabase/migrations/20260926000000_init.sql`](supabase/migrations/20260926000000_init.sql), lalu **Run**.
+3. Buka **Project Settings → API** dan catat tiga nilai ini:
+   - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
+   - `anon` / publishable key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `service_role` / secret key → `SUPABASE_SERVICE_ROLE_KEY` (**rahasia**, jangan dibagikan)
+4. Opsional tapi direkomendasikan: buka **Authentication → Emails → Templates** dan ubah link-nya agar konfirmasi tetap jalan walau email dibuka di device atau browser lain.
+   - *Confirm signup*:
+     `<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/onboarding">Confirm your email</a>`
+   - *Reset password*:
+     `<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password">Reset your password</a>`
+
+   Tanpa langkah ini, link default tetap bekerja, asalkan dibuka di browser yang sama dengan saat mendaftar.
+
+### 2. Kunci tambahan
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npx web-push generate-vapid-keys   # → NEXT_PUBLIC_VAPID_PUBLIC_KEY & VAPID_PRIVATE_KEY
+openssl rand -hex 32               # → CRON_SECRET
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Vercel
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Add New → Project**, import repo ini. Framework akan terdeteksi otomatis sebagai Next.js.
+2. Di **Environment Variables**, isi semua variabel dari [`.env.example`](.env.example). `NEXT_PUBLIC_SITE_URL` diisi domain Vercel Anda, misalnya `https://tuckbury.vercel.app`.
+3. Klik **Deploy**. Kalau domain baru diketahui setelah deploy pertama, perbarui `NEXT_PUBLIC_SITE_URL`, lalu **Redeploy**.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Hubungkan Supabase ke domain
 
-## Learn More
+1. Buka Supabase **Authentication → URL Configuration**.
+   - **Site URL**: `https://<domain-anda>`
+   - **Redirect URLs**: `https://<domain-anda>/**` (tambahkan juga `http://localhost:3000/**` untuk development)
+2. Buka [`supabase/cron.sql`](supabase/cron.sql) dan ganti dua placeholder (URL app dan `CRON_SECRET`), lalu jalankan di SQL Editor. Script ini mengaktifkan `pg_cron` dan `pg_net`, lalu memanggil `/api/cron/reminders` setiap menit.
+3. Cek hasilnya: `select * from net._http_response order by created desc limit 5;` harus menunjukkan status `200`.
 
-To learn more about Next.js, take a look at the following resources:
+### 5. Email untuk production
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Email bawaan Supabase dibatasi ketat dan dimaksudkan untuk uji coba. Untuk user sungguhan, pasang SMTP sendiri (misalnya Resend) di **Authentication → Emails → SMTP Settings**.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Development lokal
 
-## Deploy on Vercel
+```bash
+cp .env.example .env.local   # isi nilainya
+npm install
+npm run dev                  # http://localhost:3000
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Perintah            | Fungsi                              |
+| ------------------- | ----------------------------------- |
+| `npm run dev`       | Dev server                          |
+| `npm run build`     | Production build                    |
+| `npm run lint`      | ESLint                              |
+| `npm run typecheck` | Generate route types + `tsc`        |
+| `npm test`          | Unit test (Vitest)                  |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Reminder in-app tetap berjalan tanpa cron. Setiap kali app terbuka, pengingat milik user yang sudah jatuh tempo diproses. Cron hanya dibutuhkan untuk push notification saat app tertutup.
+
+## Struktur
+
+```
+src/
+  actions/        Server Actions (validasi zod, semua lewat RLS)
+  app/(auth)/     login, signup, forgot/reset password
+  app/(app)/      home, notes, journal, focus, pixels, capsules, categories, notifications, settings
+  app/api/cron/   endpoint reminder (dilindungi CRON_SECRET)
+  components/     UI, maskot SVG, nav, toast, push
+  lib/            kategori, smart date, timezone, pesan, maskot, tema, ambience
+supabase/
+  migrations/     skema + RLS + fungsi SQL
+  cron.sql        penjadwal reminder
+```
+
+## Keamanan
+
+- RLS aktif di semua tabel (`user_id = auth.uid()`), ditambah column-level grants untuk kolom yang tidak boleh diubah user. Contohnya `counts_for_streak`, `created_at` pada capsule, dan isi capsule yang terkunci.
+- Isi Time Capsule tidak bisa di-`select` oleh user. Isinya hanya bisa dibaca lewat `open_capsule()` setelah tanggal buka.
+- `SUPABASE_SERVICE_ROLE_KEY` hanya dipakai di route cron dan penghapusan akun.
+- Konten jurnal dirender sebagai text node (tanpa `dangerouslySetInnerHTML`).
+- Security headers dan CSP dipasang di `next.config.ts`.

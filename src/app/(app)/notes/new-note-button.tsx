@@ -49,7 +49,7 @@ export function NewNoteButton() {
                   onClick={() => setType(t.value)}
                   aria-pressed={type === t.value}
                   className={clsx("rounded-2xl border-2 p-3 text-left transition", type === t.value ? "border-primary scale-[1.02]" : "border-line")}
-                  style={{ background: `color-mix(in oklab, ${t.color} 45%, var(--card))` }}
+                  style={{ background: `color-mix(in oklab, ${t.color} var(--note-mix), var(--card))` }}
                 >
                   <div className="text-xl">{t.emoji}</div>
                   <div className="font-bold">{t.label}</div>

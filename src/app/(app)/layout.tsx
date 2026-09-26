@@ -18,7 +18,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
       <VibeBackground vibe={profile.vibe} />
       <div className="relative z-10 flex min-h-dvh">
         <AppNav />
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-32 pt-4 sm:px-6 md:pb-12 md:pt-8">{children}</main>
+        <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-32 pt-[calc(4.5rem+env(safe-area-inset-top))] sm:px-6 md:pb-12 md:pt-8">{children}</main>
       </div>
     </PrefsProvider>
   );

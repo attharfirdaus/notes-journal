@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, type ReactNode } from "react";
+import { startTransition, useActionState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import type { FormState } from "@/actions/auth";
 import { Button } from "./ui";
@@ -21,7 +21,16 @@ export function AuthForm({
   const [state, formAction, pending] = useActionState(action, undefined);
   const done = hideOnSuccess && state?.message;
   return (
-    <form action={formAction} className="space-y-4">
+    <form
+      action={formAction}
+      onSubmit={(e) => {
+        // Submit manually so React doesn't reset the fields (keeps the email after a typo'd password).
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        startTransition(() => formAction(data));
+      }}
+      className="space-y-4"
+    >
       {!done ? children : null}
       <AnimatePresence mode="wait">
         {state?.error ? (

@@ -12,7 +12,7 @@ const csp = [
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
   `connect-src 'self' ${supabase} ${supabaseWs}`.trim(),
-  "worker-src 'self'",
+  "worker-src 'self' blob:",
   "manifest-src 'self'",
   "media-src 'self' blob:",
   "object-src 'none'",

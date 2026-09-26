@@ -1,10 +1,10 @@
-# PRD — Noteling (working name)
+# PRD — Tuckbury
 
 > Note taker + daily journal yang terasa seperti main, bukan kerja.
 
 | | |
 |---|---|
-| Status | Draft v1, menunggu review |
+| Status | v1 disetujui · diimplementasikan |
 | Tanggal | 2026-09-26 |
 | Bahasa UI | English |
 | Platform | Web responsive, installable sebagai PWA |
@@ -148,7 +148,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 |---|---|
 | PET-1 | Maskot SVG dengan animasi idle (bernapas, berkedip) dan nama yang dipilih user. |
 | PET-2 | **Mood maskot** berasal dari aktivitas: menulis jurnal hari ini, tugas yang selesai, dan item overdue. Terdapat 5 state: ecstatic, happy, neutral, sleepy, dan sad. Maskot tidak pernah "mati" atau menghukum; paling buruk hanya sleepy/sad dan langsung ceria lagi ketika user kembali. |
-| PET-3 | **Evolusi**: maskot tumbuh (egg → baby → teen → adult) berdasarkan total hari aktif, bukan streak, agar tidak hilang saat streak putus. |
+| PET-3 | **Evolusi**: maskot tumbuh (Acorn → Kit → Scout → Keeper; hari aktif ke-1, 7, dan 30) berdasarkan total hari aktif, bukan streak, agar tidak hilang saat streak putus. |
 | PET-4 | Interaksi: tap maskot untuk memicu reaksi random dan pesan penyemangat. |
 | PET-5 (P1) | Aksesori yang terbuka di milestone (topi, kacamata, syal) dan bisa dipakaikan. |
 
@@ -270,7 +270,6 @@ push_subscriptions id, user_id, endpoint UNIQUE, p256dh, auth, user_agent
 journal_entries   id, user_id, entry_date date, content, mood smallint(1-5),
                   feelings text[], prompt, created_at, updated_at   UNIQUE(user_id, entry_date)
 streak_freezes    user_id, available, used_dates date[]
-pet_state         user_id, stage, total_active_days, accessories, equipped
 focus_sessions    id, user_id, item_id?, started_at, duration_min, completed
 time_capsules     id, user_id, title, content, open_at, opened_at, created_at
 message_history   user_id, message_id, shown_at
@@ -342,5 +341,20 @@ NEXT_PUBLIC_SITE_URL
 ## 11. Yang dibutuhkan dari Anda
 
 1. **Akun Supabase dan Vercel** (gratis). Saya tidak bisa membuat akun atas nama Anda. Kode akan berisi migrasi SQL dan panduan setup step-by-step. Anda cukup membuat project, lalu mengisi env vars.
-2. Konfirmasi nama app (*Noteling* hanya working name) dan nama default maskot.
+2. ~~Konfirmasi nama app~~ → **Tuckbury** (tuck away + -bury, “tempat menyimpan”); maskot tupai, nama default *Pip*.
 3. Review PRD ini, terutama prioritas P0/P1.
+
+## 12. Status Implementasi v1
+
+Semua requirement P0 sudah diimplementasikan. Status P1 dan penyesuaian dari draft:
+
+| Item | Status |
+|---|---|
+| NOTE-9 Recurring item (daily/weekly) | ✅ Diimplementasikan. Menandai item selesai langsung menggulirkan deadline ke periode berikutnya. |
+| STK-3 Streak freeze | ✅ Diimplementasikan |
+| REM-6 Aksi di notifikasi (Mark done / Snooze) | ⏳ Belum (backlog) |
+| PET-5 Aksesori maskot | ⏳ Belum. Scout mendapat syal dan Keeper mendapat mahkota daun sebagai bagian dari evolusi. |
+| PIX-4 Export PNG | ⏳ Belum (backlog) |
+| MSG-2 Pool pesan | ~110 pesan (target draft ±150) |
+| Tabel `pet_state` | Dihapus. Stage dan mood maskot diturunkan dari aktivitas via `get_activity_summary()`, jadi tidak ada state yang bisa out-of-sync. |
+| Reminder tanpa cron | Ditambahkan `process_my_due()`. Reminder in-app tetap muncul saat app dibuka walaupun cron belum dikonfigurasi. |

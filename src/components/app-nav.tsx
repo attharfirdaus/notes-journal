@@ -8,7 +8,7 @@ import { useState } from "react";
 import {
   Bell, BookHeart, Ellipsis, Grid3x3, Hourglass, House, NotebookPen, Settings, Tags, Timer,
 } from "lucide-react";
-import { NotificationBell } from "./notification-bell";
+import { NotificationBell, useNotificationPoller } from "./notification-bell";
 import { ServiceWorker } from "./service-worker";
 
 const PRIMARY = [
@@ -33,6 +33,7 @@ export function AppNav() {
   const path = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
   const moreActive = SECONDARY.some((s) => isActive(path, s.href));
+  const unread = useNotificationPoller();
 
   return (
     <>
@@ -67,14 +68,20 @@ export function AppNav() {
           );
         })}
         <div className="mt-auto">
-          <NotificationBell variant="sidebar" />
+          <NotificationBell variant="sidebar" unread={unread} />
         </div>
       </aside>
 
-      {/* Mobile top-right bell */}
-      <div className="fixed right-3 top-3 z-40 md:hidden">
-        <NotificationBell variant="floating" />
-      </div>
+      {/* Mobile top bar */}
+      <header
+        className="fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b-2 border-line bg-card/90 px-4 backdrop-blur md:hidden"
+        style={{ paddingTop: "env(safe-area-inset-top)", height: "calc(3.5rem + env(safe-area-inset-top))" }}
+      >
+        <Link href="/home" className="flex items-center gap-1.5 font-display text-xl font-bold">
+          🌰 Tuckbury
+        </Link>
+        <NotificationBell variant="topbar" unread={unread} />
+      </header>
 
       {/* Mobile bottom nav */}
       <nav

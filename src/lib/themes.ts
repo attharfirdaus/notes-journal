@@ -103,8 +103,10 @@ export const VIBES: { id: Vibe; name: string; emoji: string }[] = [
   { id: "rain", name: "Rainy day", emoji: "🌧️" },
 ];
 
-function vars(p: Palette): string {
+function vars(p: Palette, dark: boolean): string {
   return [
+    // How much of a note's pastel color bleeds into its card.
+    `--note-mix:${dark ? "20%" : "55%"}`,
     `--bg:${p.bg}`,
     `--soft:${p.soft}`,
     `--card:${p.card}`,
@@ -123,8 +125,8 @@ function vars(p: Palette): string {
 /** CSS for every theme × mode. Rendered once in the root layout. */
 export function themeCss(): string {
   return THEMES.map((t) => {
-    const light = vars(t.light);
-    const dark = vars(t.dark);
+    const light = vars(t.light, false);
+    const dark = vars(t.dark, true);
     return [
       `[data-theme="${t.id}"]{${light};color-scheme:light}`,
       `[data-theme="${t.id}"][data-mode="dark"]{${dark};color-scheme:dark}`,
