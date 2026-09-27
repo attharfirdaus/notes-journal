@@ -7,9 +7,8 @@ import { SettingsForm } from "./settings-form";
 export const metadata: Metadata = { title: "Settings" };
 
 export default async function SettingsPage() {
-  const profile = await requireProfile();
   const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
+  const [profile, { data }] = await Promise.all([requireProfile(), supabase.auth.getClaims()]);
   const email = (data?.claims?.email as string | undefined) ?? "";
   return (
     <div className="mx-auto max-w-2xl">

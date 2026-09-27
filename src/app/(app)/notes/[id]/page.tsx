@@ -11,10 +11,10 @@ export const metadata: Metadata = { title: "Note" };
 export default async function NotePage({ params }: PageProps<"/notes/[id]">) {
   const { id } = await params;
   if (!z.uuid().safeParse(id).success) notFound();
-  const profile = await requireProfile();
   const supabase = await createClient();
 
-  const [{ data: note }, { data: items }, { data: links }, { data: cats }] = await Promise.all([
+  const [profile, { data: note }, { data: items }, { data: links }, { data: cats }] = await Promise.all([
+    requireProfile(),
     supabase
       .from("notes")
       .select("id,title,description,type,emoji,color,status,pinned,categories_locked,completed_at,created_at,updated_at")

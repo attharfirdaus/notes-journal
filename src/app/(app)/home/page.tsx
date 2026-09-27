@@ -23,11 +23,13 @@ const GREETINGS = {
 } as const;
 
 export default async function HomePage() {
-  const profile = await requireProfile();
   const supabase = await createClient();
   const since = isoDaysAgo(7);
 
-  const [streak, activity, { data: homeItems }, { data: pinned }, { data: history }] = await Promise.all([
+  // None of these depend on the profile, so they go out together with it
+  // instead of queueing behind it.
+  const [profile, streak, activity, { data: homeItems }, { data: pinned }, { data: history }] = await Promise.all([
+    requireProfile(),
     getStreak(),
     getActivity(),
     supabase.rpc("home_items"),

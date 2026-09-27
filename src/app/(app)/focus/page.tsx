@@ -9,9 +9,9 @@ import { FocusTimer } from "./focus-timer";
 export const metadata: Metadata = { title: "Focus" };
 
 export default async function FocusPage() {
-  const profile = await requireProfile();
   const supabase = await createClient();
-  const [{ data: items }, activity] = await Promise.all([
+  const [profile, { data: items }, activity] = await Promise.all([
+    requireProfile(),
     supabase
       .from("note_items")
       .select("id,text,due_at,notes!inner(title,emoji,status)")

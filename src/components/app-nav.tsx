@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
@@ -27,6 +27,26 @@ const SECONDARY = [
 
 function isActive(path: string, href: string) {
   return path === href || path.startsWith(`${href}/`);
+}
+
+/**
+ * Spinner shown while a navigation is in flight. Must render inside a <Link>.
+ * Prefetched routes commit instantly and skip this entirely; it only appears
+ * on a slow connection. Kept a fixed size and toggled by opacity so it can
+ * never shift the layout.
+ */
+function NavSpinner({ className }: { className?: string }) {
+  const { pending } = useLinkStatus();
+  return (
+    <span
+      aria-hidden
+      className={clsx(
+        "pointer-events-none inline-block h-3.5 w-3.5 shrink-0 rounded-full border-2 border-current border-t-transparent transition-opacity duration-150",
+        pending ? "animate-spin opacity-70" : "opacity-0",
+        className,
+      )}
+    />
+  );
 }
 
 export function AppNav() {
@@ -63,7 +83,8 @@ export function AppNav() {
                 />
               ) : null}
               <Icon size={20} className="relative" />
-              <span className="relative">{item.label}</span>
+              <span className="relative flex-1">{item.label}</span>
+              <NavSpinner className="relative" />
             </Link>
           );
         })}
@@ -106,7 +127,10 @@ export function AppNav() {
                     <motion.span layoutId="tab-pill" className="absolute inset-0 rounded-2xl bg-primary/25" />
                   ) : null}
                   <Icon size={22} className="relative" />
-                  <span className="relative">{item.label}</span>
+                  <span className="relative flex items-center gap-1">
+                    {item.label}
+                    <NavSpinner className="h-2.5 w-2.5" />
+                  </span>
                 </Link>
               </li>
             );

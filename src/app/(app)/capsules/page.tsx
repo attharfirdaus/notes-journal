@@ -8,12 +8,14 @@ import { Capsules } from "./capsules";
 export const metadata: Metadata = { title: "Time Capsules" };
 
 export default async function CapsulesPage() {
-  const profile = await requireProfile();
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("time_capsules")
-    .select("id,title,mood,open_at,opened_at,created_at")
-    .order("open_at", { ascending: true });
+  const [profile, { data }] = await Promise.all([
+    requireProfile(),
+    supabase
+      .from("time_capsules")
+      .select("id,title,mood,open_at,opened_at,created_at")
+      .order("open_at", { ascending: true }),
+  ]);
 
   return (
     <div>

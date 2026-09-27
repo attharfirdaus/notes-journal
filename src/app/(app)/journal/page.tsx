@@ -15,12 +15,10 @@ import { JournalFilters } from "./journal-filters";
 export const metadata: Metadata = { title: "Journal" };
 
 export default async function JournalPage({ searchParams }: PageProps<"/journal">) {
-  const profile = await requireProfile();
   const sp = await searchParams;
   const q = typeof sp.q === "string" ? sp.q.trim().slice(0, 100) : "";
   const mood = typeof sp.mood === "string" ? Number(sp.mood) : 0;
   const view = sp.view === "calendar" ? "calendar" : "list";
-  const today = todayInTz(profile.timezone);
 
   const supabase = await createClient();
   let query = supabase
@@ -31,7 +29,10 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
   if (q) query = query.ilike("content", `%${q.replace(/[%_\\]/g, (m) => `\\${m}`)}%`);
   if (mood >= 1 && mood <= 5) query = query.eq("mood", mood);
 
-  const [{ data }, streak] = await Promise.all([query, getStreak()]);
+  // The profile is only needed for the time zone further down, so it goes out
+  // together with the entries instead of ahead of them.
+  const [profile, { data }, streak] = await Promise.all([requireProfile(), query, getStreak()]);
+  const today = todayInTz(profile.timezone);
   const entries = (data ?? []) as JournalEntry[];
   const wroteToday = entries.some((e) => e.entry_date === today) || streak.wrote_today;
 
