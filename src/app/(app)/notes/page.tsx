@@ -95,7 +95,7 @@ export default async function NotesPage({ searchParams }: PageProps<"/notes">) {
             </EmptyState>
           ) : (
             <EmptyState emoji="🌰" title="No notes yet">
-              Tuck away your first list — groceries, homework, anything!
+              Tuck away your first list: groceries, homework, anything!
             </EmptyState>
           )}
         </div>

@@ -29,11 +29,11 @@ export function LandingHero() {
           <span className="text-primary">Never forget.</span>
         </motion.h1>
         <p className="mt-4 max-w-lg text-lg text-ink-soft">
-          A cozy note taker and daily journal with a squirrel sidekick. Lists, reminders, moods and streaks — wrapped in tiny joys.
+          A cozy note taker and daily journal with a squirrel sidekick. Lists, reminders, moods and streaks, wrapped in tiny joys.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
           <Link href="/signup" className="btn-pop rounded-2xl bg-primary px-6 py-3 text-lg font-bold text-primary-ink">
-            Get started — it&apos;s free
+            Get started for free
           </Link>
           <Link href="/login" className="rounded-2xl border-2 border-line bg-card px-6 py-3 text-lg font-bold">
             I have an account

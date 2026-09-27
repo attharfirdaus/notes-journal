@@ -1,4 +1,4 @@
-# PRD — Tuckbury
+# PRD Tuckbury
 
 > Note taker + daily journal yang terasa seperti main, bukan kerja.
 
@@ -39,7 +39,7 @@ Orang sering lupa hal kecil: barang yang harus dibeli, tugas dengan deadline, ja
 
 ## 3. Target User & Persona
 
-- **Mahasiswa atau pekerja muda (18–30 tahun)** dengan banyak tugas dan jadwal, yang suka app dengan estetika playful.
+- **Mahasiswa atau pekerja muda (18-30 tahun)** dengan banyak tugas dan jadwal, yang suka app dengan estetika playful.
 - **Journaler kasual** yang ingin refleksi harian tanpa tekanan menulis panjang.
 
 **Skenario utama**
@@ -54,7 +54,7 @@ Orang sering lupa hal kecil: barang yang harus dibeli, tugas dengan deadline, ja
 
 Prioritas: **P0** = wajib di v1, **P1** = masuk v1 bila waktu cukup, **P2** = backlog.
 
-### 4.1 Autentikasi & Akun — P0
+### 4.1 Autentikasi & Akun (P0)
 
 | ID | Requirement |
 |---|---|
@@ -65,7 +65,7 @@ Prioritas: **P0** = wajib di v1, **P1** = masuk v1 bila waktu cukup, **P2** = ba
 | AUTH-5 | Isolasi data: setiap user hanya bisa membaca atau menulis datanya sendiri. Aturan ini ditegakkan di level database (Row Level Security), bukan hanya di UI. |
 | AUTH-6 | Halaman Settings: ubah nama, timezone, password, preferensi notifikasi, dan hapus akun. |
 
-### 4.2 Notes (List) — P0
+### 4.2 Notes (List) (P0)
 
 Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 
@@ -81,7 +81,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 | NOTE-8 | Section "Today" dan "Upcoming" di Home: item dengan `due_at` hari ini atau dalam 7 hari ke depan, serta item yang overdue. |
 | NOTE-9 (P1) | Recurring item (daily/weekly), misalnya "minum vitamin". |
 
-### 4.3 Kategori — P0
+### 4.3 Kategori (P0)
 
 | ID | Requirement |
 |---|---|
@@ -91,7 +91,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 | CAT-4 | Kelola kategori: CRUD nama, emoji, warna, dan keyword. User bisa mengajari detector dengan menambah keyword sendiri. Kategori yang dihapus dilepas dari semua note, tetapi note-nya tidak ikut terhapus. |
 | CAT-5 | Detector dibungkus di balik interface `categorize(text) → suggestions[]`, sehingga nanti bisa diganti dengan LLM tanpa mengubah UI. |
 
-### 4.4 Pengingat Otomatis — P0
+### 4.4 Pengingat Otomatis (P0)
 
 | ID | Requirement |
 |---|---|
@@ -103,7 +103,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 | REM-6 | Aksi di notifikasi (P1): "Mark done" dan "Snooze 1h". |
 | REM-7 | Daily nudge opsional: pengingat menulis jurnal pada jam yang dipilih user jika hari itu belum menulis. |
 
-### 4.5 Jurnal Harian — P0
+### 4.5 Jurnal Harian (P0)
 
 | ID | Requirement |
 |---|---|
@@ -114,7 +114,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 | JRN-5 | List jurnal: tampilan timeline dan kalender, dengan filter mood serta search. |
 | JRN-6 | Jurnal bersifat privat. Tidak ada fitur share. |
 
-### 4.6 Streak — P0
+### 4.6 Streak (P0)
 
 | ID | Requirement |
 |---|---|
@@ -123,7 +123,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 | STK-3 | Streak freeze (P1): 1 freeze didapat setiap 7 hari streak (maksimal 2 disimpan). Freeze otomatis terpakai untuk menjaga streak jika user melewatkan 1 hari. |
 | STK-4 | Streak dihitung di server (SQL function) agar konsisten dan tidak bisa dimanipulasi dari client. |
 
-### 4.7 Tema & Suasana — P0
+### 4.7 Tema & Suasana (P0)
 
 | ID | Requirement |
 |---|---|
@@ -131,7 +131,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 | THM-2 | Suasana (vibe): background animasi ringan yang bisa dipilih, seperti none, floating bubbles, falling leaves, starry night, dan rain. Tersedia toggle reduce motion, dan preferensi `prefers-reduced-motion` dihormati. |
 | THM-3 | Preferensi tema disimpan di profil, sehingga sinkron antar device. |
 
-### 4.8 Pesan Penyemangat — P0
+### 4.8 Pesan Penyemangat (P0)
 
 | ID | Requirement |
 |---|---|
@@ -142,7 +142,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 
 ### 4.9 Fitur Hiburan
 
-#### 4.9.1 Maskot / Pet Virtual — P0
+#### 4.9.1 Maskot / Pet Virtual (P0)
 
 | ID | Requirement |
 |---|---|
@@ -152,7 +152,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 | PET-4 | Interaksi: tap maskot untuk memicu reaksi random dan pesan penyemangat. |
 | PET-5 (P1) | Aksesori yang terbuka di milestone (topi, kacamata, syal) dan bisa dipakaikan. |
 
-#### 4.9.2 Focus Timer + Ambient — P0
+#### 4.9.2 Focus Timer + Ambient (P0)
 
 | ID | Requirement |
 |---|---|
@@ -163,7 +163,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 
 > Lofi music tidak masuk v1. Musik lofi membutuhkan aset berlisensi, dan saya tidak akan menambahkan file audio yang lisensinya belum jelas.
 
-#### 4.9.3 Year in Pixels — P0
+#### 4.9.3 Year in Pixels (P0)
 
 | ID | Requirement |
 |---|---|
@@ -172,7 +172,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 | PIX-3 | Selector tahun dan ringkasan distribusi mood (bar sederhana). |
 | PIX-4 | Export sebagai gambar PNG (P1). |
 
-#### 4.9.4 Time Capsule — P0
+#### 4.9.4 Time Capsule (P0)
 
 | ID | Requirement |
 |---|---|
@@ -303,7 +303,7 @@ NEXT_PUBLIC_SITE_URL
 - **Responsif:** layout mulai dari lebar 360 px hingga desktop.
 - **PWA:** manifest, ikon, dan service worker (untuk push dan install).
 - **Privacy:** tidak ada analytics pihak ketiga di v1. Data jurnal tidak keluar dari Supabase.
-- **Reliability:** reminder terkirim paling lambat ±1–2 menit dari `fire_at`, karena cron berjalan setiap 1 menit.
+- **Reliability:** reminder terkirim paling lambat ±1-2 menit dari `fire_at`, karena cron berjalan setiap 1 menit.
 
 ## 8. Milestones
 

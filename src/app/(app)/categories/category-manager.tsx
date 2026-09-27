@@ -49,7 +49,7 @@ export function CategoryManager({ initial, counts }: { initial: Category[]; coun
                 );
               })
             ) : (
-              <span className="text-ink-soft">No match — add a keyword to one of your categories!</span>
+              <span className="text-ink-soft">No match. Add a keyword to one of your categories!</span>
             )
           ) : (
             <span className="text-ink-soft">Scores show how strongly the text matches.</span>

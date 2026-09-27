@@ -99,7 +99,7 @@ export function FocusTimer({
       celebrate("big");
       toast({ emoji: "🍅", title: `${minutes} focused minutes!`, body: `${petName} is impressed. Time for a break.` });
       if (document.visibilityState !== "visible" && "Notification" in window && Notification.permission === "granted") {
-        new Notification("🍅 Focus session complete!", { body: "Take a break — you earned it.", icon: "/icons/192" });
+        new Notification("🍅 Focus session complete!", { body: "Take a break. You earned it.", icon: "/icons/192" });
       }
       const res = await saveFocusSession({
         started_at: startedAt ?? new Date(Date.now() - minutes * 60000).toISOString(),
@@ -273,7 +273,7 @@ export function FocusTimer({
             <option value="">Nothing specific</option>
             {tasks.map((t) => (
               <option key={t.id} value={t.id}>
-                {t.text} — {t.note}
+                {t.text} · {t.note}
               </option>
             ))}
           </select>
@@ -320,7 +320,7 @@ export function FocusTimer({
               </label>
             ))}
           </div>
-          <p className="mt-3 text-xs text-ink-soft">All sounds are generated live in your browser — mix your own soundscape.</p>
+          <p className="mt-3 text-xs text-ink-soft">All sounds are generated live in your browser. Mix your own soundscape.</p>
         </section>
 
         <section className="rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">

@@ -1,4 +1,4 @@
-// Time-zone helpers built on Intl only — every date shown to the user is
+// Time-zone helpers built on Intl only. Every date shown to the user is
 // rendered in their profile time zone so server and client agree.
 
 const partsCache = new Map<string, Intl.DateTimeFormat>();

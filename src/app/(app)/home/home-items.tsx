@@ -38,7 +38,7 @@ export function HomeItems({ items: initial }: { items: HomeItem[] }) {
         toast({ emoji: "🎉", title: `${item.note_emoji} ${item.note_title} is complete!` });
       }
       if (!res.data.item.is_done && res.data.item.due_at) {
-        // Recurring item rolled forward — show it again with its new date.
+        // Recurring item rolled forward, so show it again with its new date.
         setItems((xs) => [...xs, { ...item, due_at: res.data.item.due_at!, bucket: "upcoming" }]);
       }
     });
@@ -47,7 +47,7 @@ export function HomeItems({ items: initial }: { items: HomeItem[] }) {
   if (!items.length) {
     return (
       <EmptyState emoji="🌤️" title="Nothing due this week">
-        Enjoy the calm — or add a task with a deadline above.
+        Enjoy the calm, or add a task with a deadline above.
       </EmptyState>
     );
   }

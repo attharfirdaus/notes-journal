@@ -196,7 +196,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
           <p className="font-bold">📲 Push notifications on this device</p>
           <p className="mt-1 text-sm text-ink-soft">
             {push.state === "subscribed"
-              ? "On — you'll get reminders even when Tuckbury is closed."
+              ? "On. You'll get reminders even when Tuckbury is closed."
               : push.state === "denied"
                 ? "Blocked in your browser settings. Allow notifications for this site to turn them on."
                 : push.state === "unsupported"

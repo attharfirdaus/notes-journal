@@ -9,7 +9,7 @@ const display = Fredoka({ variable: "--font-display-face", subsets: ["latin"], w
 const body = Nunito({ variable: "--font-body", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: { default: "Tuckbury — tuck it away, never forget", template: "%s · Tuckbury" },
+  title: { default: "Tuckbury: tuck it away, never forget", template: "%s · Tuckbury" },
   description:
     "A cozy note taker and daily journal with a squirrel sidekick. Lists, reminders, streaks, moods and tiny joys.",
   applicationName: "Tuckbury",

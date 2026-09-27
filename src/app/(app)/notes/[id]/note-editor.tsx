@@ -36,7 +36,7 @@ const PROGRESS_LINES = [
   [0.01, "Nice start! 🐾"],
   [0.34, "Making progress! 🚀"],
   [0.67, "Almost there! 🔥"],
-  [1, "All done — amazing! 🎉"],
+  [1, "All done. Amazing! 🎉"],
 ] as const;
 
 function progressLine(p: number) {
@@ -764,7 +764,7 @@ function AddItemBar({
             <Chip active={useDate} onClick={() => setUseDate((v) => !v)} title="Click to toggle">
               📅 {formatDue(suggestion.iso, prefs.timezone)}
             </Chip>
-            <span className="text-xs text-ink-soft">{useDate ? `Deadline detected from “${suggestion.matched}”` : "Date ignored — tap to use it"}</span>
+            <span className="text-xs text-ink-soft">{useDate ? `Deadline detected from “${suggestion.matched}”` : "Date ignored. Tap to use it"}</span>
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -802,7 +802,7 @@ function CategoryModal({
     <Modal open={open} onClose={onClose} title="Categories 🏷️">
       <p className="mb-3 text-sm text-ink-soft">
         {locked
-          ? "You're in charge — auto-detect is paused for this note."
+          ? "You're in charge. Auto-detect is paused for this note."
           : "✨ Auto-detected from your text. Changing them here switches to manual."}
       </p>
       <div className="flex flex-wrap gap-2">

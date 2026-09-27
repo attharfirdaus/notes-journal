@@ -1,4 +1,4 @@
--- Tuckbury — reminder scheduler (run AFTER the app is deployed to Vercel).
+-- Tuckbury: reminder scheduler (run AFTER the app is deployed to Vercel).
 --
 -- Every minute pg_cron calls /api/cron/reminders on your deployment, which turns
 -- due reminders into in-app notifications and Web Push messages.

@@ -1,7 +1,7 @@
 // Loading skeletons for each route segment.
 //
 // These are Server Components with no client JS, so Next.js can prefetch them
-// as part of the partial prefetch for our dynamic routes — that is what makes
+// as part of the partial prefetch for our dynamic routes, which is what makes
 // sidebar navigation feel instant. Shapes mirror the real layout closely so
 // content swaps in without shifting.
 

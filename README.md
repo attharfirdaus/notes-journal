@@ -27,7 +27,7 @@ Spesifikasi produk ada di [`docs/PRD.md`](docs/PRD.md).
 
    Satu keterbatasan: link bawaan memakai alur PKCE, sehingga **harus dibuka di browser yang sama** dengan saat mendaftar. Kalau dibuka di device lain, user diarahkan ke `/login?error=link` dan perlu mengulang.
 
-   Untuk menghilangkan keterbatasan itu, Anda harus memasang custom SMTP dulu (lihat §5) — Supabase mengunci pengeditan template di balik SMTP. Setelah SMTP aktif, buka **Authentication → Emails → Templates** dan ganti link-nya:
+   Untuk menghilangkan keterbatasan itu, Anda harus memasang custom SMTP dulu (lihat §5), karena Supabase mengunci pengeditan template di balik SMTP. Setelah SMTP aktif, buka **Authentication → Emails → Templates** dan ganti link-nya:
    - *Confirm signup*:
      `<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/onboarding">Confirm your email</a>`
    - *Reset password*:

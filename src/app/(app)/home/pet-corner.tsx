@@ -61,7 +61,7 @@ export function PetCorner({
           progress={stage.progress}
           size={132}
           onPet={next}
-          label={`${petName} the ${stage.label.toLowerCase()} — tap for a message`}
+          label={`${petName} the ${stage.label.toLowerCase()}. Tap for a message`}
         />
         <div className="min-w-0 flex-1 pb-6">
           <AnimatePresence mode="wait">

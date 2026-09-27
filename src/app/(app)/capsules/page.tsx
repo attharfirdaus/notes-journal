@@ -21,7 +21,7 @@ export default async function CapsulesPage() {
     <div>
       <PageHeader title="Time Capsules" emoji="⏳" />
       <p className="-mt-3 mb-5 text-ink-soft">
-        Write a letter to future you. It stays sealed — even from you — until the day it unlocks.
+        Write a letter to future you. It stays sealed until the day it unlocks, even from you.
       </p>
       <Capsules capsules={(data ?? []) as TimeCapsule[]} tz={profile.timezone} />
     </div>

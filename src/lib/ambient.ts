@@ -1,6 +1,6 @@
 "use client";
 
-// Procedurally generated ambience — no audio files, no licensing questions.
+// Procedurally generated ambience. No audio files, no licensing questions.
 
 export type LayerId = "rain" | "wind" | "brown" | "pink" | "white";
 

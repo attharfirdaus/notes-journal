@@ -3,11 +3,11 @@ import { LandingHero } from "@/components/landing-hero";
 
 const FEATURES = [
   { emoji: "🛒", title: "Lists for everything", body: "Groceries, homework, packing, gift ideas. Type “Groceries: milk, eggs” and it's done." },
-  { emoji: "✨", title: "Auto-sorted", body: "Notes find their own categories — in English or Bahasa Indonesia. Teach it new words anytime." },
+  { emoji: "✨", title: "Auto-sorted", body: "Notes find their own categories, in English or Bahasa Indonesia. Teach it new words anytime." },
   { emoji: "⏰", title: "Never miss a deadline", body: "“Essay due friday 5pm” sets the date for you. Reminders arrive in-app and as push notifications." },
   { emoji: "📔", title: "Daily journal & moods", body: "Pick a mood, write a line, keep your 🔥 streak alive. Streak freezes forgive the odd missed day." },
   { emoji: "🐿️", title: "A sidekick that grows", body: "Hatch an acorn into a squirrel who cheers you on and evolves as you show up." },
-  { emoji: "🍅", title: "Focus with ambience", body: "Pomodoro timer with rain, wind and cozy noise — generated live in your browser." },
+  { emoji: "🍅", title: "Focus with ambience", body: "Pomodoro timer with rain, wind and cozy noise, all generated live in your browser." },
   { emoji: "🟪", title: "Year in Pixels", body: "Watch your year paint itself, one mood-colored square per day." },
   { emoji: "💌", title: "Time capsules", body: "Seal a letter to future you. Even you can't peek until it unlocks." },
 ];

@@ -30,7 +30,7 @@ export function petStage(totalActiveDays: number) {
   };
 }
 
-/** Mood is a gentle reflection of today — never a punishment. */
+/** Mood is a gentle reflection of today, never a punishment. */
 export function petMood(a: Pick<
   ActivitySummary,
   "wrote_today" | "tasks_done_today" | "overdue" | "focus_today" | "last_active_day" | "today"
