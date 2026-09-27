@@ -23,13 +23,15 @@ Spesifikasi produk ada di [`docs/PRD.md`](docs/PRD.md).
    - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon` / publishable key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `service_role` / secret key → `SUPABASE_SERVICE_ROLE_KEY` (**rahasia**, jangan dibagikan)
-4. Opsional tapi direkomendasikan: buka **Authentication → Emails → Templates** dan ubah link-nya agar konfirmasi tetap jalan walau email dibuka di device atau browser lain.
+4. **Template email tidak perlu diubah.** Tujuan link konfirmasi diatur dari kode (`emailRedirectTo` di `src/actions/auth.ts`), bukan dari template, jadi template bawaan Supabase sudah otomatis mengarah ke `/auth/confirm` milik app ini.
+
+   Satu keterbatasan: link bawaan memakai alur PKCE, sehingga **harus dibuka di browser yang sama** dengan saat mendaftar. Kalau dibuka di device lain, user diarahkan ke `/login?error=link` dan perlu mengulang.
+
+   Untuk menghilangkan keterbatasan itu, Anda harus memasang custom SMTP dulu (lihat §5) — Supabase mengunci pengeditan template di balik SMTP. Setelah SMTP aktif, buka **Authentication → Emails → Templates** dan ganti link-nya:
    - *Confirm signup*:
      `<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/onboarding">Confirm your email</a>`
    - *Reset password*:
      `<a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password">Reset your password</a>`
-
-   Tanpa langkah ini, link default tetap bekerja, asalkan dibuka di browser yang sama dengan saat mendaftar.
 
 ### 2. Kunci tambahan
 
