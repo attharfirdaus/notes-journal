@@ -3,7 +3,18 @@
 import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { Pause, Play, RotateCcw, SkipForward, Volume2, VolumeX } from "lucide-react";
+import {
+  AlarmClock,
+  Check,
+  Pause,
+  Play,
+  RotateCcw,
+  SkipForward,
+  Timer,
+  TriangleAlert,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import { saveFocusSession } from "@/actions/focus";
 import { updateItem } from "@/actions/notes";
 import { Mascot } from "@/components/mascot";
@@ -97,21 +108,21 @@ export function FocusTimer({
       setRound((r) => r + 1);
       setJustFinished(true);
       celebrate("big");
-      toast({ emoji: "🍅", title: `${minutes} focused minutes!`, body: `${petName} is impressed. Time for a break.` });
+      toast({ icon: Timer, title: `${minutes} focused minutes!`, body: `${petName} is impressed. Time for a break.` });
       if (document.visibilityState !== "visible" && "Notification" in window && Notification.permission === "granted") {
-        new Notification("🍅 Focus session complete!", { body: "Take a break. You earned it.", icon: "/icons/192" });
+        new Notification(" Focus session complete!", { body: "Take a break. You earned it.", icon: "/icons/192" });
       }
       const res = await saveFocusSession({
         started_at: startedAt ?? new Date(Date.now() - minutes * 60000).toISOString(),
         duration_min: minutes,
         item_id: taskId || null,
       });
-      if (!res.ok) toast({ emoji: "😬", title: "Session not saved", body: res.error });
+      if (!res.ok) toast({ icon: TriangleAlert, title: "Session not saved", body: res.error });
       const nextMode: Mode = (round + 1) % 4 === 0 ? "long" : "short";
       setMode(nextMode);
       setRemaining(durations[nextMode] * 60000);
     } else {
-      toast({ emoji: "⏰", title: "Break's over!", body: "Ready for another round?" });
+      toast({ icon: AlarmClock, title: "Break's over!", body: "Ready for another round?" });
       if (document.visibilityState !== "visible" && "Notification" in window && Notification.permission === "granted") {
         new Notification("⏰ Break's over!", { body: "Ready for another round?", icon: "/icons/192" });
       }
@@ -119,7 +130,6 @@ export function FocusTimer({
       setRemaining(durations.focus * 60000);
     }
     setStartedAt(null);
-     
   }, [mode, durations, startedAt, taskId, round, petName, toast]);
 
   // Timestamp-based ticking stays accurate in background tabs.
@@ -236,7 +246,8 @@ export function FocusTimer({
             <RotateCcw size={20} />
           </IconButton>
           <Button size="lg" onClick={toggle} className="w-40">
-            {running ? <Pause size={20} /> : <Play size={20} />} {running ? "Pause" : remaining < total && remaining > 0 ? "Resume" : "Start"}
+            {running ? <Pause size={20} /> : <Play size={20} />}{" "}
+            {running ? "Pause" : remaining < total && remaining > 0 ? "Resume" : "Start"}
           </Button>
           <IconButton
             label={mode === "focus" ? "Skip to break (not counted)" : "Skip break"}
@@ -252,10 +263,14 @@ export function FocusTimer({
           <Mascot stage={stage} mood={running ? "happy" : justFinished ? "ecstatic" : mood} size={70} label={petName} />
           <div className="text-sm">
             <p className="font-bold">
-              Today: {minutesToday} min · 🍅 × {round}
+              Today: {minutesToday} min · × {round}
             </p>
             <p className="text-ink-soft">
-              {running ? `${petName} is focusing with you…` : justFinished ? `${petName} cheers! 🎉` : `${petName} is ready when you are.`}
+              {running
+                ? `${petName} is focusing with you…`
+                : justFinished
+                  ? `${petName} cheers! `
+                  : `${petName} is ready when you are.`}
             </p>
           </div>
         </div>
@@ -263,7 +278,7 @@ export function FocusTimer({
 
       <div className="space-y-5">
         <section className="rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">
-          <h2 className="mb-2 font-display text-lg font-bold">🎯 Working on</h2>
+          <h2 className="mb-2 font-display text-lg font-bold"> Working on</h2>
           <select
             value={taskId}
             onChange={(e) => setTaskId(e.target.value)}
@@ -283,20 +298,20 @@ export function FocusTimer({
               className="mt-3 w-full"
               onClick={async () => {
                 const res = await updateItem(task.id, { is_done: true });
-                if (!res.ok) return toast({ emoji: "😬", title: "Couldn't update", body: res.error });
+                if (!res.ok) return toast({ icon: TriangleAlert, title: "Couldn't update", body: res.error });
                 celebrate("small");
-                toast({ emoji: "✅", title: `Done: ${task.text}` });
+                toast({ icon: Check, title: `Done: ${task.text}` });
                 setTaskId("");
               }}
             >
-              ✅ Mark “{task.text}” as done
+              Mark “{task.text}” as done
             </Button>
           ) : null}
         </section>
 
         <section className="rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-display text-lg font-bold">🎧 Ambience</h2>
+            <h2 className="font-display text-lg font-bold"> Ambience</h2>
             <Button size="sm" variant={soundOn ? "primary" : "soft"} onClick={toggleSound}>
               {soundOn ? <Volume2 size={16} /> : <VolumeX size={16} />} {soundOn ? "On" : "Off"}
             </Button>
@@ -304,8 +319,13 @@ export function FocusTimer({
           <div className="space-y-3">
             {LAYERS.map((l) => (
               <label key={l.id} className="flex items-center gap-3">
-                <span className={clsx("w-28 shrink-0 text-sm font-bold", volumes[l.id] > 0 && soundOn ? "text-ink" : "text-ink-soft")}>
-                  {l.emoji} {l.label}
+                <span
+                  className={clsx(
+                    "flex w-28 shrink-0 items-center gap-1.5 text-sm font-bold",
+                    volumes[l.id] > 0 && soundOn ? "text-ink" : "text-ink-soft",
+                  )}
+                >
+                  <l.Icon size={15} aria-hidden /> {l.label}
                 </span>
                 <input
                   type="range"
@@ -320,11 +340,13 @@ export function FocusTimer({
               </label>
             ))}
           </div>
-          <p className="mt-3 text-xs text-ink-soft">All sounds are generated live in your browser. Mix your own soundscape.</p>
+          <p className="mt-3 text-xs text-ink-soft">
+            All sounds are generated live in your browser. Mix your own soundscape.
+          </p>
         </section>
 
         <section className="rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">
-          <h2 className="mb-3 font-display text-lg font-bold">⚙️ Durations (minutes)</h2>
+          <h2 className="mb-3 font-display text-lg font-bold"> Durations (minutes)</h2>
           <div className="grid grid-cols-3 gap-2">
             {(Object.keys(MODE_META) as Mode[]).map((m) => (
               <label key={m} className="text-sm font-bold text-ink-soft">

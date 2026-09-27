@@ -11,7 +11,7 @@ export default async function CategoriesPage() {
   const supabase = await createClient();
   const [, { data: cats }, { data: links }] = await Promise.all([
     requireProfile(),
-    supabase.from("categories").select("id,name,emoji,color,keywords,is_default").order("name"),
+    supabase.from("categories").select("id,name,icon,color,keywords,is_default").order("name"),
     supabase.from("note_categories").select("category_id"),
   ]);
   const counts: Record<string, number> = {};
@@ -19,9 +19,10 @@ export default async function CategoriesPage() {
 
   return (
     <div>
-      <PageHeader title="Categories" emoji="🏷️" />
+      <PageHeader title="Categories" icon="ui-categories" />
       <p className="-mt-3 mb-5 text-ink-soft">
-        Tuckbury sorts your notes automatically using these keywords. Add your own words to teach it, in English or Bahasa Indonesia.
+        Tuckbury sorts your notes automatically using these keywords. Add your own words to teach it, in English or
+        Bahasa Indonesia.
       </p>
       <CategoryManager initial={(cats ?? []) as Category[]} counts={counts} />
     </div>

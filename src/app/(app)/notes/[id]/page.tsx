@@ -17,7 +17,7 @@ export default async function NotePage({ params }: PageProps<"/notes/[id]">) {
     requireProfile(),
     supabase
       .from("notes")
-      .select("id,title,description,type,emoji,color,status,pinned,categories_locked,completed_at,created_at,updated_at")
+      .select("id,title,description,type,icon,color,status,pinned,categories_locked,completed_at,created_at,updated_at")
       .eq("id", id)
       .maybeSingle(),
     supabase
@@ -26,7 +26,7 @@ export default async function NotePage({ params }: PageProps<"/notes/[id]">) {
       .eq("note_id", id)
       .order("position"),
     supabase.from("note_categories").select("category_id,source").eq("note_id", id),
-    supabase.from("categories").select("id,name,emoji,color,keywords,is_default").order("name"),
+    supabase.from("categories").select("id,name,icon,color,keywords,is_default").order("name"),
   ]);
   if (!note) notFound();
 

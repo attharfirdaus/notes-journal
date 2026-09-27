@@ -29,7 +29,7 @@ export async function signUp(_: FormState, form: FormData): Promise<FormState> {
   });
   if (error) return { error: error.message };
   if (data.session) redirect("/onboarding");
-  return { message: "Check your inbox! We sent you a link to confirm your email. 💌" };
+  return { message: "Check your inbox! We sent you a link to confirm your email. " };
 }
 
 export async function signIn(_: FormState, form: FormData): Promise<FormState> {
@@ -60,7 +60,7 @@ export async function requestPasswordReset(_: FormState, form: FormData): Promis
   });
   if (error?.status === 429) return { error: "Too many requests. Please wait a minute and try again." };
   // Same answer whether or not the account exists, so emails can't be probed.
-  return { message: "If that email has an account, a reset link is on its way. 📬" };
+  return { message: "If that email has an account, a reset link is on its way. " };
 }
 
 export async function updatePassword(_: FormState, form: FormData): Promise<FormState> {
@@ -73,7 +73,7 @@ export async function updatePassword(_: FormState, form: FormData): Promise<Form
   const supabase = await createClient();
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
   if (error) return { error: error.message };
-  return { message: "Password updated! 🔐" };
+  return { message: "Password updated! " };
 }
 
 export async function signOut() {
@@ -83,7 +83,7 @@ export async function signOut() {
 }
 
 export async function deleteAccount(_: FormState, form: FormData): Promise<FormState> {
-  if (form.get("confirm") !== "DELETE") return { error: 'Type DELETE to confirm.' };
+  if (form.get("confirm") !== "DELETE") return { error: "Type DELETE to confirm." };
   const { supabase, uid } = await authed();
   const admin = createAdminClient();
   const { error } = await admin.auth.admin.deleteUser(uid);

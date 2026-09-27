@@ -6,6 +6,7 @@ import { CalendarClock, Pin } from "lucide-react";
 import clsx from "clsx";
 import type { Category, Note, NoteCategoryLink } from "@/lib/types";
 import { formatDue } from "@/lib/time";
+import { Icon } from "@/lib/icons";
 
 export type NoteCardData = Note & {
   links: NoteCategoryLink[];
@@ -15,7 +16,17 @@ export type NoteCardData = Note & {
   overdue: boolean;
 };
 
-export function NoteCard({ note, categories, tz, index }: { note: NoteCardData; categories: Category[]; tz: string; index: number }) {
+export function NoteCard({
+  note,
+  categories,
+  tz,
+  index,
+}: {
+  note: NoteCardData;
+  categories: Category[];
+  tz: string;
+  index: number;
+}) {
   const cats = note.links.map((l) => categories.find((c) => c.id === l.category_id)).filter(Boolean) as Category[];
   const pct = note.total ? note.done / note.total : 0;
   return (
@@ -35,8 +46,13 @@ export function NoteCard({ note, categories, tz, index }: { note: NoteCardData; 
         style={{ background: `color-mix(in oklab, ${note.color} var(--note-mix), var(--card))` }}
       >
         <div className="flex items-start gap-2">
-          <span className="text-2xl leading-none">{note.emoji}</span>
-          <h3 className={clsx("min-w-0 flex-1 font-display text-lg font-bold leading-tight text-ink", note.status === "completed" && "line-through decoration-2 opacity-70")}>
+          <Icon name={note.icon} size={22} className="mt-0.5 shrink-0 text-ink" />
+          <h3
+            className={clsx(
+              "min-w-0 flex-1 font-display text-lg font-bold leading-tight text-ink",
+              note.status === "completed" && "line-through decoration-2 opacity-70",
+            )}
+          >
             {note.title}
           </h3>
           {note.pinned ? <Pin size={16} className="shrink-0 rotate-45 text-ink" aria-label="Pinned" /> : null}
@@ -46,7 +62,8 @@ export function NoteCard({ note, categories, tz, index }: { note: NoteCardData; 
           <div className="mt-2.5 flex flex-wrap gap-1">
             {cats.map((c) => (
               <span key={c.id} className="rounded-full bg-card/70 px-2 py-0.5 text-xs font-bold text-ink">
-                {c.emoji} {c.name}
+                <Icon name={c.icon} size={12} className="mr-1 inline-block align-[-2px]" />
+                {c.name}
               </span>
             ))}
           </div>
@@ -62,11 +79,16 @@ export function NoteCard({ note, categories, tz, index }: { note: NoteCardData; 
           </div>
         ) : null}
         {note.nextDue ? (
-          <p className={clsx("mt-2 flex items-center gap-1 text-xs font-bold", note.overdue ? "text-[#C0392B] dark:text-[#FF8A80]" : "text-ink-soft")}>
+          <p
+            className={clsx(
+              "mt-2 flex items-center gap-1 text-xs font-bold",
+              note.overdue ? "text-[#C0392B] dark:text-[#FF8A80]" : "text-ink-soft",
+            )}
+          >
             <CalendarClock size={14} /> {formatDue(note.nextDue, tz)}
           </p>
         ) : null}
-        {note.status === "completed" ? <p className="mt-2 text-xs font-black text-ink-soft">✨ All done!</p> : null}
+        {note.status === "completed" ? <p className="mt-2 text-xs font-black text-ink-soft"> All done!</p> : null}
       </Link>
     </motion.div>
   );

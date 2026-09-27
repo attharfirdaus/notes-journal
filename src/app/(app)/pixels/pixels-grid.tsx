@@ -13,7 +13,19 @@ import { IconButton } from "@/components/ui";
 type Pixel = { date: string; mood: number | null; snippet: string };
 const MONTHS = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
 
-export function PixelsGrid({ year, today, minYear, maxYear, entries }: { year: number; today: string; minYear: number; maxYear: number; entries: Pixel[] }) {
+export function PixelsGrid({
+  year,
+  today,
+  minYear,
+  maxYear,
+  entries,
+}: {
+  year: number;
+  today: string;
+  minYear: number;
+  maxYear: number;
+  entries: Pixel[];
+}) {
   const router = useRouter();
   const [hover, setHover] = useState<Pixel | null>(null);
   const byDate = useMemo(() => new Map(entries.map((e) => [e.date, e])), [entries]);
@@ -27,11 +39,19 @@ export function PixelsGrid({ year, today, minYear, maxYear, entries }: { year: n
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-center gap-3">
-        <IconButton label="Previous year" disabled={year <= minYear} onClick={() => router.push(`/pixels?year=${year - 1}`)}>
+        <IconButton
+          label="Previous year"
+          disabled={year <= minYear}
+          onClick={() => router.push(`/pixels?year=${year - 1}`)}
+        >
           <ChevronLeft />
         </IconButton>
         <h2 className="font-display text-2xl font-bold">{year}</h2>
-        <IconButton label="Next year" disabled={year >= maxYear} onClick={() => router.push(`/pixels?year=${year + 1}`)}>
+        <IconButton
+          label="Next year"
+          disabled={year >= maxYear}
+          onClick={() => router.push(`/pixels?year=${year + 1}`)}
+        >
           <ChevronRight />
         </IconButton>
       </div>
@@ -54,7 +74,8 @@ export function PixelsGrid({ year, today, minYear, maxYear, entries }: { year: n
         {hover ? (
           <p>
             <span className="font-bold">
-              {moodInfo(hover.mood)?.emoji ?? "📝"} {formatDate(hover.date, { weekday: "long", month: "long", day: "numeric" })}
+              {formatDate(hover.date, { weekday: "long", month: "long", day: "numeric" })}
+              {moodInfo(hover.mood) ? ` · ${moodInfo(hover.mood)!.label}` : ""}
             </span>
             <span className="mt-0.5 block text-ink-soft">{plainSnippet(hover.snippet, 140) || "Just a mood."}</span>
           </p>
@@ -70,8 +91,8 @@ export function PixelsGrid({ year, today, minYear, maxYear, entries }: { year: n
             const n = counts.get(m.value) ?? 0;
             return (
               <div key={m.value} className="flex items-center gap-2">
-                <span className="w-24 shrink-0 text-sm font-bold">
-                  {m.emoji} {m.label}
+                <span className="flex w-24 shrink-0 items-center gap-1.5 text-sm font-bold">
+                  <m.Icon size={15} aria-hidden /> {m.label}
                 </span>
                 <div className="h-4 flex-1 overflow-hidden rounded-full bg-soft">
                   <motion.div
@@ -107,7 +128,9 @@ function Row({
 }) {
   return (
     <>
-      <div className="flex items-center justify-end pr-1 text-[10px] font-bold text-ink-soft">{day % 5 === 0 || day === 1 ? day : ""}</div>
+      <div className="flex items-center justify-end pr-1 text-[10px] font-bold text-ink-soft">
+        {day % 5 === 0 || day === 1 ? day : ""}
+      </div>
       {MONTHS.map((_, m) => {
         const valid = day <= new Date(Date.UTC(year, m + 1, 0)).getUTCDate();
         if (!valid) return <div key={m} />;
@@ -120,7 +143,8 @@ function Row({
           outline: date === today ? "2px solid var(--primary)" : undefined,
           opacity: future ? 0.35 : 1,
         };
-        const cls = "block aspect-square w-full rounded-[4px] sm:rounded-md transition hover:scale-125 hover:z-10 relative";
+        const cls =
+          "block aspect-square w-full rounded-[4px] sm:rounded-md transition hover:scale-125 hover:z-10 relative";
         if (future) return <div key={m} className={cls} style={style} />;
         return (
           <Link

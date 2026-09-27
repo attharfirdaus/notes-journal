@@ -9,6 +9,7 @@ import { Button, Input } from "@/components/ui";
 import { celebrate } from "@/lib/fx";
 import { THEMES } from "@/lib/themes";
 import type { ThemeId } from "@/lib/types";
+import { THEME_ICONS } from "@/lib/icons";
 
 const STEPS = ["hello", "pet", "theme", "hatch"] as const;
 
@@ -54,7 +55,10 @@ export function Onboarding({ initialName }: { initialName: string }) {
     <div className="flex min-h-dvh flex-col items-center justify-center px-4 py-10">
       <div className="mb-6 flex gap-2" aria-hidden>
         {STEPS.map((s, i) => (
-          <span key={s} className={`h-2.5 rounded-full transition-all ${i <= step ? "w-8 bg-primary" : "w-2.5 bg-line"}`} />
+          <span
+            key={s}
+            className={`h-2.5 rounded-full transition-all ${i <= step ? "w-8 bg-primary" : "w-2.5 bg-line"}`}
+          />
         ))}
       </div>
 
@@ -73,10 +77,17 @@ export function Onboarding({ initialName }: { initialName: string }) {
               </div>
               <h1 className="mt-2 font-display text-3xl font-bold">Welcome to Tuckbury!</h1>
               <p className="mt-2 text-ink-soft">
-                The cozy place to tuck away lists, plans and feelings, so your brain can relax. 🌰
+                The cozy place to tuck away lists, plans and feelings, so your brain can relax.
               </p>
               <div className="mt-5 text-left">
-                <Input label="What should we call you?" value={name} onChange={(e) => setName(e.target.value)} maxLength={40} placeholder="Your nickname" autoFocus />
+                <Input
+                  label="What should we call you?"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  maxLength={40}
+                  placeholder="Your nickname"
+                  autoFocus
+                />
               </div>
               <Button className="mt-5 w-full" size="lg" onClick={() => setStep(1)}>
                 Nice to meet you →
@@ -87,16 +98,26 @@ export function Onboarding({ initialName }: { initialName: string }) {
           {step === 1 ? (
             <>
               <div className="flex justify-center">
-                <motion.div animate={{ rotate: [0, -4, 4, -4, 0] }} transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 1 }}>
+                <motion.div
+                  animate={{ rotate: [0, -4, 4, -4, 0] }}
+                  transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 1 }}
+                >
                   <Mascot stage="acorn" mood="ecstatic" progress={0.8} size={130} label="The acorn wiggles" />
                 </motion.div>
               </div>
               <h2 className="mt-2 font-display text-2xl font-bold">Something is wiggling…</h2>
               <p className="mt-2 text-ink-soft">
-                This acorn will hatch into your squirrel sidekick. It grows as you write, check things off and focus. What will you name it?
+                This acorn will hatch into your squirrel sidekick. It grows as you write, check things off and focus.
+                What will you name it?
               </p>
               <div className="mt-5 text-left">
-                <Input label="Sidekick name" value={pet} onChange={(e) => setPet(e.target.value)} maxLength={20} placeholder="Pip" />
+                <Input
+                  label="Sidekick name"
+                  value={pet}
+                  onChange={(e) => setPet(e.target.value)}
+                  maxLength={20}
+                  placeholder="Pip"
+                />
               </div>
               <div className="mt-5 flex gap-2">
                 <Button variant="soft" className="flex-1" onClick={() => setStep(0)}>
@@ -111,7 +132,7 @@ export function Onboarding({ initialName }: { initialName: string }) {
 
           {step === 2 ? (
             <>
-              <h2 className="font-display text-2xl font-bold">Pick your vibe ✨</h2>
+              <h2 className="font-display text-2xl font-bold">Pick your vibe</h2>
               <p className="mt-1 text-ink-soft">You can change this anytime in Settings.</p>
               <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {THEMES.map((t) => (
@@ -125,11 +146,19 @@ export function Onboarding({ initialName }: { initialName: string }) {
                   >
                     <div className="flex gap-1">
                       {[t.light.primary, t.light.accent, t.light.pet].map((c) => (
-                        <span key={c} className="h-5 w-5 rounded-full border border-black/10" style={{ background: c }} />
+                        <span
+                          key={c}
+                          className="h-5 w-5 rounded-full border border-black/10"
+                          style={{ background: c }}
+                        />
                       ))}
                     </div>
-                    <div className="mt-2 text-sm font-bold" style={{ color: t.light.ink }}>
-                      {t.emoji} {t.name}
+                    <div className="mt-2 flex items-center gap-1.5 text-sm font-bold" style={{ color: t.light.ink }}>
+                      {(() => {
+                        const I = THEME_ICONS[t.id];
+                        return <I size={15} aria-hidden />;
+                      })()}{" "}
+                      {t.name}
                     </div>
                   </button>
                 ))}
@@ -141,7 +170,7 @@ export function Onboarding({ initialName }: { initialName: string }) {
                   Back
                 </Button>
                 <Button className="flex-1" onClick={finish} loading={pending}>
-                  Let&apos;s go! 🐣
+                  Let&apos;s go!
                 </Button>
               </div>
             </>
@@ -157,7 +186,7 @@ export function Onboarding({ initialName }: { initialName: string }) {
               >
                 <Mascot stage="acorn" mood="ecstatic" progress={0.9} size={160} label={pet} />
               </motion.div>
-              <h2 className="mt-2 font-display text-2xl font-bold">{pet || "Pip"} is almost here! 🎉</h2>
+              <h2 className="mt-2 font-display text-2xl font-bold">{pet || "Pip"} is almost here!</h2>
               <p className="mt-2 text-ink-soft">
                 Check off a task or write your first journal entry to hatch {pet || "Pip"}.
               </p>

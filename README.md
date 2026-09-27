@@ -1,4 +1,4 @@
-# 🌰 Tuckbury
+# Tuckbury
 
 > Tuck it away. Never forget.
 

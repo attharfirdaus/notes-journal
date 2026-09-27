@@ -6,11 +6,32 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import clsx from "clsx";
 import {
-  Archive, ArchiveRestore, BellRing, CalendarClock, ChevronDown, ChevronLeft, GripVertical, Pin, PinOff, Plus,
-  Repeat, Sparkles, Trash2, X,
+  Archive,
+  ArchiveRestore,
+  BellRing,
+  CalendarClock,
+  ChevronDown,
+  ChevronLeft,
+  GripVertical,
+  PartyPopper,
+  Pin,
+  PinOff,
+  Plus,
+  Repeat,
+  Sparkles,
+  Trash2,
+  TriangleAlert,
+  X,
 } from "lucide-react";
 import {
-  addItems, deleteItem, deleteNote, redetectCategories, reorderItems, setNoteCategories, updateItem, updateNote,
+  addItems,
+  deleteItem,
+  deleteNote,
+  redetectCategories,
+  reorderItems,
+  setNoteCategories,
+  updateItem,
+  updateNote,
 } from "@/actions/notes";
 import { Button, Chip, IconButton, Modal, ProgressBar, Segmented } from "@/components/ui";
 import { useToast } from "@/components/toast";
@@ -19,7 +40,8 @@ import { usePush } from "@/components/push";
 import { celebrate, originFromEvent, sfx } from "@/lib/fx";
 import { detectDate, type DateSuggestion } from "@/lib/smart-date";
 import { formatDue, isPast, isoToZonedInput, zonedInputToIso } from "@/lib/time";
-import { NOTE_COLORS, NOTE_EMOJIS, NOTE_TYPES, REMINDER_PRESETS, reminderLabel } from "@/lib/note-meta";
+import { ICON_KEYS, Icon } from "@/lib/icons";
+import { NOTE_COLORS, NOTE_TYPES, REMINDER_PRESETS, reminderLabel } from "@/lib/note-meta";
 import type { Category, Note, NoteCategoryLink, NoteItem, NoteStatus, NoteType } from "@/lib/types";
 
 type Props = {
@@ -32,11 +54,11 @@ type Props = {
 };
 
 const PROGRESS_LINES = [
-  [0, "Let's get started! 🌱"],
-  [0.01, "Nice start! 🐾"],
-  [0.34, "Making progress! 🚀"],
-  [0.67, "Almost there! 🔥"],
-  [1, "All done. Amazing! 🎉"],
+  [0, "Let's get started! "],
+  [0.01, "Nice start! "],
+  [0.34, "Making progress! "],
+  [0.67, "Almost there! "],
+  [1, "All done. Amazing! "],
 ] as const;
 
 function progressLine(p: number) {
@@ -72,7 +94,7 @@ export function NoteEditor(props: Props) {
     if (status === "completed" && statusRef.current !== "completed") {
       celebrate("big");
       if (prefs.soundEffects) sfx.tada();
-      toast({ emoji: "🎉", title: "List complete!", body: `${prefs.petName} is doing a victory dance.` });
+      toast({ icon: PartyPopper, title: "List complete!", body: `${prefs.petName} is doing a victory dance.` });
     }
     statusRef.current = status;
     setNote((n) => ({ ...n, status }));
@@ -82,7 +104,7 @@ export function NoteEditor(props: Props) {
     setNote((n) => ({ ...n, ...patch }));
     start(async () => {
       const res = await updateNote(note.id, patch);
-      if (!res.ok) return toast({ emoji: "😬", title: "Couldn't save", body: res.error });
+      if (!res.ok) return toast({ icon: TriangleAlert, title: "Couldn't save", body: res.error });
       setNote(res.data.note);
       statusRef.current = res.data.note.status;
       if (res.data.categories) setLinks(res.data.categories);
@@ -114,10 +136,15 @@ export function NoteEditor(props: Props) {
       const res = await updateItem(item.id, { is_done: done });
       if (!res.ok) {
         setItems((xs) => xs.map((x) => (x.id === item.id ? item : x)));
-        return toast({ emoji: "😬", title: "Couldn't update", body: res.error });
+        return toast({ icon: TriangleAlert, title: "Couldn't update", body: res.error });
       }
       setItems((xs) => xs.map((x) => (x.id === item.id ? res.data.item : x)));
-      if (item.recurrence && done) toast({ emoji: "🔁", title: "See you next time!", body: `Rescheduled: ${formatDue(res.data.item.due_at!, prefs.timezone)}` });
+      if (item.recurrence && done)
+        toast({
+          icon: Repeat,
+          title: "See you next time!",
+          body: `Rescheduled: ${formatDue(res.data.item.due_at!, prefs.timezone)}`,
+        });
       onStatus(res.data.status);
     });
   };
@@ -128,7 +155,7 @@ export function NoteEditor(props: Props) {
       const res = await updateItem(item.id, patch);
       if (!res.ok) {
         setItems((xs) => xs.map((x) => (x.id === item.id ? item : x)));
-        return toast({ emoji: "😬", title: "Couldn't save", body: res.error });
+        return toast({ icon: TriangleAlert, title: "Couldn't save", body: res.error });
       }
       setItems((xs) => xs.map((x) => (x.id === item.id ? res.data.item : x)));
       onStatus(res.data.status);
@@ -141,7 +168,7 @@ export function NoteEditor(props: Props) {
       const res = await deleteItem(item.id);
       if (!res.ok) {
         setItems((xs) => [...xs, item].sort((a, b) => a.position - b.position));
-        return toast({ emoji: "😬", title: "Couldn't delete", body: res.error });
+        return toast({ icon: TriangleAlert, title: "Couldn't delete", body: res.error });
       }
       onStatus(res.data.status);
     });
@@ -150,7 +177,7 @@ export function NoteEditor(props: Props) {
   const add = async (rows: { text: string; due_at?: string | null; quantity?: string | null }[]) => {
     const res = await addItems(note.id, rows);
     if (!res.ok) {
-      toast({ emoji: "😬", title: "Couldn't add", body: res.error });
+      toast({ icon: TriangleAlert, title: "Couldn't add", body: res.error });
       return false;
     }
     setItems((xs) => [...xs, ...res.data.items]);
@@ -163,7 +190,7 @@ export function NoteEditor(props: Props) {
     const ids = [...ordered, ...doneItems].map((i) => i.id);
     start(async () => {
       const res = await reorderItems(note.id, ids);
-      if (!res.ok) toast({ emoji: "😬", title: "Couldn't reorder", body: res.error });
+      if (!res.ok) toast({ icon: TriangleAlert, title: "Couldn't reorder", body: res.error });
     });
   };
 
@@ -172,7 +199,10 @@ export function NoteEditor(props: Props) {
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <Link href="/notes" className="inline-flex items-center gap-1 rounded-xl px-2 py-1.5 text-sm font-bold text-ink-soft hover:bg-soft hover:text-ink">
+        <Link
+          href="/notes"
+          className="inline-flex items-center gap-1 rounded-xl px-2 py-1.5 text-sm font-bold text-ink-soft hover:bg-soft hover:text-ink"
+        >
           <ChevronLeft size={18} /> Notes
         </Link>
         <div className="flex items-center gap-1">
@@ -183,7 +213,10 @@ export function NoteEditor(props: Props) {
             label={note.status === "archived" ? "Unarchive" : "Archive"}
             onClick={() => {
               patchNote({ status: note.status === "archived" ? "active" : "archived" });
-              toast({ emoji: note.status === "archived" ? "📤" : "📦", title: note.status === "archived" ? "Unarchived" : "Archived" });
+              toast({
+                icon: note.status === "archived" ? ArchiveRestore : Archive,
+                title: note.status === "archived" ? "Unarchived" : "Archived",
+              });
             }}
           >
             {note.status === "archived" ? <ArchiveRestore size={19} /> : <Archive size={19} />}
@@ -204,9 +237,9 @@ export function NoteEditor(props: Props) {
             type="button"
             onClick={() => setStyleOpen(true)}
             className="wiggle-hover flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-card/70 text-3xl"
-            aria-label="Change emoji and color"
+            aria-label="Change icon and color"
           >
-            {note.emoji}
+            <Icon name={note.icon} size={26} />
           </button>
           <div className="min-w-0 flex-1">
             <input
@@ -236,7 +269,8 @@ export function NoteEditor(props: Props) {
             if (!c) return null;
             return (
               <Chip key={c.id} color={c.color} title={l.source === "auto" ? "Auto-detected" : "Added by you"}>
-                {c.emoji} {c.name}
+                <Icon name={c.icon} size={13} className="mr-1 inline-block align-[-2px]" />
+                {c.name}
                 {l.source === "auto" ? <Sparkles size={11} className="ml-0.5 inline" aria-label="auto" /> : null}
               </Chip>
             );
@@ -249,7 +283,7 @@ export function NoteEditor(props: Props) {
             {links.length ? "Edit" : "+ Category"}
           </button>
           {!note.categories_locked ? (
-            <span className="text-xs font-semibold text-ink-soft">✨ auto-detecting</span>
+            <span className="text-xs font-semibold text-ink-soft"> auto-detecting</span>
           ) : null}
         </div>
 
@@ -258,7 +292,7 @@ export function NoteEditor(props: Props) {
             label="Note type"
             value={note.type}
             onChange={(type) => patchNote({ type })}
-            options={NOTE_TYPES.map((t) => ({ value: t.value, label: `${t.emoji} ${t.label}` }))}
+            options={NOTE_TYPES.map((t) => ({ value: t.value, label: t.label }))}
           />
         </div>
 
@@ -320,7 +354,12 @@ export function NoteEditor(props: Props) {
             </button>
             <AnimatePresence initial={false}>
               {showDone ? (
-                <motion.ul initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-2 overflow-hidden">
+                <motion.ul
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="space-y-2 overflow-hidden"
+                >
                   {doneItems.map((item) => (
                     <ItemRow
                       key={item.id}
@@ -352,7 +391,7 @@ export function NoteEditor(props: Props) {
         onSave={(ids) =>
           start(async () => {
             const res = await setNoteCategories(note.id, ids);
-            if (!res.ok) return toast({ emoji: "😬", title: "Couldn't save", body: res.error });
+            if (!res.ok) return toast({ icon: TriangleAlert, title: "Couldn't save", body: res.error });
             setLinks(res.data);
             setNote((n) => ({ ...n, categories_locked: true }));
             setCatOpen(false);
@@ -361,27 +400,35 @@ export function NoteEditor(props: Props) {
         onRedetect={() =>
           start(async () => {
             const res = await redetectCategories(note.id);
-            if (!res.ok) return toast({ emoji: "😬", title: "Couldn't detect", body: res.error });
+            if (!res.ok) return toast({ icon: TriangleAlert, title: "Couldn't detect", body: res.error });
             setLinks(res.data);
             setNote((n) => ({ ...n, categories_locked: false }));
             setCatOpen(false);
-            toast({ emoji: "✨", title: res.data.length ? "Categories detected!" : "No match found", body: res.data.length ? undefined : "Try adding keywords in Categories." });
+            toast({
+              icon: Sparkles,
+              title: res.data.length ? "Categories detected!" : "No match found",
+              body: res.data.length ? undefined : "Try adding keywords in Categories.",
+            });
           })
         }
       />
 
-      <Modal open={styleOpen} onClose={() => setStyleOpen(false)} title="Make it yours 🎨">
-        <p className="mb-2 text-sm font-bold text-ink-soft">Emoji</p>
-        <div className="grid grid-cols-8 gap-1">
-          {NOTE_EMOJIS.map((e) => (
+      <Modal open={styleOpen} onClose={() => setStyleOpen(false)} title="Make it yours">
+        <p className="mb-2 text-sm font-bold text-ink-soft">Icon</p>
+        <div className="grid max-h-56 grid-cols-8 gap-1 overflow-y-auto">
+          {ICON_KEYS.map((key) => (
             <button
-              key={e}
+              key={key}
               type="button"
-              onClick={() => patchNote({ emoji: e })}
-              className={clsx("rounded-xl p-1.5 text-2xl transition hover:scale-125", note.emoji === e && "bg-primary/30")}
-              aria-label={`Emoji ${e}`}
+              onClick={() => patchNote({ icon: key })}
+              className={clsx(
+                "flex items-center justify-center rounded-xl p-2 transition hover:scale-110",
+                note.icon === key ? "bg-primary/30 text-ink" : "text-ink-soft",
+              )}
+              aria-label={key.replace(/-/g, " ")}
+              title={key.replace(/-/g, " ")}
             >
-              {e}
+              <Icon name={key} size={19} />
             </button>
           ))}
         </div>
@@ -392,7 +439,10 @@ export function NoteEditor(props: Props) {
               key={c}
               type="button"
               onClick={() => patchNote({ color: c })}
-              className={clsx("h-9 w-9 rounded-full border-2 transition hover:scale-110", note.color === c ? "border-ink" : "border-black/10")}
+              className={clsx(
+                "h-9 w-9 rounded-full border-2 transition hover:scale-110",
+                note.color === c ? "border-ink" : "border-black/10",
+              )}
               style={{ background: c }}
               aria-label={`Color ${c}`}
             />
@@ -414,8 +464,8 @@ export function NoteEditor(props: Props) {
             onClick={() =>
               start(async () => {
                 const res = await deleteNote(note.id);
-                if (!res.ok) return toast({ emoji: "😬", title: "Couldn't delete", body: res.error });
-                toast({ emoji: "🗑️", title: "Note deleted" });
+                if (!res.ok) return toast({ icon: TriangleAlert, title: "Couldn't delete", body: res.error });
+                toast({ icon: Trash2, title: "Note deleted" });
                 router.push("/notes");
               })
             }
@@ -497,7 +547,9 @@ function ItemRow({
   };
 
   const body = (
-    <div className={clsx("rounded-2xl border-2 bg-card shadow-soft transition", open ? "border-primary" : "border-line")}>
+    <div
+      className={clsx("rounded-2xl border-2 bg-card shadow-soft transition", open ? "border-primary" : "border-line")}
+    >
       <div className="flex items-center gap-2 p-2 pl-2.5">
         {draggable ? (
           <span
@@ -508,7 +560,12 @@ function ItemRow({
             <GripVertical size={18} />
           </span>
         ) : null}
-        <button type="button" onClick={(e) => onToggle(item, e)} aria-label={item.is_done ? "Mark as not done" : "Mark as done"} className="rounded-xl p-0.5">
+        <button
+          type="button"
+          onClick={(e) => onToggle(item, e)}
+          aria-label={item.is_done ? "Mark as not done" : "Mark as done"}
+          className="rounded-xl p-0.5"
+        >
           <Check checked={item.is_done} />
         </button>
         <div className="min-w-0 flex-1">
@@ -525,7 +582,14 @@ function ItemRow({
             )}
           />
           {(showDue || item.due_at) && item.due_at ? (
-            <button type="button" onClick={onOpen} className={clsx("flex items-center gap-1 text-xs font-bold", overdue ? "text-[#C0392B] dark:text-[#FF8A80]" : "text-ink-soft")}>
+            <button
+              type="button"
+              onClick={onOpen}
+              className={clsx(
+                "flex items-center gap-1 text-xs font-bold",
+                overdue ? "text-[#C0392B] dark:text-[#FF8A80]" : "text-ink-soft",
+              )}
+            >
               <CalendarClock size={13} /> {formatDue(item.due_at, prefs.timezone)}
               {item.recurrence ? <Repeat size={12} className="ml-1" /> : null}
             </button>
@@ -543,20 +607,40 @@ function ItemRow({
           />
         ) : null}
         <IconButton label="Item details" onClick={onOpen} className="h-8 w-8">
-          {showDue ? <CalendarClock size={17} /> : <ChevronDown size={17} className={clsx("transition", open && "rotate-180")} />}
+          {showDue ? (
+            <CalendarClock size={17} />
+          ) : (
+            <ChevronDown size={17} className={clsx("transition", open && "rotate-180")} />
+          )}
         </IconButton>
       </div>
       <AnimatePresence initial={false}>
         {open ? (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-            <ItemDetails item={item} onSave={onSave} onDelete={onDelete} noteType={noteType} reminderDefaults={reminderDefaults} />
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <ItemDetails
+              item={item}
+              onSave={onSave}
+              onDelete={onDelete}
+              noteType={noteType}
+              reminderDefaults={reminderDefaults}
+            />
           </motion.div>
         ) : null}
       </AnimatePresence>
     </div>
   );
 
-  if (!draggable) return <motion.li layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="list-none">{body}</motion.li>;
+  if (!draggable)
+    return (
+      <motion.li layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="list-none">
+        {body}
+      </motion.li>
+    );
 
   return (
     <Reorder.Item
@@ -633,12 +717,20 @@ function ItemDetails({
             </span>
             <div className="flex flex-wrap gap-1.5">
               {REMINDER_PRESETS.map((p) => (
-                <Chip key={p.value} active={(offsets ?? reminderDefaults).includes(p.value)} onClick={() => toggleOffset(p.value)}>
+                <Chip
+                  key={p.value}
+                  active={(offsets ?? reminderDefaults).includes(p.value)}
+                  onClick={() => toggleOffset(p.value)}
+                >
                   {p.label}
                 </Chip>
               ))}
               {offsets !== null ? (
-                <button type="button" className="text-xs font-bold text-ink-soft underline" onClick={() => onSave(item, { remind_offsets: null })}>
+                <button
+                  type="button"
+                  className="text-xs font-bold text-ink-soft underline"
+                  onClick={() => onSave(item, { remind_offsets: null })}
+                >
                   Reset to defaults ({reminderDefaults.map(reminderLabel).join(", ")})
                 </button>
               ) : null}
@@ -697,13 +789,18 @@ function AddItemBar({
     const raw = text.trim();
     if (!raw || busy) return;
     // Pasting several lines adds several items.
-    const lines = raw.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+    const lines = raw
+      .split(/\n+/)
+      .map((l) => l.trim())
+      .filter(Boolean);
     let rows: { text: string; due_at?: string | null; quantity?: string | null }[];
     if (lines.length === 1 && suggestion && useDate && suggestion.cleaned) {
       rows = [{ text: suggestion.cleaned, due_at: suggestion.iso }];
     } else {
       rows = lines.map((l) => {
-        const m = showQty ? /^(\d+(?:[.,]\d+)?\s*(?:x|pcs|kg|g|l|ml|pack|packs|bottles?|box(?:es)?)?)\s+(.+)$/i.exec(l) : null;
+        const m = showQty
+          ? /^(\d+(?:[.,]\d+)?\s*(?:x|pcs|kg|g|l|ml|pack|packs|bottles?|box(?:es)?)?)\s+(.+)$/i.exec(l)
+          : null;
         return m ? { text: m[2], quantity: m[1].trim() } : { text: l };
       });
     }
@@ -760,16 +857,25 @@ function AddItemBar({
       </div>
       <AnimatePresence>
         {suggestion && suggestion.cleaned && !text.includes("\n") ? (
-          <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-2 flex flex-wrap items-center gap-2 pl-2 text-sm">
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mt-2 flex flex-wrap items-center gap-2 pl-2 text-sm"
+          >
             <Chip active={useDate} onClick={() => setUseDate((v) => !v)} title="Click to toggle">
-              📅 {formatDue(suggestion.iso, prefs.timezone)}
+              {formatDue(suggestion.iso, prefs.timezone)}
             </Chip>
-            <span className="text-xs text-ink-soft">{useDate ? `Deadline detected from “${suggestion.matched}”` : "Date ignored. Tap to use it"}</span>
+            <span className="text-xs text-ink-soft">
+              {useDate ? `Deadline detected from “${suggestion.matched}”` : "Date ignored. Tap to use it"}
+            </span>
           </motion.div>
         ) : null}
       </AnimatePresence>
       {text.includes("\n") ? (
-        <p className="mt-2 pl-2 text-xs font-bold text-ink-soft">{text.split(/\n+/).filter((l) => l.trim()).length} items will be added</p>
+        <p className="mt-2 pl-2 text-xs font-bold text-ink-soft">
+          {text.split(/\n+/).filter((l) => l.trim()).length} items will be added
+        </p>
       ) : null}
     </div>
   );
@@ -799,11 +905,11 @@ function CategoryModal({
   }, [open, links]);
 
   return (
-    <Modal open={open} onClose={onClose} title="Categories 🏷️">
+    <Modal open={open} onClose={onClose} title="Categories ">
       <p className="mb-3 text-sm text-ink-soft">
         {locked
           ? "You're in charge. Auto-detect is paused for this note."
-          : "✨ Auto-detected from your text. Changing them here switches to manual."}
+          : " Auto-detected from your text. Changing them here switches to manual."}
       </p>
       <div className="flex flex-wrap gap-2">
         {categories.map((c) => {
@@ -817,7 +923,8 @@ function CategoryModal({
               className="rounded-full border-2 px-3 py-1.5 text-sm font-bold transition hover:-translate-y-0.5"
               style={on ? { borderColor: c.color, background: `${c.color}99` } : { borderColor: "var(--line)" }}
             >
-              {c.emoji} {c.name} {on ? "✓" : ""}
+              <Icon name={c.icon} size={14} className="mr-1.5 inline-block align-[-3px]" />
+              {c.name}
             </button>
           );
         })}
@@ -847,7 +954,7 @@ function PushNudge({ hasDue }: { hasDue: boolean }) {
       animate={{ opacity: 1, y: 0 }}
       className="mt-4 flex items-center gap-3 rounded-2xl border-2 border-line bg-card p-3 shadow-soft"
     >
-      <span className="text-2xl">🔔</span>
+      <span className="text-2xl"></span>
       <p className="flex-1 text-sm font-semibold">Want a ping before deadlines, even when Tuckbury is closed?</p>
       <Button size="sm" onClick={() => void push.subscribe()} loading={push.busy}>
         Turn on

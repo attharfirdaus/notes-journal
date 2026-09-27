@@ -11,11 +11,12 @@ import type { ActionResult, Note, NoteCategoryLink, NoteItem, NoteStatus } from 
 const id = z.uuid();
 const noteType = z.enum(["checklist", "tasks", "schedule", "free"]);
 const hex = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
-const emoji = z.string().min(1).max(16);
+const iconKey = z.string().regex(/^[a-z][a-z0-9-]{0,30}$/);
 const itemText = z.string().trim().min(1).max(500);
 const offsets = z.array(z.int().min(0).max(20160)).max(5).nullable();
 
-const NOTE_COLS = "id,title,description,type,emoji,color,status,pinned,categories_locked,completed_at,created_at,updated_at";
+const NOTE_COLS =
+  "id,title,description,type,icon,color,status,pinned,categories_locked,completed_at,created_at,updated_at";
 const ITEM_COLS = "id,note_id,text,is_done,done_at,position,quantity,due_at,remind_offsets,recurrence";
 
 function fail(e: unknown): { ok: false; error: string } {
@@ -45,12 +46,17 @@ async function autoCategorize(supabase: SupabaseClient, noteId: string): Promise
 export async function createNote(input: {
   title: string;
   type?: string;
-  emoji?: string;
+  icon?: string;
   color?: string;
 }): Promise<ActionResult<{ id: string }>> {
   try {
     const data = z
-      .object({ title: z.string().trim().min(1).max(120), type: noteType.default("checklist"), emoji: emoji.optional(), color: hex.optional() })
+      .object({
+        title: z.string().trim().min(1).max(120),
+        type: noteType.default("checklist"),
+        icon: iconKey.optional(),
+        color: hex.optional(),
+      })
       .parse(input);
     const { supabase } = await authed();
     const { data: note, error } = await supabase.from("notes").insert(data).select("id").single();
@@ -63,8 +69,18 @@ export async function createNote(input: {
   }
 }
 
-const TYPE_EMOJI: Record<string, string> = { checklist: "🛒", tasks: "✅", schedule: "📅", free: "📝" };
-const TYPE_COLOR: Record<string, string> = { checklist: "#FDE68A", tasks: "#BBF7D0", schedule: "#BFDBFE", free: "#FBCFE8" };
+const TYPE_ICON: Record<string, string> = {
+  checklist: "shopping-cart",
+  tasks: "check",
+  schedule: "calendar",
+  free: "note",
+};
+const TYPE_COLOR: Record<string, string> = {
+  checklist: "#FDE68A",
+  tasks: "#BBF7D0",
+  schedule: "#BFDBFE",
+  free: "#FBCFE8",
+};
 
 export async function quickAdd(text: string): Promise<ActionResult<{ id: string; title: string; items: number }>> {
   try {
@@ -84,14 +100,16 @@ export async function quickAdd(text: string): Promise<ActionResult<{ id: string;
 
     const { data: note, error } = await supabase
       .from("notes")
-      .insert({ title, type: plan.type, emoji: TYPE_EMOJI[plan.type], color: TYPE_COLOR[plan.type] })
+      .insert({ title, type: plan.type, icon: TYPE_ICON[plan.type], color: TYPE_COLOR[plan.type] })
       .select("id")
       .single();
     if (error) throw error;
     if (plan.items.length) {
       const { error: ie } = await supabase
         .from("note_items")
-        .insert(plan.items.map((it, i) => ({ note_id: note.id, text: it.text, due_at: it.due_at ?? null, position: i + 1 })));
+        .insert(
+          plan.items.map((it, i) => ({ note_id: note.id, text: it.text, due_at: it.due_at ?? null, position: i + 1 })),
+        );
       if (ie) throw ie;
     }
     await autoCategorize(supabase, note.id);
@@ -108,7 +126,7 @@ const NotePatch = z
     title: z.string().trim().min(1).max(120),
     description: z.string().max(2000),
     type: noteType,
-    emoji,
+    icon: iconKey,
     color: hex,
     pinned: z.boolean(),
     status: z.enum(["active", "completed", "archived"]),
@@ -125,7 +143,8 @@ export async function updateNote(
     const { supabase } = await authed();
     const { data: note, error } = await supabase.from("notes").update(data).eq("id", nid).select(NOTE_COLS).single();
     if (error) throw error;
-    const categories = data.title !== undefined || data.description !== undefined ? await autoCategorize(supabase, nid) : null;
+    const categories =
+      data.title !== undefined || data.description !== undefined ? await autoCategorize(supabase, nid) : null;
     return { ok: true, data: { note: note as Note, categories } };
   } catch (e) {
     return fail(e);
@@ -146,14 +165,23 @@ export async function deleteNote(noteId: string): Promise<ActionResult> {
 }
 
 /** Manual category edit: keeps "auto" badges on ones that were auto-detected, then locks. */
-export async function setNoteCategories(noteId: string, categoryIds: string[]): Promise<ActionResult<NoteCategoryLink[]>> {
+export async function setNoteCategories(
+  noteId: string,
+  categoryIds: string[],
+): Promise<ActionResult<NoteCategoryLink[]>> {
   try {
     const nid = id.parse(noteId);
-    const ids = z.array(id).max(10).parse([...new Set(categoryIds)]);
+    const ids = z
+      .array(id)
+      .max(10)
+      .parse([...new Set(categoryIds)]);
     const { supabase } = await authed();
     const { data: existing } = await supabase.from("note_categories").select("category_id,source").eq("note_id", nid);
     const autoIds = new Set((existing ?? []).filter((e) => e.source === "auto").map((e) => e.category_id));
-    const links = ids.map((cid) => ({ category_id: cid, source: autoIds.has(cid) ? ("auto" as const) : ("manual" as const) }));
+    const links = ids.map((cid) => ({
+      category_id: cid,
+      source: autoIds.has(cid) ? ("auto" as const) : ("manual" as const),
+    }));
 
     const { error: lockErr } = await supabase.from("notes").update({ categories_locked: true }).eq("id", nid);
     if (lockErr) throw lockErr;
@@ -204,14 +232,25 @@ export async function addItems(
     const base = (last?.position ?? 0) + 1;
     const { data, error } = await supabase
       .from("note_items")
-      .insert(rows.map((r, i) => ({ note_id: nid, text: r.text, due_at: r.due_at ?? null, quantity: r.quantity || null, position: base + i })))
+      .insert(
+        rows.map((r, i) => ({
+          note_id: nid,
+          text: r.text,
+          due_at: r.due_at ?? null,
+          quantity: r.quantity || null,
+          position: base + i,
+        })),
+      )
       .select(ITEM_COLS);
     if (error) throw error;
     const [categories, { data: note }] = await Promise.all([
       autoCategorize(supabase, nid),
       supabase.from("notes").select("status").eq("id", nid).single(),
     ]);
-    return { ok: true, data: { items: data as NoteItem[], categories, status: (note?.status ?? "active") as NoteStatus } };
+    return {
+      ok: true,
+      data: { items: data as NoteItem[], categories, status: (note?.status ?? "active") as NoteStatus },
+    };
   } catch (e) {
     return fail(e);
   }
@@ -237,7 +276,12 @@ export async function updateItem(
     const data = ItemPatch.parse(patch);
     if (data.quantity === "") data.quantity = null;
     const { supabase } = await authed();
-    const { data: item, error } = await supabase.from("note_items").update(data).eq("id", iid).select(ITEM_COLS).single();
+    const { data: item, error } = await supabase
+      .from("note_items")
+      .update(data)
+      .eq("id", iid)
+      .select(ITEM_COLS)
+      .single();
     if (error) throw error;
     const { data: note } = await supabase.from("notes").select("status").eq("id", item.note_id).single();
     if (data.text !== undefined) await autoCategorize(supabase, item.note_id);
@@ -267,7 +311,13 @@ export async function reorderItems(noteId: string, orderedIds: string[]): Promis
     const ids = z.array(id).max(500).parse(orderedIds);
     const { supabase } = await authed();
     const results = await Promise.all(
-      ids.map((iid, i) => supabase.from("note_items").update({ position: i + 1 }).eq("id", iid).eq("note_id", nid)),
+      ids.map((iid, i) =>
+        supabase
+          .from("note_items")
+          .update({ position: i + 1 })
+          .eq("id", iid)
+          .eq("note_id", nid),
+      ),
     );
     const failed = results.find((r) => r.error);
     if (failed?.error) throw failed.error;

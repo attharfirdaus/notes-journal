@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import { Search } from "lucide-react";
+import { CalendarDays, List, Search } from "lucide-react";
 import { MOODS } from "@/lib/journal";
 import { Segmented, Spinner } from "@/components/ui";
 
@@ -46,8 +46,22 @@ export function JournalFilters({ q: initialQ, mood, view }: { q: string; mood: n
             value={view}
             onChange={(v) => set("view", v === "list" ? "" : v)}
             options={[
-              { value: "list", label: "📜 List" },
-              { value: "calendar", label: "🗓️ Calendar" },
+              {
+                value: "list",
+                label: (
+                  <>
+                    <List size={15} /> List
+                  </>
+                ),
+              },
+              {
+                value: "calendar",
+                label: (
+                  <>
+                    <CalendarDays size={15} /> Calendar
+                  </>
+                ),
+              },
             ]}
           />
         </div>
@@ -60,9 +74,13 @@ export function JournalFilters({ q: initialQ, mood, view }: { q: string; mood: n
             aria-pressed={mood === m.value}
             onClick={() => set("mood", mood === m.value ? "" : String(m.value))}
             className="rounded-full border-2 px-3 py-1 text-sm font-bold transition hover:-translate-y-0.5"
-            style={mood === m.value ? { borderColor: m.color, background: `${m.color}88` } : { borderColor: "var(--line)", background: "var(--card)" }}
+            style={
+              mood === m.value
+                ? { borderColor: m.color, background: `${m.color}88` }
+                : { borderColor: "var(--line)", background: "var(--card)" }
+            }
           >
-            {m.emoji} {m.label}
+            <m.Icon size={16} aria-hidden /> {m.label}
           </button>
         ))}
       </div>

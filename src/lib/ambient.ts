@@ -1,15 +1,17 @@
 "use client";
 
+import { Activity, CloudRain, Sparkles, Waves, Wind, type LucideIcon } from "lucide-react";
+
 // Procedurally generated ambience. No audio files, no licensing questions.
 
 export type LayerId = "rain" | "wind" | "brown" | "pink" | "white";
 
-export const LAYERS: { id: LayerId; label: string; emoji: string }[] = [
-  { id: "rain", label: "Rain", emoji: "🌧️" },
-  { id: "wind", label: "Wind", emoji: "🍃" },
-  { id: "brown", label: "Deep hum", emoji: "🟤" },
-  { id: "pink", label: "Soft static", emoji: "🌸" },
-  { id: "white", label: "White noise", emoji: "⚪" },
+export const LAYERS: { id: LayerId; label: string; Icon: LucideIcon }[] = [
+  { id: "rain", label: "Rain", Icon: CloudRain },
+  { id: "wind", label: "Wind", Icon: Wind },
+  { id: "brown", label: "Deep hum", Icon: Waves },
+  { id: "pink", label: "Soft static", Icon: Sparkles },
+  { id: "white", label: "White noise", Icon: Activity },
 ];
 
 function noiseBuffer(ctx: AudioContext, kind: "white" | "pink" | "brown", seconds = 4): AudioBuffer {
@@ -17,7 +19,14 @@ function noiseBuffer(ctx: AudioContext, kind: "white" | "pink" | "brown", second
   const buf = ctx.createBuffer(2, len, ctx.sampleRate);
   for (let ch = 0; ch < 2; ch++) {
     const out = buf.getChannelData(ch);
-    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, last = 0;
+    let b0 = 0,
+      b1 = 0,
+      b2 = 0,
+      b3 = 0,
+      b4 = 0,
+      b5 = 0,
+      b6 = 0,
+      last = 0;
     for (let i = 0; i < len; i++) {
       const w = Math.random() * 2 - 1;
       if (kind === "white") out[i] = w * 0.5;
@@ -139,11 +148,12 @@ export class AmbientEngine {
     });
     return {
       gain: out,
-      stop: () => nodes.forEach((n) => {
-        try {
-          n.stop();
-        } catch {}
-      }),
+      stop: () =>
+        nodes.forEach((n) => {
+          try {
+            n.stop();
+          } catch {}
+        }),
     };
   }
 

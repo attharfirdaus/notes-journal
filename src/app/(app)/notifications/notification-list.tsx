@@ -4,13 +4,13 @@ import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import clsx from "clsx";
-import { CheckCheck, Trash2, X } from "lucide-react";
+import { AlarmClock, BookHeart, CheckCheck, Mail, Squirrel, Trash2, X } from "lucide-react";
 import { clearNotifications, deleteNotification, markNotificationsRead } from "@/actions/notifications";
 import { Button, EmptyState, IconButton } from "@/components/ui";
 import { relativeFromNow } from "@/lib/time";
 import type { AppNotification } from "@/lib/types";
 
-const KIND_EMOJI = { reminder: "⏰", capsule: "💌", nudge: "📔", system: "🐿️" } as const;
+const KIND_ICON = { reminder: AlarmClock, capsule: Mail, nudge: BookHeart, system: Squirrel } as const;
 
 export function NotificationList({ initial }: { initial: AppNotification[] }) {
   const router = useRouter();
@@ -32,7 +32,7 @@ export function NotificationList({ initial }: { initial: AppNotification[] }) {
 
   if (!items.length) {
     return (
-      <EmptyState emoji="📭" title="All quiet here">
+      <EmptyState icon="ui-inbox" title="All quiet here">
         Reminders for deadlines, unlocked time capsules and journal nudges will show up here.
       </EmptyState>
     );
@@ -82,14 +82,23 @@ export function NotificationList({ initial }: { initial: AppNotification[] }) {
               )}
             >
               <button type="button" onClick={() => open(n)} className="flex min-w-0 flex-1 items-start gap-3 text-left">
-                <span className="text-2xl">{KIND_EMOJI[n.kind]}</span>
+                {(() => {
+                  const I = KIND_ICON[n.kind];
+                  return (
+                    <span className="inline-flex shrink-0 rounded-xl bg-soft p-2 text-primary">
+                      <I size={18} strokeWidth={2.5} aria-hidden />
+                    </span>
+                  );
+                })()}
                 <span className="min-w-0">
                   <span className="block font-bold">{n.title}</span>
                   {n.body ? <span className="block text-sm text-ink-soft">{n.body}</span> : null}
                   <span className="mt-0.5 block text-xs text-ink-soft">{relativeFromNow(n.created_at)}</span>
                 </span>
               </button>
-              {!n.read_at ? <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" aria-label="Unread" /> : null}
+              {!n.read_at ? (
+                <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" aria-label="Unread" />
+              ) : null}
               <IconButton
                 label="Delete notification"
                 className="h-8 w-8"

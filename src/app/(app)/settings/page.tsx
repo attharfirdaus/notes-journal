@@ -12,7 +12,7 @@ export default async function SettingsPage() {
   const email = (data?.claims?.email as string | undefined) ?? "";
   return (
     <div className="mx-auto max-w-2xl">
-      <PageHeader title="Settings" emoji="⚙️" />
+      <PageHeader title="Settings" icon="ui-settings" />
       <SettingsForm profile={profile} email={email} />
     </div>
   );

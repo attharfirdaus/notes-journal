@@ -2,7 +2,21 @@
 
 import { useActionState, useEffect, useState, useTransition, type ReactNode } from "react";
 import clsx from "clsx";
-import { LogOut } from "lucide-react";
+import {
+  AlarmClock,
+  Check,
+  Hand,
+  Laptop,
+  LogOut,
+  Moon,
+  Palette,
+  Send,
+  ShieldCheck,
+  Squirrel,
+  Sun,
+  TriangleAlert,
+  type LucideIcon,
+} from "lucide-react";
 import { deleteAccount, signOut, updatePassword } from "@/actions/auth";
 import { sendTestPush } from "@/actions/notifications";
 import { updateProfile, type ProfilePatch } from "@/actions/settings";
@@ -12,12 +26,16 @@ import { useToast } from "@/components/toast";
 import { REMINDER_PRESETS } from "@/lib/note-meta";
 import { THEMES, VIBES } from "@/lib/themes";
 import type { ColorMode, Profile } from "@/lib/types";
+import { THEME_ICONS, VIBE_ICONS } from "@/lib/icons";
 
-function Section({ title, emoji, children }: { title: string; emoji: string; children: ReactNode }) {
+function Section({ title, icon: Icon, children }: { title: string; icon: LucideIcon; children: ReactNode }) {
   return (
     <section className="rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">
-      <h2 className="mb-4 font-display text-xl font-bold">
-        {emoji} {title}
+      <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
+        <span className="inline-flex rounded-xl bg-soft p-1.5 text-primary">
+          <Icon size={18} strokeWidth={2.5} aria-hidden />
+        </span>
+        {title}
       </h2>
       <div className="space-y-4">{children}</div>
     </section>
@@ -47,8 +65,8 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
     if (patch.reduce_motion !== undefined) root.dataset.reduceMotion = String(patch.reduce_motion);
     start(async () => {
       const res = await updateProfile(patch);
-      if (!res.ok) toast({ emoji: "😬", title: "Couldn't save", body: res.error });
-      else if (!quiet) toast({ emoji: "✅", title: "Saved" });
+      if (!res.ok) toast({ icon: TriangleAlert, title: "Couldn't save", body: res.error });
+      else if (!quiet) toast({ icon: Check, title: "Saved" });
     });
   };
 
@@ -60,9 +78,15 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
 
   return (
     <div className="space-y-5">
-      <Section title="You & your sidekick" emoji="🐿️">
+      <Section title="You & your sidekick" icon={Squirrel}>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Input label="Your nickname" value={name} maxLength={40} onChange={(e) => setName(e.target.value)} onBlur={() => name !== p.display_name && save({ display_name: name })} />
+          <Input
+            label="Your nickname"
+            value={name}
+            maxLength={40}
+            onChange={(e) => setName(e.target.value)}
+            onBlur={() => name !== p.display_name && save({ display_name: name })}
+          />
           <Input
             label="Sidekick name"
             value={pet}
@@ -88,7 +112,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
         </label>
       </Section>
 
-      <Section title="Look & feel" emoji="🎨">
+      <Section title="Look & feel" icon={Palette}>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {THEMES.map((t) => (
             <button
@@ -96,7 +120,10 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
               type="button"
               onClick={() => save({ theme: t.id }, true)}
               aria-pressed={p.theme === t.id}
-              className={clsx("rounded-2xl border-2 p-3 text-left transition hover:-translate-y-0.5", p.theme === t.id ? "border-primary ring-2 ring-primary" : "border-line")}
+              className={clsx(
+                "rounded-2xl border-2 p-3 text-left transition hover:-translate-y-0.5",
+                p.theme === t.id ? "border-primary ring-2 ring-primary" : "border-line",
+              )}
               style={{ background: t.light.bg }}
             >
               <div className="flex gap-1">
@@ -104,8 +131,12 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
                   <span key={c} className="h-5 w-5 rounded-full border border-black/10" style={{ background: c }} />
                 ))}
               </div>
-              <div className="mt-2 text-sm font-bold" style={{ color: t.light.ink }}>
-                {t.emoji} {t.name}
+              <div className="mt-2 flex items-center gap-1.5 text-sm font-bold" style={{ color: t.light.ink }}>
+                {(() => {
+                  const I = THEME_ICONS[t.id];
+                  return <I size={15} aria-hidden />;
+                })()}{" "}
+                {t.name}
               </div>
             </button>
           ))}
@@ -117,9 +148,30 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
             value={p.color_mode}
             onChange={(v) => save({ color_mode: v }, true)}
             options={[
-              { value: "light", label: "☀️ Light" },
-              { value: "dark", label: "🌙 Dark" },
-              { value: "system", label: "💻 Auto" },
+              {
+                value: "light",
+                label: (
+                  <>
+                    <Sun size={15} /> Light
+                  </>
+                ),
+              },
+              {
+                value: "dark",
+                label: (
+                  <>
+                    <Moon size={15} /> Dark
+                  </>
+                ),
+              },
+              {
+                value: "system",
+                label: (
+                  <>
+                    <Laptop size={15} /> Auto
+                  </>
+                ),
+              },
             ]}
           />
         </div>
@@ -128,16 +180,30 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
           <div className="flex flex-wrap gap-2">
             {VIBES.map((v) => (
               <Chip key={v.id} active={p.vibe === v.id} onClick={() => save({ vibe: v.id }, true)}>
-                {v.emoji} {v.name}
+                {(() => {
+                  const I = VIBE_ICONS[v.id];
+                  return <I size={14} className="mr-1 inline-block align-[-2px]" aria-hidden />;
+                })()}
+                {v.name}
               </Chip>
             ))}
           </div>
         </div>
-        <Switch label="Reduce motion" description="Turns off background animations and most movement." checked={p.reduce_motion} onChange={(v) => save({ reduce_motion: v }, true)} />
-        <Switch label="Sound effects" description="Little pops and chimes when you check things off." checked={p.sound_effects} onChange={(v) => save({ sound_effects: v }, true)} />
+        <Switch
+          label="Reduce motion"
+          description="Turns off background animations and most movement."
+          checked={p.reduce_motion}
+          onChange={(v) => save({ reduce_motion: v }, true)}
+        />
+        <Switch
+          label="Sound effects"
+          description="Little pops and chimes when you check things off."
+          checked={p.sound_effects}
+          onChange={(v) => save({ sound_effects: v }, true)}
+        />
       </Section>
 
-      <Section title="Reminders" emoji="⏰">
+      <Section title="Reminders" icon={AlarmClock}>
         <div>
           <span className="mb-1.5 block text-sm font-bold text-ink-soft">For tasks with a deadline, remind me…</span>
           <div className="flex flex-wrap gap-1.5">
@@ -148,8 +214,10 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
                   key={r.value}
                   active={on}
                   onClick={() => {
-                    const next = on ? p.reminder_defaults.filter((x) => x !== r.value) : [...p.reminder_defaults, r.value];
-                    if (next.length > 5) return toast({ emoji: "✋", title: "Up to 5 reminders" });
+                    const next = on
+                      ? p.reminder_defaults.filter((x) => x !== r.value)
+                      : [...p.reminder_defaults, r.value];
+                    if (next.length > 5) return toast({ icon: Hand, title: "Up to 5 reminders" });
                     save({ reminder_defaults: next }, true);
                   }}
                 >
@@ -158,7 +226,9 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
               );
             })}
           </div>
-          <span className="mt-1 block text-xs text-ink-soft">Applies to new and updated tasks. You can override per item.</span>
+          <span className="mt-1 block text-xs text-ink-soft">
+            Applies to new and updated tasks. You can override per item.
+          </span>
         </div>
         <label className="block">
           <span className="mb-1.5 block text-sm font-bold text-ink-soft">For schedule items (events), remind me</span>
@@ -193,7 +263,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
         </div>
 
         <div className="rounded-2xl bg-soft p-4">
-          <p className="font-bold">📲 Push notifications on this device</p>
+          <p className="font-bold"> Push notifications on this device</p>
           <p className="mt-1 text-sm text-ink-soft">
             {push.state === "subscribed"
               ? "On. You'll get reminders even when Tuckbury is closed."
@@ -216,7 +286,11 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
                   variant="soft"
                   onClick={async () => {
                     const res = await sendTestPush();
-                    toast(res.ok ? { emoji: "📨", title: `Test sent to ${res.data.sent} device(s)` } : { emoji: "😬", title: "Test failed", body: res.error });
+                    toast(
+                      res.ok
+                        ? { icon: Send, title: `Test sent to ${res.data.sent} device(s)` }
+                        : { icon: TriangleAlert, title: "Test failed", body: res.error },
+                    );
                   }}
                 >
                   Send test
@@ -234,15 +308,31 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
         </div>
       </Section>
 
-      <Section title="Account" emoji="🔐">
+      <Section title="Account" icon={ShieldCheck}>
         <p className="text-sm">
           Signed in as <span className="font-bold">{email}</span>
         </p>
         <form action={pwAction} className="space-y-3">
           <p className="font-bold">Change password</p>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Input name="password" type="password" placeholder="New password" autoComplete="new-password" minLength={8} required aria-label="New password" />
-            <Input name="confirm" type="password" placeholder="Confirm" autoComplete="new-password" minLength={8} required aria-label="Confirm password" />
+            <Input
+              name="password"
+              type="password"
+              placeholder="New password"
+              autoComplete="new-password"
+              minLength={8}
+              required
+              aria-label="New password"
+            />
+            <Input
+              name="confirm"
+              type="password"
+              placeholder="Confirm"
+              autoComplete="new-password"
+              minLength={8}
+              required
+              aria-label="Confirm password"
+            />
           </div>
           {pwState?.error ? <p className="text-sm font-bold text-[#EF5B5B]">{pwState.error}</p> : null}
           {pwState?.message ? <p className="text-sm font-bold">{pwState.message}</p> : null}
@@ -262,7 +352,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
         </div>
       </Section>
 
-      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete your account? 😢">
+      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete your account? ">
         <form action={delAction} className="space-y-4">
           <p className="text-ink-soft">
             This permanently deletes your notes, journal, capsules and everything else. {p.pet_name} will miss you.

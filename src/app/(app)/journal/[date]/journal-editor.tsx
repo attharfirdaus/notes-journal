@@ -5,7 +5,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import clsx from "clsx";
-import { Bold, ChevronLeft, ChevronRight, Eye, Italic, List, Pencil, Shuffle, Trash2 } from "lucide-react";
+import {
+  Bold,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Flame,
+  Italic,
+  List,
+  Pencil,
+  Shuffle,
+  Trash2,
+  TriangleAlert,
+} from "lucide-react";
 import { deleteJournal, saveJournal } from "@/actions/journal";
 import { Button, IconButton, Modal } from "@/components/ui";
 import { RichText } from "@/components/rich-text";
@@ -47,10 +59,16 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
       return;
     }
     setSave("saving");
-    const res = await saveJournal({ entry_date: date, content, mood, feelings: feelings as (typeof FEELINGS)[number][], prompt });
+    const res = await saveJournal({
+      entry_date: date,
+      content,
+      mood,
+      feelings: feelings as (typeof FEELINGS)[number][],
+      prompt,
+    });
     if (!res.ok) {
       setSave("error");
-      toast({ emoji: "😬", title: "Couldn't save", body: res.error });
+      toast({ icon: TriangleAlert, title: "Couldn't save", body: res.error });
       return;
     }
     setSave("saved");
@@ -62,8 +80,10 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
         celebrate(milestone ? "big" : "small");
         if (prefs.soundEffects) sfx.chime();
         toast({
-          emoji: "🔥",
-          title: milestone ? `${s.current}-day streak! Incredible!` : `Streak: ${s.current} day${s.current === 1 ? "" : "s"}`,
+          icon: Flame,
+          title: milestone
+            ? `${s.current}-day streak! Incredible!`
+            : `Streak: ${s.current} day${s.current === 1 ? "" : "s"}`,
           body: `${prefs.petName} is so proud of you.`,
         });
       }
@@ -76,7 +96,7 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
       firstRender.current = false;
       return;
     }
-     
+
     setSave("dirty");
     const t = setTimeout(() => void persist(), 900);
     return () => clearTimeout(t);
@@ -116,13 +136,18 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
   };
 
   const isToday = date === today;
-  const title = isToday ? "Today" : formatDate(date, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  const title = isToday
+    ? "Today"
+    : formatDate(date, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
   const words = content.trim() ? content.trim().split(/\s+/).length : 0;
 
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <Link href="/journal" className="inline-flex items-center gap-1 rounded-xl px-2 py-1.5 text-sm font-bold text-ink-soft hover:bg-soft hover:text-ink">
+        <Link
+          href="/journal"
+          className="inline-flex items-center gap-1 rounded-xl px-2 py-1.5 text-sm font-bold text-ink-soft hover:bg-soft hover:text-ink"
+        >
           <ChevronLeft size={18} /> Journal
         </Link>
         <div className="flex items-center gap-1">
@@ -143,7 +168,9 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
       <header className="mb-4">
         <h1 className="font-display text-3xl font-bold">{title}</h1>
         {!isToday && !exists ? (
-          <p className="mt-1 text-sm text-ink-soft">Backfilling a past day is welcome. It just won&apos;t count toward your streak.</p>
+          <p className="mt-1 text-sm text-ink-soft">
+            Backfilling a past day is welcome. It just won&apos;t count toward your streak.
+          </p>
         ) : null}
       </header>
 
@@ -166,10 +193,13 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
                 whileHover={{ scale: 1.15, rotate: -4 }}
                 whileTap={{ scale: 0.9 }}
                 animate={on ? { scale: [1, 1.35, 1.15] } : { scale: 1 }}
-                className={clsx("flex flex-col items-center gap-1 rounded-2xl border-2 p-2 transition sm:w-20", on ? "border-transparent" : "border-transparent opacity-70 hover:opacity-100")}
+                className={clsx(
+                  "flex flex-col items-center gap-1 rounded-2xl border-2 p-2 transition sm:w-20",
+                  on ? "border-transparent" : "border-transparent opacity-70 hover:opacity-100",
+                )}
                 style={on ? { background: `${m.color}88` } : undefined}
               >
-                <span className="text-3xl sm:text-4xl">{m.emoji}</span>
+                <m.Icon size={30} strokeWidth={2.25} aria-hidden className="sm:h-9 sm:w-9" />
                 <span className="text-[11px] font-bold">{m.label}</span>
               </motion.button>
             );
@@ -206,7 +236,7 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
             exit={{ opacity: 0 }}
             className="mt-4 flex items-center gap-3 rounded-2xl border-2 border-dashed border-line bg-soft/60 p-3"
           >
-            <span className="text-2xl">💭</span>
+            <span className="text-2xl"></span>
             <p className="flex-1 font-semibold italic">{prompt}</p>
             <IconButton label="Another prompt" onClick={() => setPrompt(randomPrompt(prompt))}>
               <Shuffle size={18} />
@@ -228,7 +258,15 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
           </IconButton>
           <div className="flex-1" />
           <span className="mr-2 text-xs font-bold text-ink-soft" aria-live="polite">
-            {save === "saving" ? "Saving…" : save === "saved" ? "Saved ✓" : save === "dirty" ? "Editing…" : save === "error" ? "Not saved" : ""}
+            {save === "saving"
+              ? "Saving…"
+              : save === "saved"
+                ? "Saved "
+                : save === "dirty"
+                  ? "Editing…"
+                  : save === "error"
+                    ? "Not saved"
+                    : ""}
           </span>
           <Button size="sm" variant="soft" onClick={() => setPreview((v) => !v)}>
             {preview ? <Pencil size={15} /> : <Eye size={15} />} {preview ? "Edit" : "Preview"}
@@ -258,7 +296,9 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
       </div>
 
       <Modal open={confirmDelete} onClose={() => setConfirmDelete(false)} title="Delete this entry?">
-        <p className="text-ink-soft">This can&apos;t be undone{isToday ? ", and today will no longer count toward your streak" : ""}.</p>
+        <p className="text-ink-soft">
+          This can&apos;t be undone{isToday ? ", and today will no longer count toward your streak" : ""}.
+        </p>
         <div className="mt-5 flex gap-2">
           <Button variant="soft" className="flex-1" onClick={() => setConfirmDelete(false)}>
             Keep it
@@ -269,8 +309,8 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
             onClick={() =>
               start(async () => {
                 const res = await deleteJournal(date);
-                if (!res.ok) return toast({ emoji: "😬", title: "Couldn't delete", body: res.error });
-                toast({ emoji: "🗑️", title: "Entry deleted" });
+                if (!res.ok) return toast({ icon: TriangleAlert, title: "Couldn't delete", body: res.error });
+                toast({ icon: Trash2, title: "Entry deleted" });
                 router.push("/journal");
               })
             }

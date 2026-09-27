@@ -17,9 +17,7 @@ export function StreakCard({ streak }: { streak: StreakInfo }) {
           className={streak.current ? "flame" : "grayscale opacity-50"}
           style={{ fontSize: `${2.2 * flameSize(streak.current)}rem`, lineHeight: 1 }}
           aria-hidden
-        >
-          🔥
-        </span>
+        ></span>
       </div>
       <div className="min-w-0 flex-1">
         <p className="font-display text-2xl font-bold leading-none">
@@ -31,12 +29,15 @@ export function StreakCard({ streak }: { streak: StreakInfo }) {
             : streak.wrote_today
               ? next
                 ? `${next - streak.current} more to the ${next}-day badge`
-                : "Legendary streak! 👑"
+                : "Legendary streak! "
               : "Write today to keep it going!"}
         </p>
         <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs font-bold text-ink-soft">
           <span>Best: {streak.longest}</span>
-          <span className="inline-flex items-center gap-0.5" title="Streak freezes save your streak if you miss a single day. Earn one every 7 days.">
+          <span
+            className="inline-flex items-center gap-0.5"
+            title="Streak freezes save your streak if you miss a single day. Earn one every 7 days."
+          >
             <Snowflake size={13} /> {streak.freezes} freeze{streak.freezes === 1 ? "" : "s"}
           </span>
         </div>

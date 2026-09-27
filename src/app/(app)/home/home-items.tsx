@@ -10,11 +10,12 @@ import { EmptyState } from "@/components/ui";
 import { celebrate, originFromEvent, sfx } from "@/lib/fx";
 import { formatDue } from "@/lib/time";
 import type { HomeItem } from "@/lib/types";
+import { AlarmClock, CalendarDays, PartyPopper, Sun, TriangleAlert } from "lucide-react";
 
 const SECTIONS = [
-  { key: "overdue", title: "Overdue", emoji: "⏰" },
-  { key: "today", title: "Today", emoji: "🌞" },
-  { key: "upcoming", title: "Next 7 days", emoji: "🗓️" },
+  { key: "overdue", title: "Overdue", Icon: AlarmClock },
+  { key: "today", title: "Today", Icon: Sun },
+  { key: "upcoming", title: "Next 7 days", Icon: CalendarDays },
 ] as const;
 
 export function HomeItems({ items: initial }: { items: HomeItem[] }) {
@@ -31,11 +32,11 @@ export function HomeItems({ items: initial }: { items: HomeItem[] }) {
       const res = await updateItem(item.id, { is_done: true });
       if (!res.ok) {
         setItems((xs) => [...xs, item]);
-        return toast({ emoji: "😬", title: "Couldn't update", body: res.error });
+        return toast({ icon: TriangleAlert, title: "Couldn't update", body: res.error });
       }
       if (res.data.status === "completed") {
         celebrate("big");
-        toast({ emoji: "🎉", title: `${item.note_emoji} ${item.note_title} is complete!` });
+        toast({ icon: PartyPopper, title: `${item.note_title} is complete!` });
       }
       if (!res.data.item.is_done && res.data.item.due_at) {
         // Recurring item rolled forward, so show it again with its new date.
@@ -46,7 +47,7 @@ export function HomeItems({ items: initial }: { items: HomeItem[] }) {
 
   if (!items.length) {
     return (
-      <EmptyState emoji="🌤️" title="Nothing due this week">
+      <EmptyState icon="ui-cloud-sun" title="Nothing due this week">
         Enjoy the calm, or add a task with a deadline above.
       </EmptyState>
     );
@@ -59,8 +60,9 @@ export function HomeItems({ items: initial }: { items: HomeItem[] }) {
         if (!list.length) return null;
         return (
           <section key={s.key}>
-            <h2 className="mb-2 font-display text-xl font-bold">
-              {s.emoji} {s.title} <span className="text-base text-ink-soft">({list.length})</span>
+            <h2 className="mb-2 flex items-center gap-2 font-display text-xl font-bold">
+              <s.Icon size={20} aria-hidden /> {s.title}{" "}
+              <span className="text-base font-normal text-ink-soft">({list.length})</span>
             </h2>
             <ul className="space-y-2">
               <AnimatePresence initial={false}>
@@ -82,10 +84,12 @@ export function HomeItems({ items: initial }: { items: HomeItem[] }) {
                     <Link href={`/notes/${item.note_id}`} className="min-w-0 flex-1">
                       <span className="block truncate font-semibold">{item.text}</span>
                       <span className="block truncate text-xs text-ink-soft">
-                        <span className={s.key === "overdue" ? "font-bold text-[#C0392B] dark:text-[#FF8A80]" : "font-bold"}>
+                        <span
+                          className={s.key === "overdue" ? "font-bold text-[#C0392B] dark:text-[#FF8A80]" : "font-bold"}
+                        >
                           {formatDue(item.due_at, prefs.timezone)}
                         </span>{" "}
-                        · {item.note_emoji} {item.note_title}
+                        · {item.note_title}
                       </span>
                     </Link>
                   </motion.li>

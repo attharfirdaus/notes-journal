@@ -46,7 +46,7 @@ Orang sering lupa hal kecil: barang yang harus dibeli, tugas dengan deadline, ja
 
 - *"Aku mau belanja bulanan"* → buat list barang, centang satu per satu di toko.
 - *"Tugas Data Mining dikumpulkan Jumat 23:59"* → buat tugas dengan deadline dan reminder, lalu dapat notifikasi H-1 dan 1 jam sebelum deadline.
-- *"Hari ini capek tapi seneng"* → tulis jurnal singkat, pilih mood 😊, streak naik, dan maskot ikut senang.
+- *"Hari ini capek tapi seneng"* → tulis jurnal singkat, pilih mood senang, streak naik, dan maskot ikut senang.
 
 ---
 
@@ -109,7 +109,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 |---|---|
 | JRN-1 | Satu entri per tanggal lokal user (unique `user_id + entry_date`). Entri hari ini bisa diedit kapan saja pada hari itu. Entri hari sebelumnya tetap bisa diedit, tetapi tidak mempengaruhi streak. |
 | JRN-2 | Editor teks dengan formatting ringan (bold, italic, list) dan autosave. |
-| JRN-3 | Mood picker: 5 level (😭 😔 😐 🙂 🤩), masing-masing dengan warna. Opsional ditambah tag perasaan (grateful, tired, anxious, excited, ...). |
+| JRN-3 | Mood picker: 5 level (angry, frown, meh, smile, laugh; ikon lucide), masing-masing dengan warna. Opsional ditambah tag perasaan (grateful, tired, anxious, excited, ...). |
 | JRN-4 | Daily prompt opsional (misalnya "What made you smile today?"), diambil acak dari pool prompt. |
 | JRN-5 | List jurnal: tampilan timeline dan kalender, dengan filter mood serta search. |
 | JRN-6 | Jurnal bersifat privat. Tidak ada fitur share. |
@@ -119,7 +119,7 @@ Konsep: satu **Note** adalah sebuah list yang berisi banyak **Item**.
 | ID | Requirement |
 |---|---|
 | STK-1 | Streak = jumlah hari berturut-turut (menurut timezone user) dengan entri jurnal yang dibuat pada hari itu. |
-| STK-2 | Tampilan: current streak, longest streak, dan animasi api 🔥 yang makin besar di milestone 3, 7, 14, 30, 100, dan 365 hari. |
+| STK-2 | Tampilan: current streak, longest streak, dan animasi api yang makin besar di milestone 3, 7, 14, 30, 100, dan 365 hari. |
 | STK-3 | Streak freeze (P1): 1 freeze didapat setiap 7 hari streak (maksimal 2 disimpan). Freeze otomatis terpakai untuk menjaga streak jika user melewatkan 1 hari. |
 | STK-4 | Streak dihitung di server (SQL function) agar konsisten dan tidak bisa dimanipulasi dari client. |
 
@@ -350,11 +350,11 @@ Semua requirement P0 sudah diimplementasikan. Status P1 dan penyesuaian dari dra
 
 | Item | Status |
 |---|---|
-| NOTE-9 Recurring item (daily/weekly) | ✅ Diimplementasikan. Menandai item selesai langsung menggulirkan deadline ke periode berikutnya. |
-| STK-3 Streak freeze | ✅ Diimplementasikan |
-| REM-6 Aksi di notifikasi (Mark done / Snooze) | ⏳ Belum (backlog) |
-| PET-5 Aksesori maskot | ⏳ Belum. Scout mendapat syal dan Keeper mendapat mahkota daun sebagai bagian dari evolusi. |
-| PIX-4 Export PNG | ⏳ Belum (backlog) |
+| NOTE-9 Recurring item (daily/weekly) | Sudah diimplementasikan. Menandai item selesai langsung menggulirkan deadline ke periode berikutnya. |
+| STK-3 Streak freeze | Sudah diimplementasikan |
+| REM-6 Aksi di notifikasi (Mark done / Snooze) | Belum (backlog) |
+| PET-5 Aksesori maskot | Belum. Scout mendapat syal dan Keeper mendapat mahkota daun sebagai bagian dari evolusi. |
+| PIX-4 Export PNG | Belum (backlog) |
 | MSG-2 Pool pesan | ~110 pesan (target draft ±150) |
 | Tabel `pet_state` | Dihapus. Stage dan mood maskot diturunkan dari aktivitas via `get_activity_summary()`, jadi tidak ada state yang bisa out-of-sync. |
 | Reminder tanpa cron | Ditambahkan `process_my_due()`. Reminder in-app tetap muncul saat app dibuka walaupun cron belum dikonfigurasi. |
