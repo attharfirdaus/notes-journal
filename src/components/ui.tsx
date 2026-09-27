@@ -12,6 +12,7 @@ import {
   type ReactNode,
   type TextareaHTMLAttributes,
 } from "react";
+import { Icon, type IconName } from "@/lib/icons";
 
 type Variant = "primary" | "soft" | "ghost" | "danger" | "accent";
 type Size = "sm" | "md" | "lg";
@@ -76,47 +77,52 @@ export function Spinner({ className }: { className?: string }) {
   return (
     <span
       aria-hidden
-      className={clsx("inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent", className)}
+      className={clsx(
+        "inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent",
+        className,
+      )}
     />
   );
 }
 
-export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement> & { label?: string; hint?: string }>(
-  function Input({ label, hint, className, id, ...rest }, ref) {
-    const auto = useId();
-    const inputId = id ?? auto;
-    return (
-      <label htmlFor={inputId} className="block">
-        {label ? <span className="mb-1.5 block text-sm font-bold text-ink-soft">{label}</span> : null}
-        <input
-          ref={ref}
-          id={inputId}
-          className={clsx(
-            "h-12 w-full rounded-2xl border-2 border-line bg-card px-4 text-[15px] text-ink placeholder:text-ink-soft/70 outline-none transition focus:border-primary",
-            className,
-          )}
-          {...rest}
-        />
-        {hint ? <span className="mt-1 block text-xs text-ink-soft">{hint}</span> : null}
-      </label>
-    );
-  },
-);
-
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(
-  function Textarea({ className, ...rest }, ref) {
-    return (
-      <textarea
+export const Input = forwardRef<
+  HTMLInputElement,
+  InputHTMLAttributes<HTMLInputElement> & { label?: string; hint?: string }
+>(function Input({ label, hint, className, id, ...rest }, ref) {
+  const auto = useId();
+  const inputId = id ?? auto;
+  return (
+    <label htmlFor={inputId} className="block">
+      {label ? <span className="mb-1.5 block text-sm font-bold text-ink-soft">{label}</span> : null}
+      <input
         ref={ref}
+        id={inputId}
         className={clsx(
-          "w-full rounded-2xl border-2 border-line bg-card px-4 py-3 text-[15px] text-ink placeholder:text-ink-soft/70 outline-none transition focus:border-primary",
+          "h-12 w-full rounded-2xl border-2 border-line bg-card px-4 text-[15px] text-ink placeholder:text-ink-soft/70 outline-none transition focus:border-primary",
           className,
         )}
         {...rest}
       />
-    );
-  },
-);
+      {hint ? <span className="mt-1 block text-xs text-ink-soft">{hint}</span> : null}
+    </label>
+  );
+});
+
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(function Textarea(
+  { className, ...rest },
+  ref,
+) {
+  return (
+    <textarea
+      ref={ref}
+      className={clsx(
+        "w-full rounded-2xl border-2 border-line bg-card px-4 py-3 text-[15px] text-ink placeholder:text-ink-soft/70 outline-none transition focus:border-primary",
+        className,
+      )}
+      {...rest}
+    />
+  );
+});
 
 export function Card({ className, children, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   return (
@@ -333,16 +339,16 @@ export function ProgressBar({ value, className, color }: { value: number; classN
   );
 }
 
-export function EmptyState({ emoji, title, children }: { emoji: string; title: string; children?: ReactNode }) {
+export function EmptyState({ icon, title, children }: { icon: IconName; title: string; children?: ReactNode }) {
   return (
     <div className="flex flex-col items-center gap-2 rounded-blob border-2 border-dashed border-line px-6 py-10 text-center">
       <motion.div
-        className="text-5xl"
+        className="rounded-3xl bg-soft p-4 text-ink-soft"
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         aria-hidden
       >
-        {emoji}
+        <Icon name={icon} size={34} strokeWidth={2} />
       </motion.div>
       <p className="font-display text-lg font-bold">{title}</p>
       {children ? <div className="text-sm text-ink-soft">{children}</div> : null}
@@ -350,11 +356,23 @@ export function EmptyState({ emoji, title, children }: { emoji: string; title: s
   );
 }
 
-export function PageHeader({ title, emoji, children }: { title: string; emoji?: string; children?: ReactNode }) {
+export function PageHeader({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon?: IconName;
+  children?: ReactNode;
+}) {
   return (
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-      <h1 className="font-display text-3xl font-bold tracking-tight">
-        {emoji ? <span className="mr-2 inline-block wiggle-hover">{emoji}</span> : null}
+      <h1 className="flex items-center gap-2.5 font-display text-3xl font-bold tracking-tight">
+        {icon ? (
+          <span className="wiggle-hover inline-flex rounded-2xl bg-soft p-2 text-primary">
+            <Icon name={icon} size={24} strokeWidth={2.5} />
+          </span>
+        ) : null}
         {title}
       </h1>
       {children ? <div className="flex flex-wrap items-center gap-2">{children}</div> : null}

@@ -1,5 +1,7 @@
 "use client";
 
+import { Leaf } from "lucide-react";
+
 import { useMemo } from "react";
 import type { Vibe } from "@/lib/types";
 
@@ -27,7 +29,11 @@ export function VibeBackground({ vibe }: { vibe: Vibe }) {
   return (
     <div className="vibe-layer" aria-hidden>
       {particles.map((p, i) => {
-        const base = { left: `${p.left}%`, animationDelay: `-${p.delay}s`, animationDuration: `${p.duration}s` } as React.CSSProperties;
+        const base = {
+          left: `${p.left}%`,
+          animationDelay: `-${p.delay}s`,
+          animationDuration: `${p.duration}s`,
+        } as React.CSSProperties;
         const vars = { "--dx": `${p.dx}px`, "--s": p.size, "--rot": `${p.dx * 4}deg` } as React.CSSProperties;
         switch (vibe) {
           case "bubbles":
@@ -36,11 +42,15 @@ export function VibeBackground({ vibe }: { vibe: Vibe }) {
                 key={i}
                 className="vibe-particle rounded-full border-2"
                 style={{
-                  ...base, ...vars,
-                  width: 18 + p.size * 26, height: 18 + p.size * 26,
+                  ...base,
+                  ...vars,
+                  width: 18 + p.size * 26,
+                  height: 18 + p.size * 26,
                   borderColor: "color-mix(in oklab, var(--primary) 45%, transparent)",
                   background: "color-mix(in oklab, var(--primary) 10%, transparent)",
-                  animationName: "vibe-rise", animationTimingFunction: "linear", animationIterationCount: "infinite",
+                  animationName: "vibe-rise",
+                  animationTimingFunction: "linear",
+                  animationIterationCount: "infinite",
                 }}
               />
             );
@@ -50,11 +60,16 @@ export function VibeBackground({ vibe }: { vibe: Vibe }) {
                 key={i}
                 className="vibe-particle select-none"
                 style={{
-                  ...base, ...vars, fontSize: 14 + p.size * 14, opacity: 0.7,
-                  animationName: "vibe-fall", animationTimingFunction: "linear", animationIterationCount: "infinite",
+                  ...base,
+                  ...vars,
+                  color: "var(--primary)",
+                  opacity: 0.55,
+                  animationName: "vibe-fall",
+                  animationTimingFunction: "linear",
+                  animationIterationCount: "infinite",
                 }}
               >
-                {["🍂", "🍃", "🍁"][i % 3]}
+                <Leaf size={14 + p.size * 14} aria-hidden />
               </span>
             );
           case "stars":
@@ -63,8 +78,10 @@ export function VibeBackground({ vibe }: { vibe: Vibe }) {
                 key={i}
                 className="vibe-particle rounded-full"
                 style={{
-                  left: `${p.left}%`, top: `${p.top}%`,
-                  width: 2 + p.size * 3, height: 2 + p.size * 3,
+                  left: `${p.left}%`,
+                  top: `${p.top}%`,
+                  width: 2 + p.size * 3,
+                  height: 2 + p.size * 3,
                   background: i % 4 === 0 ? "var(--accent)" : "var(--primary)",
                   boxShadow: "0 0 8px var(--primary)",
                   animation: `vibe-twinkle ${2 + p.size * 3}s ${-p.delay}s ease-in-out infinite`,
@@ -78,9 +95,14 @@ export function VibeBackground({ vibe }: { vibe: Vibe }) {
                 className="vibe-particle"
                 style={{
                   ...base,
-                  width: 2, height: 18 + p.size * 14, borderRadius: 2,
-                  background: "linear-gradient(to bottom, transparent, color-mix(in oklab, var(--primary) 50%, transparent))",
-                  animationName: "vibe-rain", animationTimingFunction: "linear", animationIterationCount: "infinite",
+                  width: 2,
+                  height: 18 + p.size * 14,
+                  borderRadius: 2,
+                  background:
+                    "linear-gradient(to bottom, transparent, color-mix(in oklab, var(--primary) 50%, transparent))",
+                  animationName: "vibe-rain",
+                  animationTimingFunction: "linear",
+                  animationIterationCount: "infinite",
                 }}
               />
             );

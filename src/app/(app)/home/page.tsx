@@ -12,6 +12,7 @@ import { PetCorner } from "./pet-corner";
 import { QuickAdd } from "./quick-add";
 import { HomeItems } from "./home-items";
 import { StreakCard } from "@/components/streak-card";
+import { Icon, UI } from "@/lib/icons";
 
 export const metadata: Metadata = { title: "Home" };
 
@@ -33,8 +34,19 @@ export default async function HomePage() {
     getStreak(),
     getActivity(),
     supabase.rpc("home_items"),
-    supabase.from("notes").select("id,title,emoji,color").eq("pinned", true).neq("status", "archived").order("updated_at", { ascending: false }).limit(6),
-    supabase.from("message_history").select("message_id").gte("shown_at", since).order("shown_at", { ascending: false }).limit(60),
+    supabase
+      .from("notes")
+      .select("id,title,icon,color")
+      .eq("pinned", true)
+      .neq("status", "archived")
+      .order("updated_at", { ascending: false })
+      .limit(6),
+    supabase
+      .from("message_history")
+      .select("message_id")
+      .gte("shown_at", since)
+      .order("shown_at", { ascending: false })
+      .limit(60),
   ]);
 
   const part = dayPart(profile.timezone);
@@ -60,10 +72,13 @@ export default async function HomePage() {
   return (
     <div className="space-y-6">
       <header>
-        <p className="text-sm font-bold text-ink-soft">{today ? formatDate(today, { weekday: "long", month: "long", day: "numeric" }) : null}</p>
+        <p className="text-sm font-bold text-ink-soft">
+          {today ? formatDate(today, { weekday: "long", month: "long", day: "numeric" }) : null}
+        </p>
         <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
           {GREETINGS[part]}
-          {profile.display_name ? `, ${profile.display_name}` : ""}! {part === "night" ? "🌙" : part === "morning" ? "☀️" : "👋"}
+          {profile.display_name ? `, ${profile.display_name}` : ""}!{" "}
+          {part === "night" ? "" : part === "morning" ? "" : ""}
         </h1>
       </header>
 
@@ -72,7 +87,10 @@ export default async function HomePage() {
           petName={profile.pet_name}
           stage={stage}
           mood={mood}
-          initialMessage={{ id: msg.id, text: renderMessage(msg, { name: profile.display_name, pet: profile.pet_name, streak: streak.current }) }}
+          initialMessage={{
+            id: msg.id,
+            text: renderMessage(msg, { name: profile.display_name, pet: profile.pet_name, streak: streak.current }),
+          }}
           ctx={ctx}
           recent={[msg.id, ...recent]}
           streak={streak.current}
@@ -84,7 +102,9 @@ export default async function HomePage() {
             href="/journal/today"
             className="flex items-center gap-3 rounded-blob border-2 border-line bg-card p-4 shadow-soft transition hover:-translate-y-0.5"
           >
-            <span className="text-3xl">{todayMood ? todayMood.emoji : "📔"}</span>
+            <span className="inline-flex rounded-2xl bg-soft p-2.5 text-primary">
+              {todayMood ? <todayMood.Icon size={24} aria-hidden /> : <UI.journal size={24} aria-hidden />}
+            </span>
             <span>
               <span className="block font-display text-lg font-bold">
                 {activity.wrote_today ? "Today's journal is written" : "How was your day?"}
@@ -103,7 +123,7 @@ export default async function HomePage() {
 
       {pinned?.length ? (
         <section>
-          <h2 className="mb-3 font-display text-xl font-bold">📌 Pinned</h2>
+          <h2 className="mb-3 font-display text-xl font-bold"> Pinned</h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {pinned.map((n) => (
               <Link
@@ -112,7 +132,7 @@ export default async function HomePage() {
                 className="rounded-2xl border-2 border-line p-3 font-bold shadow-soft transition hover:-translate-y-1 hover:rotate-1"
                 style={{ background: `color-mix(in oklab, ${n.color} var(--note-mix), var(--card))` }}
               >
-                <span className="mr-1.5 text-xl">{n.emoji}</span>
+                <Icon name={n.icon} size={18} className="mr-1.5 inline-block align-[-3px]" />
                 {n.title}
               </Link>
             ))}

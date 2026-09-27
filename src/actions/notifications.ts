@@ -85,7 +85,7 @@ export async function sendTestPush(): Promise<ActionResult<{ sent: number }>> {
   if (!subs?.length) return { ok: false, error: "No devices subscribed yet." };
   let sent = 0;
   for (const s of subs) {
-    const r = await sendPush(s, { title: "🐿️ Hello from Tuckbury!", body: "Push reminders are working.", url: "/home" });
+    const r = await sendPush(s, { title: " Hello from Tuckbury!", body: "Push reminders are working.", url: "/home" });
     if (r === "ok") sent++;
     if (r === "gone") await supabase.from("push_subscriptions").delete().eq("id", s.id);
   }

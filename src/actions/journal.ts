@@ -22,7 +22,11 @@ export async function saveJournal(
   const { supabase } = await authed();
   const e = parsed.data;
 
-  const { data: existing } = await supabase.from("journal_entries").select("id").eq("entry_date", e.entry_date).maybeSingle();
+  const { data: existing } = await supabase
+    .from("journal_entries")
+    .select("id")
+    .eq("entry_date", e.entry_date)
+    .maybeSingle();
   let id: string;
   if (existing) {
     const { error } = await supabase
@@ -34,7 +38,11 @@ export async function saveJournal(
   } else {
     if (!e.content.trim() && e.mood === null) return { ok: false, error: "Write something or pick a mood first" };
     const { data, error } = await supabase.from("journal_entries").insert(e).select("id").single();
-    if (error) return { ok: false, error: error.message.includes("future") ? "You can't journal the future (yet) 🔮" : error.message };
+    if (error)
+      return {
+        ok: false,
+        error: error.message.includes("future") ? "You can't journal the future (yet) " : error.message,
+      };
     id = data.id;
   }
   const { data: streak } = await supabase.rpc("get_streak");

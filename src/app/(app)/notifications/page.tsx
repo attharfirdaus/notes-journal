@@ -19,7 +19,7 @@ export default async function NotificationsPage() {
     .limit(100);
   return (
     <div className="mx-auto max-w-2xl">
-      <PageHeader title="Inbox" emoji="🔔" />
+      <PageHeader title="Inbox" icon="ui-notifications" />
       <NotificationList initial={(data ?? []) as AppNotification[]} />
     </div>
   );

@@ -5,6 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import { Search } from "lucide-react";
 import type { Category } from "@/lib/types";
 import { Spinner } from "@/components/ui";
+import { Icon } from "@/lib/icons";
 
 type Value = { q: string; category: string; status: string; type: string; sort: string };
 
@@ -64,25 +65,41 @@ export function NotesFilters({ categories, value }: { categories: Category[]; va
                 : { borderColor: "var(--line)", background: "var(--card)" }
             }
           >
-            {c.emoji} {c.name}
+            <Icon name={c.icon} size={14} className="mr-1 inline-block align-[-3px]" />
+            {c.name}
           </button>
         ))}
       </div>
       <div className="flex flex-wrap gap-2">
-        <select aria-label="Status" className={selectClass} value={value.status} onChange={(e) => set("status", e.target.value === "active" ? "" : e.target.value)}>
-          <option value="active">🟢 Active</option>
-          <option value="completed">✅ Completed</option>
-          <option value="archived">📦 Archived</option>
-          <option value="all">🌈 All</option>
+        <select
+          aria-label="Status"
+          className={selectClass}
+          value={value.status}
+          onChange={(e) => set("status", e.target.value === "active" ? "" : e.target.value)}
+        >
+          <option value="active"> Active</option>
+          <option value="completed"> Completed</option>
+          <option value="archived"> Archived</option>
+          <option value="all"> All</option>
         </select>
-        <select aria-label="Type" className={selectClass} value={value.type} onChange={(e) => set("type", e.target.value)}>
+        <select
+          aria-label="Type"
+          className={selectClass}
+          value={value.type}
+          onChange={(e) => set("type", e.target.value)}
+        >
           <option value="">All types</option>
-          <option value="checklist">🛒 Checklist</option>
-          <option value="tasks">✅ Tasks</option>
-          <option value="schedule">📅 Schedule</option>
-          <option value="free">📝 Free list</option>
+          <option value="checklist"> Checklist</option>
+          <option value="tasks"> Tasks</option>
+          <option value="schedule"> Schedule</option>
+          <option value="free"> Free list</option>
         </select>
-        <select aria-label="Sort" className={selectClass} value={value.sort} onChange={(e) => set("sort", e.target.value === "updated" ? "" : e.target.value)}>
+        <select
+          aria-label="Sort"
+          className={selectClass}
+          value={value.sort}
+          onChange={(e) => set("sort", e.target.value === "updated" ? "" : e.target.value)}
+        >
           <option value="updated">Recently updated</option>
           <option value="created">Newest</option>
           <option value="due">Deadline</option>

@@ -19,7 +19,7 @@ export default async function CapsulesPage() {
 
   return (
     <div>
-      <PageHeader title="Time Capsules" emoji="⏳" />
+      <PageHeader title="Time Capsules" icon="ui-capsules" />
       <p className="-mt-3 mb-5 text-ink-soft">
         Write a letter to future you. It stays sealed until the day it unlocks, even from you.
       </p>

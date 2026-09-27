@@ -2,9 +2,10 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
 import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from "react";
 
-type Toast = { id: number; title: string; body?: string; emoji?: string; href?: string };
+type Toast = { id: number; title: string; body?: string; icon?: LucideIcon; href?: string };
 type ToastApi = { toast: (t: Omit<Toast, "id">) => void };
 
 const ToastContext = createContext<ToastApi>({ toast: () => {} });
@@ -39,7 +40,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           {toasts.map((t) => {
             const inner = (
               <>
-                {t.emoji ? <span className="text-2xl">{t.emoji}</span> : null}
+                {t.icon ? (
+                  <span className="inline-flex shrink-0 rounded-xl bg-soft p-2 text-primary">
+                    <t.icon size={20} strokeWidth={2.5} aria-hidden />
+                  </span>
+                ) : null}
                 <span className="min-w-0">
                   <span className="block font-bold">{t.title}</span>
                   {t.body ? <span className="block text-sm text-ink-soft">{t.body}</span> : null}
@@ -58,7 +63,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 onClick={() => dismiss(t.id)}
               >
                 {t.href ? (
-                  <Link href={t.href} className="flex items-center gap-3 rounded-2xl border-2 border-line bg-card px-4 py-3 shadow-soft">
+                  <Link
+                    href={t.href}
+                    className="flex items-center gap-3 rounded-2xl border-2 border-line bg-card px-4 py-3 shadow-soft"
+                  >
                     {inner}
                   </Link>
                 ) : (

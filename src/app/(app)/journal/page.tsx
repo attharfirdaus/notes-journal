@@ -11,6 +11,7 @@ import { StreakCard } from "@/components/streak-card";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { JournalCalendar } from "./journal-calendar";
 import { JournalFilters } from "./journal-filters";
+import { PenLine } from "lucide-react";
 
 export const metadata: Metadata = { title: "Journal" };
 
@@ -38,12 +39,12 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
 
   return (
     <div>
-      <PageHeader title="Journal" emoji="📔">
+      <PageHeader title="Journal" icon="ui-journal">
         <Link
           href="/journal/today"
           className="btn-pop inline-flex h-11 items-center gap-2 rounded-2xl bg-primary px-4 font-bold text-primary-ink"
         >
-          {wroteToday ? "✏️ Continue today" : "✍️ Write today"}
+          {wroteToday ? " Continue today" : " Write today"}
         </Link>
       </PageHeader>
 
@@ -56,11 +57,11 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
       {entries.length === 0 ? (
         <div className="mt-6">
           {q || mood ? (
-            <EmptyState emoji="🔍" title="No entries match">
+            <EmptyState icon="ui-search" title="No entries match">
               Try a different word or mood.
             </EmptyState>
           ) : (
-            <EmptyState emoji="📔" title="Your journal is waiting">
+            <EmptyState icon="ui-journal" title="Your journal is waiting">
               Every story starts with a single line. How was today?
             </EmptyState>
           )}
@@ -83,14 +84,23 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
                     className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-2xl"
                     style={{ background: m ? `${m.color}66` : "var(--soft)" }}
                   >
-                    {m?.emoji ?? "📝"}
+                    {m ? <m.Icon size={22} aria-hidden /> : <PenLine size={22} aria-hidden />}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-baseline gap-x-2">
                       <span className="font-display text-lg font-bold">
-                        {e.entry_date === today ? "Today" : formatDate(e.entry_date, { weekday: "long", month: "short", day: "numeric", year: e.entry_date.slice(0, 4) === today.slice(0, 4) ? undefined : "numeric" })}
+                        {e.entry_date === today
+                          ? "Today"
+                          : formatDate(e.entry_date, {
+                              weekday: "long",
+                              month: "short",
+                              day: "numeric",
+                              year: e.entry_date.slice(0, 4) === today.slice(0, 4) ? undefined : "numeric",
+                            })}
                       </span>
-                      {e.counts_for_streak ? <span className="text-xs" title="Counted toward your streak">🔥</span> : null}
+                      {e.counts_for_streak ? (
+                        <span className="text-xs" title="Counted toward your streak"></span>
+                      ) : null}
                     </span>
                     <span className="mt-0.5 line-clamp-2 block text-sm text-ink-soft">
                       {plainSnippet(e.content) || <em>Just a mood today.</em>}
@@ -111,9 +121,7 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
           })}
         </ol>
       )}
-      <p className="mt-6 text-center text-xs text-ink-soft">
-        Mood key: {MOODS.map((m) => `${m.emoji} ${m.label}`).join(" · ")}
-      </p>
+      <p className="mt-6 text-center text-xs text-ink-soft">Mood key: {MOODS.map((m) => m.label).join(" · ")}</p>
     </div>
   );
 }

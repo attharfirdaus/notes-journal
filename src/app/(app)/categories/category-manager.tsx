@@ -3,16 +3,28 @@
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
-import { Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
+import { Pencil, Plus, Sparkles, Tag, Trash2, TriangleAlert } from "lucide-react";
 import { deleteCategory, saveCategory } from "@/actions/categories";
 import { Button, Chip, IconButton, Input, Modal } from "@/components/ui";
 import { useToast } from "@/components/toast";
 import { categorize } from "@/lib/categorize";
-import { NOTE_EMOJIS } from "@/lib/note-meta";
+import { ICON_KEYS, Icon } from "@/lib/icons";
 import type { Category } from "@/lib/types";
 
-const COLORS = ["#FCA5A5", "#FDBA74", "#FDE047", "#D9F99D", "#86EFAC", "#6EE7B7", "#67E8F9", "#93C5FD", "#A5B4FC", "#C4B5FD", "#F9A8D4", "#D6D3D1"];
-const EXTRA_EMOJIS = ["🏷️", "🛒", "✅", "💼", "📚", "🎉", "💪", "💰", "💡", "✈️", "🌱", "🍔", "🐾", "🧘", "🎬", "⚽", "👶", "🧹", "🔧", "💻"];
+const COLORS = [
+  "#FCA5A5",
+  "#FDBA74",
+  "#FDE047",
+  "#D9F99D",
+  "#86EFAC",
+  "#6EE7B7",
+  "#67E8F9",
+  "#93C5FD",
+  "#A5B4FC",
+  "#C4B5FD",
+  "#F9A8D4",
+  "#D6D3D1",
+];
 
 export function CategoryManager({ initial, counts }: { initial: Category[]; counts: Record<string, number> }) {
   const { toast } = useToast();
@@ -44,7 +56,8 @@ export function CategoryManager({ initial, counts }: { initial: Category[]; coun
                 const c = cats.find((x) => x.id === d.id)!;
                 return (
                   <Chip key={d.id} color={c.color}>
-                    {c.emoji} {c.name} · {d.score}
+                    <Icon name={c.icon} size={13} className="mr-1 inline-block align-[-2px]" />
+                    {c.name} · {d.score}
                   </Chip>
                 );
               })
@@ -76,10 +89,13 @@ export function CategoryManager({ initial, counts }: { initial: Category[]; coun
               style={{ borderColor: c.color, background: `color-mix(in oklab, ${c.color} 30%, var(--card))` }}
             >
               <div className="flex items-start gap-3">
-                <span className="text-3xl">{c.emoji}</span>
+                <Icon name={c.icon} size={26} className="mt-0.5 shrink-0" />
                 <div className="min-w-0 flex-1">
                   <p className="font-display text-lg font-bold">{c.name}</p>
-                  <Link href={`/notes?category=${c.id}&status=all`} className="text-xs font-bold text-ink-soft hover:underline">
+                  <Link
+                    href={`/notes?category=${c.id}&status=all`}
+                    className="text-xs font-bold text-ink-soft hover:underline"
+                  >
                     {counts[c.id] ?? 0} note{counts[c.id] === 1 ? "" : "s"}
                   </Link>
                 </div>
@@ -100,19 +116,22 @@ export function CategoryManager({ initial, counts }: { initial: Category[]; coun
       </div>
 
       <CategoryForm
-        key={editing === "new" ? "new" : editing?.id ?? "none"}
+        key={editing === "new" ? "new" : (editing?.id ?? "none")}
         category={editing}
         onClose={() => setEditing(null)}
         onSaved={(c, isNew) => {
-          setCats((xs) => (isNew ? [...xs, c] : xs.map((x) => (x.id === c.id ? c : x))).sort((a, b) => a.name.localeCompare(b.name)));
+          setCats((xs) =>
+            (isNew ? [...xs, c] : xs.map((x) => (x.id === c.id ? c : x))).sort((a, b) => a.name.localeCompare(b.name)),
+          );
           setEditing(null);
-          toast({ emoji: c.emoji, title: isNew ? `${c.name} created` : `${c.name} saved` });
+          toast({ icon: Tag, title: isNew ? `${c.name} created` : `${c.name} saved` });
         }}
       />
 
       <Modal open={Boolean(deleting)} onClose={() => setDeleting(null)} title="Delete category?">
         <p className="text-ink-soft">
-          “{deleting?.name}” will be removed from {counts[deleting?.id ?? ""] ?? 0} note(s). The notes themselves stay safe.
+          “{deleting?.name}” will be removed from {counts[deleting?.id ?? ""] ?? 0} note(s). The notes themselves stay
+          safe.
         </p>
         <div className="mt-5 flex gap-2">
           <Button variant="soft" className="flex-1" onClick={() => setDeleting(null)}>
@@ -125,7 +144,7 @@ export function CategoryManager({ initial, counts }: { initial: Category[]; coun
               start(async () => {
                 if (!deleting) return;
                 const res = await deleteCategory(deleting.id);
-                if (!res.ok) return toast({ emoji: "😬", title: "Couldn't delete", body: res.error });
+                if (!res.ok) return toast({ icon: TriangleAlert, title: "Couldn't delete", body: res.error });
                 setCats((xs) => xs.filter((x) => x.id !== deleting.id));
                 setDeleting(null);
               })
@@ -150,7 +169,7 @@ function CategoryForm({
 }) {
   const existing = category && category !== "new" ? category : null;
   const [name, setName] = useState(existing?.name ?? "");
-  const [emoji, setEmoji] = useState(existing?.emoji ?? "🏷️");
+  const [icon, setIcon] = useState<string>(existing?.icon ?? "tag");
   const [color, setColor] = useState(existing?.color ?? COLORS[8]);
   const [keywords, setKeywords] = useState<string[]>(existing?.keywords ?? []);
   const [kw, setKw] = useState("");
@@ -158,7 +177,10 @@ function CategoryForm({
   const [pending, start] = useTransition();
 
   const addKw = () => {
-    const parts = kw.split(",").map((k) => k.trim().toLowerCase()).filter(Boolean);
+    const parts = kw
+      .split(",")
+      .map((k) => k.trim().toLowerCase())
+      .filter(Boolean);
     if (parts.length) setKeywords((ks) => [...new Set([...ks, ...parts])]);
     setKw("");
   };
@@ -169,26 +191,34 @@ function CategoryForm({
         onSubmit={(e) => {
           e.preventDefault();
           start(async () => {
-            const res = await saveCategory(existing?.id ?? null, { name, emoji, color, keywords });
+            const res = await saveCategory(existing?.id ?? null, { name, icon, color, keywords });
             if (!res.ok) return setError(res.error);
             onSaved(res.data, !existing);
           });
         }}
         className="space-y-4"
       >
-        <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} maxLength={30} required placeholder="Pets, Side hustle, Gym…" />
+        <Input
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          maxLength={30}
+          required
+          placeholder="Pets, Side hustle, Gym…"
+        />
         <div>
-          <span className="mb-1.5 block text-sm font-bold text-ink-soft">Emoji</span>
-          <div className="flex flex-wrap gap-1">
-            {[...new Set([...EXTRA_EMOJIS, ...NOTE_EMOJIS])].map((e) => (
+          <span className="mb-1.5 block text-sm font-bold text-ink-soft">Icon</span>
+          <div className="flex max-h-44 flex-wrap gap-1 overflow-y-auto">
+            {ICON_KEYS.map((key) => (
               <button
-                key={e}
+                key={key}
                 type="button"
-                onClick={() => setEmoji(e)}
-                aria-label={`Emoji ${e}`}
-                className={`rounded-xl p-1 text-xl transition hover:scale-125 ${emoji === e ? "bg-primary/30" : ""}`}
+                onClick={() => setIcon(key)}
+                aria-label={key.replace(/-/g, " ")}
+                title={key.replace(/-/g, " ")}
+                className={`rounded-xl p-2 transition hover:scale-110 ${icon === key ? "bg-primary/30 text-ink" : "text-ink-soft"}`}
               >
-                {e}
+                <Icon name={key} size={18} />
               </button>
             ))}
           </div>

@@ -14,7 +14,7 @@ export default async function FocusPage() {
     requireProfile(),
     supabase
       .from("note_items")
-      .select("id,text,due_at,notes!inner(title,emoji,status)")
+      .select("id,text,due_at,notes!inner(title,icon,status)")
       .eq("is_done", false)
       .neq("notes.status", "archived")
       .order("due_at", { ascending: true, nullsFirst: false })
@@ -23,13 +23,13 @@ export default async function FocusPage() {
   ]);
 
   const tasks = (items ?? []).map((i) => {
-    const note = (Array.isArray(i.notes) ? i.notes[0] : i.notes) as { title: string; emoji: string };
-    return { id: i.id, text: i.text, note: `${note.emoji} ${note.title}` };
+    const note = (Array.isArray(i.notes) ? i.notes[0] : i.notes) as { title: string; icon: string };
+    return { id: i.id, text: i.text, note: note.title };
   });
 
   return (
     <div>
-      <PageHeader title="Focus" emoji="🍅" />
+      <PageHeader title="Focus" icon="ui-focus" />
       <FocusTimer
         tasks={tasks}
         focusToday={activity.focus_today}

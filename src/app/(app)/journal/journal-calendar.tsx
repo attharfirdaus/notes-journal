@@ -2,13 +2,19 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, PenLine } from "lucide-react";
 import { moodInfo } from "@/lib/journal";
 import { IconButton } from "@/components/ui";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-export function JournalCalendar({ entries, today }: { entries: { date: string; mood: number | null }[]; today: string }) {
+export function JournalCalendar({
+  entries,
+  today,
+}: {
+  entries: { date: string; mood: number | null }[];
+  today: string;
+}) {
   const [month, setMonth] = useState(today.slice(0, 7));
   const byDate = useMemo(() => new Map(entries.map((e) => [e.date, e])), [entries]);
 
@@ -55,7 +61,9 @@ export function JournalCalendar({ entries, today }: { entries: { date: string; m
               style={{ background: mood ? `${mood.color}88` : entry ? "var(--soft)" : "transparent" }}
             >
               <span className="text-[11px] leading-none text-ink-soft">{i + 1}</span>
-              <span className="text-lg leading-tight">{mood?.emoji ?? (entry ? "📝" : "")}</span>
+              <span className="flex h-5 items-center justify-center leading-none">
+                {mood ? <mood.Icon size={17} aria-hidden /> : entry ? <PenLine size={15} aria-hidden /> : null}
+              </span>
             </div>
           );
           return future ? (

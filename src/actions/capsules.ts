@@ -31,7 +31,7 @@ export async function openCapsule(id: string): Promise<ActionResult<{ content: s
   const { data, error } = await supabase.rpc("open_capsule", { p_id: cid });
   if (error) return { ok: false, error: error.message };
   const row = (data as { content: string }[] | null)?.[0];
-  if (!row) return { ok: false, error: "This capsule is still locked 🔒" };
+  if (!row) return { ok: false, error: "This capsule is still locked " };
   return { ok: true, data: { content: row.content } };
 }
 

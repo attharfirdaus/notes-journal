@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
-import { Sparkles } from "lucide-react";
+import { Nut, Sparkles, TriangleAlert } from "lucide-react";
 import { quickAdd } from "@/actions/notes";
 import { Button, Chip } from "@/components/ui";
 import { usePrefs } from "@/components/prefs";
@@ -12,7 +12,7 @@ import { celebrate } from "@/lib/fx";
 import { planQuickAdd } from "@/lib/quick-add";
 import { NOTE_TYPES } from "@/lib/note-meta";
 import { formatDue } from "@/lib/time";
-
+import { Icon } from "@/lib/icons";
 
 export function QuickAdd() {
   const router = useRouter();
@@ -25,11 +25,11 @@ export function QuickAdd() {
   const submit = () =>
     start(async () => {
       const res = await quickAdd(text);
-      if (!res.ok) return toast({ emoji: "😬", title: "Couldn't add", body: res.error });
+      if (!res.ok) return toast({ icon: TriangleAlert, title: "Couldn't add", body: res.error });
       setText("");
       celebrate("small");
       toast({
-        emoji: "🌰",
+        icon: Nut,
         title: `Tucked away: ${res.data.title}`,
         body: res.data.items > 1 ? `${res.data.items} items added` : "Tap to open",
         href: `/notes/${res.data.id}`,
@@ -70,10 +70,15 @@ export function QuickAdd() {
             className="flex flex-wrap items-center gap-1.5 overflow-hidden pl-8 pt-2 text-sm"
           >
             <span className="text-xs font-bold text-ink-soft">Will create:</span>
-            {meta ? <Chip>{meta.emoji} {meta.label}</Chip> : null}
+            {meta ? (
+              <Chip>
+                <Icon name={meta.icon} size={13} className="mr-1 inline-block align-[-2px]" />
+                {meta.label}
+              </Chip>
+            ) : null}
             <Chip>“{plan.title}”</Chip>
             {plan.items.length > 1 ? <Chip>{plan.items.length} items</Chip> : null}
-            {plan.date ? <Chip>📅 {formatDue(plan.date.iso, prefs.timezone)}</Chip> : null}
+            {plan.date ? <Chip> {formatDue(plan.date.iso, prefs.timezone)}</Chip> : null}
           </motion.div>
         ) : null}
       </AnimatePresence>

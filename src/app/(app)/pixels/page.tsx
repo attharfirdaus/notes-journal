@@ -29,8 +29,10 @@ export default async function PixelsPage({ searchParams }: PageProps<"/pixels">)
 
   return (
     <div>
-      <PageHeader title="Year in Pixels" emoji="🟪" />
-      <p className="-mt-3 mb-5 text-ink-soft">One little square for every day, colored by your mood. Watch your year paint itself.</p>
+      <PageHeader title="Year in Pixels" icon="ui-pixels" />
+      <p className="-mt-3 mb-5 text-ink-soft">
+        One little square for every day, colored by your mood. Watch your year paint itself.
+      </p>
       <PixelsGrid
         year={year}
         today={today}

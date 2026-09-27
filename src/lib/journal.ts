@@ -1,10 +1,12 @@
-export const MOODS = [
-  { value: 1, emoji: "😭", label: "Awful", color: "#8B9CF7" },
-  { value: 2, emoji: "😔", label: "Meh", color: "#7CC4F2" },
-  { value: 3, emoji: "😐", label: "Okay", color: "#B8C2CC" },
-  { value: 4, emoji: "🙂", label: "Good", color: "#8EDB8A" },
-  { value: 5, emoji: "🤩", label: "Amazing", color: "#FFC857" },
-] as const;
+import { Angry, Frown, Laugh, Meh, Smile, type LucideIcon } from "lucide-react";
+
+export const MOODS: { value: number; Icon: LucideIcon; label: string; color: string }[] = [
+  { value: 1, Icon: Angry, label: "Awful", color: "#8B9CF7" },
+  { value: 2, Icon: Frown, label: "Meh", color: "#7CC4F2" },
+  { value: 3, Icon: Meh, label: "Okay", color: "#B8C2CC" },
+  { value: 4, Icon: Smile, label: "Good", color: "#8EDB8A" },
+  { value: 5, Icon: Laugh, label: "Amazing", color: "#FFC857" },
+];
 
 export function moodInfo(value: number | null | undefined) {
   return MOODS.find((m) => m.value === value) ?? null;

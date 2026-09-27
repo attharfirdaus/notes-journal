@@ -27,7 +27,7 @@ export type Profile = {
 export type Category = {
   id: string;
   name: string;
-  emoji: string;
+  icon: string;
   color: string;
   keywords: string[];
   is_default: boolean;
@@ -40,7 +40,7 @@ export type Note = {
   title: string;
   description: string;
   type: NoteType;
-  emoji: string;
+  icon: string;
   color: string;
   status: NoteStatus;
   pinned: boolean;
@@ -67,7 +67,7 @@ export type HomeItem = {
   id: string;
   note_id: string;
   note_title: string;
-  note_emoji: string;
+  note_icon: string;
   text: string;
   due_at: string;
   is_done: boolean;

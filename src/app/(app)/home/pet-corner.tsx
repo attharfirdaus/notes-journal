@@ -10,6 +10,7 @@ import { ProgressBar } from "@/components/ui";
 import { sfx } from "@/lib/fx";
 import { pickMessage, renderMessage, type MessageContext } from "@/lib/messages";
 import { MOOD_LINES, type PetMood, type petStage } from "@/lib/pet";
+import { Snowflake } from "lucide-react";
 
 export function PetCorner({
   petName,
@@ -37,7 +38,8 @@ export function PetCorner({
   const seen = useRef(recent);
 
   useEffect(() => {
-    if (usedFreeze) toast({ emoji: "❄️", title: "Streak saved!", body: "A streak freeze covered yesterday. Phew!" });
+    if (usedFreeze)
+      toast({ icon: Snowflake, title: "Streak saved!", body: "A streak freeze covered yesterday. Phew!" });
   }, [usedFreeze, toast]);
 
   const next = () => {

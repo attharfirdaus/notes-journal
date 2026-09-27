@@ -8,6 +8,7 @@ import { createNote } from "@/actions/notes";
 import { Button, Input, Modal } from "@/components/ui";
 import { NOTE_TYPES } from "@/lib/note-meta";
 import type { NoteType } from "@/lib/types";
+import { Icon } from "@/lib/icons";
 
 export function NewNoteButton() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export function NewNoteButton() {
   const submit = () =>
     start(async () => {
       const meta = NOTE_TYPES.find((t) => t.value === type)!;
-      const res = await createNote({ title, type, emoji: meta.emoji, color: meta.color });
+      const res = await createNote({ title, type, icon: meta.icon, color: meta.color });
       if (!res.ok) return setError(res.error);
       router.push(`/notes/${res.data.id}`);
     });
@@ -30,7 +31,7 @@ export function NewNoteButton() {
       <Button onClick={() => setOpen(true)}>
         <Plus size={18} /> New note
       </Button>
-      <Modal open={open} onClose={() => setOpen(false)} title="New note ✨">
+      <Modal open={open} onClose={() => setOpen(false)} title="New note ">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -38,7 +39,15 @@ export function NewNoteButton() {
           }}
           className="space-y-4"
         >
-          <Input label="Title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={120} placeholder="Weekend groceries, Thesis tasks…" autoFocus required />
+          <Input
+            label="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            maxLength={120}
+            placeholder="Weekend groceries, Thesis tasks…"
+            autoFocus
+            required
+          />
           <div>
             <span className="mb-1.5 block text-sm font-bold text-ink-soft">What kind of list?</span>
             <div className="grid grid-cols-2 gap-2">
@@ -48,10 +57,13 @@ export function NewNoteButton() {
                   type="button"
                   onClick={() => setType(t.value)}
                   aria-pressed={type === t.value}
-                  className={clsx("rounded-2xl border-2 p-3 text-left transition", type === t.value ? "border-primary scale-[1.02]" : "border-line")}
+                  className={clsx(
+                    "rounded-2xl border-2 p-3 text-left transition",
+                    type === t.value ? "border-primary scale-[1.02]" : "border-line",
+                  )}
                   style={{ background: `color-mix(in oklab, ${t.color} var(--note-mix), var(--card))` }}
                 >
-                  <div className="text-xl">{t.emoji}</div>
+                  <Icon name={t.icon} size={20} />
                   <div className="font-bold">{t.label}</div>
                   <div className="text-xs text-ink-soft">{t.hint}</div>
                 </button>

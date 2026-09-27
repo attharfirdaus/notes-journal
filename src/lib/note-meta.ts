@@ -1,17 +1,24 @@
+import type { IconKey } from "./icons";
 import type { NoteType } from "./types";
 
-export const NOTE_TYPES: { value: NoteType; label: string; emoji: string; color: string; hint: string }[] = [
-  { value: "checklist", label: "Checklist", emoji: "🛒", color: "#FDE68A", hint: "Things to buy or pack" },
-  { value: "tasks", label: "Tasks", emoji: "✅", color: "#BBF7D0", hint: "To-dos with deadlines" },
-  { value: "schedule", label: "Schedule", emoji: "📅", color: "#BFDBFE", hint: "Events & appointments" },
-  { value: "free", label: "Free list", emoji: "📝", color: "#FBCFE8", hint: "Ideas, anything goes" },
+export const NOTE_TYPES: { value: NoteType; label: string; icon: IconKey; color: string; hint: string }[] = [
+  { value: "checklist", label: "Checklist", icon: "shopping-cart", color: "#FDE68A", hint: "Things to buy or pack" },
+  { value: "tasks", label: "Tasks", icon: "check", color: "#BBF7D0", hint: "To-dos with deadlines" },
+  { value: "schedule", label: "Schedule", icon: "calendar", color: "#BFDBFE", hint: "Events & appointments" },
+  { value: "free", label: "Free list", icon: "note", color: "#FBCFE8", hint: "Ideas, anything goes" },
 ];
 
-export const NOTE_COLORS = ["#FDE68A", "#FECACA", "#FBCFE8", "#DDD6FE", "#BFDBFE", "#A5F3FC", "#BBF7D0", "#D9F99D", "#FED7AA", "#E7E5E4"];
-
-export const NOTE_EMOJIS = [
-  "📝", "🛒", "✅", "📅", "📚", "💼", "💡", "🎉", "✈️", "💰", "💪", "🌱", "🍳", "🎁", "🏠", "🎮",
-  "🎵", "🎨", "🐶", "🧺", "💊", "🧳", "🎓", "⭐", "❤️", "🔥", "🌈", "🍀", "☕", "🚗", "📦", "🧠",
+export const NOTE_COLORS = [
+  "#FDE68A",
+  "#FECACA",
+  "#FBCFE8",
+  "#DDD6FE",
+  "#BFDBFE",
+  "#A5F3FC",
+  "#BBF7D0",
+  "#D9F99D",
+  "#FED7AA",
+  "#E7E5E4",
 ];
 
 export const REMINDER_PRESETS: { value: number; label: string }[] = [

@@ -23,12 +23,12 @@ export default async function NotesPage({ searchParams }: PageProps<"/notes">) {
   const sort = (str("sort") || "updated") as keyof typeof SORTS | "due";
 
   const supabase = await createClient();
-  const embed = category
-    ? "note_categories!inner(category_id,source)"
-    : "note_categories(category_id,source)";
+  const embed = category ? "note_categories!inner(category_id,source)" : "note_categories(category_id,source)";
   let query = supabase
     .from("notes")
-    .select(`id,title,description,type,emoji,color,status,pinned,categories_locked,completed_at,created_at,updated_at,${embed},note_items(is_done,due_at)`)
+    .select(
+      `id,title,description,type,icon,color,status,pinned,categories_locked,completed_at,created_at,updated_at,${embed},note_items(is_done,due_at)`,
+    )
     .limit(200);
 
   if (status !== "all") query = query.eq("status", status);
@@ -50,16 +50,17 @@ export default async function NotesPage({ searchParams }: PageProps<"/notes">) {
   const [profile, { data: rows }, { data: cats }] = await Promise.all([
     profilePromise,
     query,
-    supabase.from("categories").select("id,name,emoji,color,keywords,is_default").order("name"),
+    supabase.from("categories").select("id,name,icon,color,keywords,is_default").order("name"),
   ]);
 
   const categories = (cats ?? []) as Category[];
   let notes: NoteCardData[] = (rows ?? []).map((r) => {
     const items = (r.note_items ?? []) as { is_done: boolean; due_at: string | null }[];
-    const nextDue = items
-      .filter((i) => !i.is_done && i.due_at)
-      .map((i) => i.due_at as string)
-      .sort()[0] ?? null;
+    const nextDue =
+      items
+        .filter((i) => !i.is_done && i.due_at)
+        .map((i) => i.due_at as string)
+        .sort()[0] ?? null;
     return {
       ...(r as unknown as Note),
       links: (r.note_categories ?? []) as NoteCategoryLink[],
@@ -77,7 +78,7 @@ export default async function NotesPage({ searchParams }: PageProps<"/notes">) {
 
   return (
     <div>
-      <PageHeader title="Notes" emoji="🗒️">
+      <PageHeader title="Notes" icon="ui-notes">
         <NewNoteButton />
       </PageHeader>
       <NotesFilters categories={categories} value={{ q, category, status, type, sort }} />
@@ -90,11 +91,11 @@ export default async function NotesPage({ searchParams }: PageProps<"/notes">) {
       ) : (
         <div className="mt-6">
           {filtered ? (
-            <EmptyState emoji="🔍" title="Nothing matches">
+            <EmptyState icon="ui-search" title="Nothing matches">
               Try another search or filter.
             </EmptyState>
           ) : (
-            <EmptyState emoji="🌰" title="No notes yet">
+            <EmptyState icon="ui-nut" title="No notes yet">
               Tuck away your first list: groceries, homework, anything!
             </EmptyState>
           )}

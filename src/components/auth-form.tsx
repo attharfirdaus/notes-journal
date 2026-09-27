@@ -41,7 +41,7 @@ export function AuthForm({
             animate={{ opacity: 1, x: [0, -6, 6, -3, 0] }}
             className="rounded-2xl bg-[#EF5B5B]/15 px-4 py-2.5 text-sm font-bold text-ink"
           >
-            😬 {state.error}
+            {state.error}
           </motion.p>
         ) : null}
         {state?.message ? (

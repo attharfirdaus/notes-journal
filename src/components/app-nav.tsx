@@ -6,7 +6,17 @@ import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
-  Bell, BookHeart, Ellipsis, Grid3x3, Hourglass, House, NotebookPen, Settings, Tags, Timer,
+  Bell,
+  BookHeart,
+  Ellipsis,
+  Grid3x3,
+  Hourglass,
+  House,
+  NotebookPen,
+  Nut,
+  Settings,
+  Tags,
+  Timer,
 } from "lucide-react";
 import { NotificationBell, useNotificationPoller } from "./notification-bell";
 import { ServiceWorker } from "./service-worker";
@@ -61,7 +71,7 @@ export function AppNav() {
       {/* Desktop sidebar */}
       <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-1 border-r-2 border-line bg-card/70 p-4 backdrop-blur md:flex">
         <Link href="/home" className="mb-4 flex items-center gap-2 px-2 font-display text-2xl font-bold">
-          <span className="wiggle-hover inline-block">🌰</span> Tuckbury
+          <Nut size={22} strokeWidth={2.5} className="wiggle-hover text-primary" aria-hidden /> Tuckbury
         </Link>
         {[...PRIMARY, ...SECONDARY].map((item) => {
           const active = isActive(path, item.href);
@@ -99,7 +109,7 @@ export function AppNav() {
         style={{ paddingTop: "env(safe-area-inset-top)", height: "calc(3.5rem + env(safe-area-inset-top))" }}
       >
         <Link href="/home" className="flex items-center gap-1.5 font-display text-xl font-bold">
-          🌰 Tuckbury
+          <Nut size={20} strokeWidth={2.5} className="text-primary" aria-hidden /> Tuckbury
         </Link>
         <NotificationBell variant="topbar" unread={unread} />
       </header>
@@ -127,10 +137,9 @@ export function AppNav() {
                     <motion.span layoutId="tab-pill" className="absolute inset-0 rounded-2xl bg-primary/25" />
                   ) : null}
                   <Icon size={22} className="relative" />
-                  <span className="relative flex items-center gap-1">
-                    {item.label}
-                    <NavSpinner className="h-2.5 w-2.5" />
-                  </span>
+                  <span className="relative">{item.label}</span>
+                  {/* Out of flow so it can never shift the label off centre. */}
+                  <NavSpinner className="absolute right-1 top-1 h-2.5 w-2.5" />
                 </Link>
               </li>
             );
@@ -151,7 +160,11 @@ export function AppNav() {
             </button>
             {moreOpen ? (
               <>
-                <button aria-label="Close menu" className="fixed inset-0 -z-10 cursor-default" onClick={() => setMoreOpen(false)} />
+                <button
+                  aria-label="Close menu"
+                  className="fixed inset-0 -z-10 cursor-default"
+                  onClick={() => setMoreOpen(false)}
+                />
                 <motion.ul
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
