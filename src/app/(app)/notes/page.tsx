@@ -13,7 +13,7 @@ export const metadata: Metadata = { title: "Notes" };
 const SORTS = { updated: "updated_at", created: "created_at", title: "title" } as const;
 
 export default async function NotesPage({ searchParams }: PageProps<"/notes">) {
-  const profile = await requireProfile();
+  const profilePromise = requireProfile();
   const sp = await searchParams;
   const str = (k: string) => (typeof sp[k] === "string" ? (sp[k] as string) : "");
   const q = str("q").trim().slice(0, 100);
@@ -47,7 +47,8 @@ export default async function NotesPage({ searchParams }: PageProps<"/notes">) {
     query = query.order(SORTS[sort] ?? "updated_at", { ascending: sort === "title" });
   }
 
-  const [{ data: rows }, { data: cats }] = await Promise.all([
+  const [profile, { data: rows }, { data: cats }] = await Promise.all([
+    profilePromise,
     query,
     supabase.from("categories").select("id,name,emoji,color,keywords,is_default").order("name"),
   ]);

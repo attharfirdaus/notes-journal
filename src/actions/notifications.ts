@@ -2,12 +2,16 @@
 
 import { z } from "zod";
 import { authed } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import { pushConfigured, sendPush } from "@/lib/push";
 import type { ActionResult, AppNotification } from "@/lib/types";
 
 export async function pollNotifications(): Promise<ActionResult<{ unread: number; recent: AppNotification[] }>> {
   try {
-    const { supabase } = await authed();
+    // Runs on a timer for every open tab, so it skips the usual auth lookup:
+    // process_my_due() raises without a session and RLS scopes the reads, which
+    // is all this needs — the user id itself is never used here.
+    const supabase = await createClient();
     await supabase.rpc("process_my_due");
     const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const [{ count }, { data: recent }] = await Promise.all([

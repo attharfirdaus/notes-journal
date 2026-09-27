@@ -8,9 +8,9 @@ import { CategoryManager } from "./category-manager";
 export const metadata: Metadata = { title: "Categories" };
 
 export default async function CategoriesPage() {
-  await requireProfile();
   const supabase = await createClient();
-  const [{ data: cats }, { data: links }] = await Promise.all([
+  const [, { data: cats }, { data: links }] = await Promise.all([
+    requireProfile(),
     supabase.from("categories").select("id,name,emoji,color,keywords,is_default").order("name"),
     supabase.from("note_categories").select("category_id"),
   ]);
