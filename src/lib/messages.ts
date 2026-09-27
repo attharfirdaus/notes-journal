@@ -28,7 +28,7 @@ export type MessageContext = {
 
 // Placeholders: {name}, {pet}, {streak}
 const RAW: [MessageTag[], string][] = [
-  // — anytime —
+  // anytime
   [["any"], "Tiny steps still move you forward. 🐾"],
   [["any"], "You don't have to remember everything. That's what I'm here for!"],
   [["any"], "Hi {name}! {pet} saved you a comfy spot. ☁️"],
@@ -65,11 +65,11 @@ const RAW: [MessageTag[], string][] = [
   [["any"], "Pro tip: 'Submit report friday 5pm' sets the deadline for you."],
   [["any"], "Did you know? You can tap me for another message. 👆"],
   [["any"], "Pro tip: write a letter to future you in the Time Capsule. 💌"],
-  [["any"], "Ideas are like acorns — collect them now, sort them later."],
+  [["any"], "Ideas are like acorns. Collect them now, sort them later."],
   [["any"], "You're allowed to change the plan."],
   [["any"], "Sunshine mode: activated. ☀️"],
   [["any"], "Hey {name}, you matter. Just a reminder."],
-  // — time of day —
+  // time of day
   [["morning"], "Good morning, {name}! What's the one thing that matters most today? 🌅"],
   [["morning"], "Rise and shine! {pet} already stretched their tail. 🐿️"],
   [["morning"], "Fresh day, fresh page. Let's make it a good one."],
@@ -86,12 +86,12 @@ const RAW: [MessageTag[], string][] = [
   [["evening"], "The day's almost done. Be proud of what you did."],
   [["evening"], "A little journal before bed? {pet} loves bedtime stories. 📔"],
   [["evening"], "Plan tomorrow in two minutes, sleep better tonight."],
-  [["night"], "It's late, {name}. Your to-dos will wait — sleep is important. 🌙"],
+  [["night"], "It's late, {name}. Your to-dos will wait. Sleep is important. 🌙"],
   [["night"], "Night owl mode! Just don't forget to rest. 🦉"],
   [["night"], "{pet} is yawning… maybe you should too? 😴"],
   [["night"], "Stars are out. Time to let your brain rest. ✨"],
   [["night"], "Whatever didn't get done today can be tomorrow's win."],
-  // — mood —
+  // mood
   [["low"], "Rough days happen. You don't have to fix everything today. 💛"],
   [["low"], "It's okay to not be okay. {pet} is right here with you."],
   [["low"], "Be soft with yourself today. Even one small thing is plenty."],
@@ -103,45 +103,45 @@ const RAW: [MessageTag[], string][] = [
   [["low"], "Would writing it down help? The journal is always listening. 📔"],
   [["high"], "Look at you glowing! Keep that energy, {name}! ✨"],
   [["high"], "Good vibes detected! {pet} is doing cartwheels. 🤸"],
-  [["high"], "You're on a roll — what's next on the list?"],
+  [["high"], "You're on a roll! What's next on the list?"],
   [["high"], "Happy you = happy {pet}. 🌈"],
-  [["high"], "Bottle up this feeling — maybe in a Time Capsule? 💌"],
-  // — streak —
+  [["high"], "Bottle up this feeling. Maybe in a Time Capsule? 💌"],
+  // streak
   [["streak"], "🔥 {streak}-day journal streak! You're unstoppable."],
   [["streak"], "{streak} days in a row! {pet} is so proud. 🐿️💛"],
   [["streak"], "Your streak is {streak} days strong. Consistency looks good on you!"],
   [["streak"], "{streak} days of showing up for yourself. That's beautiful."],
-  [["streak"], "Keep the flame alive — {streak} days and counting! 🔥"],
+  [["streak"], "Keep the flame alive! {streak} days and counting 🔥"],
   [["streak", "nojournal"], "Your {streak}-day streak is waiting for today's entry! 📔"],
-  // — overdue —
-  [["overdue"], "A few things slipped past their deadline. No stress — pick just one. 🌱"],
+  // overdue
+  [["overdue"], "A few things slipped past their deadline. No stress, pick just one. 🌱"],
   [["overdue"], "Overdue isn't failure. It's just a nudge. Let's tackle one?"],
   [["overdue"], "Some tasks are waiting for you. Or… reschedule them. That's allowed too!"],
   [["overdue"], "Tiny tip: finish the smallest overdue task first. Momentum is magic. ✨"],
   [["overdue"], "{pet} found some overdue acorns. Want to sort them out together?"],
-  // — productive —
+  // productive
   [["productive"], "Look at all those checked boxes! 🎉"],
   [["productive"], "You've been crushing it today, {name}!"],
   [["productive"], "Productivity level: legendary squirrel. 🐿️👑"],
   [["productive"], "Every checkmark makes {pet} do a little hop!"],
   [["productive"], "You got things done today. Take a moment to enjoy that."],
   [["productive"], "Done and done! Don't forget to reward yourself. 🍦"],
-  // — journal —
+  // journal
   [["nojournal"], "How was your day? {pet} would love to hear about it. 📔"],
   [["nojournal"], "Two minutes of journaling can clear a whole cloud of thoughts. ☁️"],
-  [["nojournal"], "Today's page is still blank — want to fill it with a few words?"],
+  [["nojournal"], "Today's page is still blank. Want to fill it with a few words?"],
   [["nojournal"], "Pick a mood, write one sentence. That's a journal entry!"],
   [["nojournal", "evening"], "Before the day ends: one line about today? 🌇"],
   [["journaled"], "Today's journal: done! Your future self will love reading it. 💌"],
   [["journaled"], "You wrote today. That's self-care in action. 🌿"],
   [["journaled"], "Another day, another page in your story. 📖"],
-  // — focus —
+  // focus
   [["focus"], "Nice focus session! Your brain deserves a stretch. 🧠"],
   [["focus"], "Deep work unlocked. {pet} is impressed. 🍅"],
   [["focus"], "Focused minutes add up to big things."],
-  // — new users —
+  // new users
   [["new"], "Welcome to Tuckbury, {name}! I'm {pet}. Let's tuck away your first thought. 🌰"],
-  [["new"], "New here? Try the quick add box — just type anything!"],
+  [["new"], "New here? Try the quick add box and just type anything!"],
   [["new"], "Every great journey starts with a single note. 📝"],
   [["new"], "Tip: write your first journal entry to start your streak! 🔥"],
 ];

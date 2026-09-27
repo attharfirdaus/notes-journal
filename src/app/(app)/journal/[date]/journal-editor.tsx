@@ -143,7 +143,7 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
       <header className="mb-4">
         <h1 className="font-display text-3xl font-bold">{title}</h1>
         {!isToday && !exists ? (
-          <p className="mt-1 text-sm text-ink-soft">Backfilling a past day is welcome — it just won&apos;t count toward your streak.</p>
+          <p className="mt-1 text-sm text-ink-soft">Backfilling a past day is welcome. It just won&apos;t count toward your streak.</p>
         ) : null}
       </header>
 

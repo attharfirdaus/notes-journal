@@ -15,7 +15,7 @@ export default async function JournalEntryPage({ params }: PageProps<"/journal/[
 
   // Whether the date is in the future can only be decided once the profile's
   // time zone is known, but the entry for a concrete date can be read straight
-  // away — so both go out at once. "today" and malformed dates redirect below
+  // away, so both go out at once. "today" and malformed dates redirect below
   // and never need the query.
   const [profile, entry] = await Promise.all([
     requireProfile(),

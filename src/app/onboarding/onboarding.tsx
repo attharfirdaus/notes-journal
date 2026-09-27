@@ -73,7 +73,7 @@ export function Onboarding({ initialName }: { initialName: string }) {
               </div>
               <h1 className="mt-2 font-display text-3xl font-bold">Welcome to Tuckbury!</h1>
               <p className="mt-2 text-ink-soft">
-                The cozy place to tuck away lists, plans and feelings — so your brain can relax. 🌰
+                The cozy place to tuck away lists, plans and feelings, so your brain can relax. 🌰
               </p>
               <div className="mt-5 text-left">
                 <Input label="What should we call you?" value={name} onChange={(e) => setName(e.target.value)} maxLength={40} placeholder="Your nickname" autoFocus />

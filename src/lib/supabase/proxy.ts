@@ -22,7 +22,7 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // Do not run code between createServerClient and getClaims — it refreshes the session.
+  // Do not run code between createServerClient and getClaims. It refreshes the session.
   const { data } = await supabase.auth.getClaims();
   const signedIn = Boolean(data?.claims?.sub);
   const path = request.nextUrl.pathname;

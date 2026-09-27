@@ -1,4 +1,4 @@
--- Tuckbury — initial schema
+-- Tuckbury: initial schema
 -- Every user-owned table has RLS enabled and is scoped to auth.uid().
 
 -- ─────────────────────────────────────────────────────────────

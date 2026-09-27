@@ -44,7 +44,7 @@ export async function signIn(_: FormState, form: FormData): Promise<FormState> {
     password: parsed.data.password,
   });
   if (error) {
-    if (error.code === "email_not_confirmed") return { error: "Please confirm your email first — check your inbox." };
+    if (error.code === "email_not_confirmed") return { error: "Please confirm your email first. Check your inbox." };
     return { error: "Wrong email or password." };
   }
   redirect(safeNext(parsed.data.next));

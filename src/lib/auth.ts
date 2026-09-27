@@ -11,7 +11,7 @@ import type { Profile } from "./types";
  * result to the caller's own row, and PostgREST verifies the JWT before running
  * the query. Resolving the id first would mean an extra `getClaims()` call, and
  * on a project using symmetric JWT keys that is a network round-trip to the
- * auth server on *every* render — measurably the most expensive thing in a cold
+ * auth server on *every* render, measurably the most expensive thing in a cold
  * navigation. Cached per request, so the many callers below share one query.
  */
 export const getProfile = cache(async (): Promise<Profile | null> => {

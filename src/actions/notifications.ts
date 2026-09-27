@@ -10,7 +10,7 @@ export async function pollNotifications(): Promise<ActionResult<{ unread: number
   try {
     // Runs on a timer for every open tab, so it skips the usual auth lookup:
     // process_my_due() raises without a session and RLS scopes the reads, which
-    // is all this needs — the user id itself is never used here.
+    // is all this needs. The user id itself is never used here.
     const supabase = await createClient();
     await supabase.rpc("process_my_due");
     const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();

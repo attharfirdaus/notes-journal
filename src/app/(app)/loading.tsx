@@ -10,7 +10,7 @@ import {
 // One loading boundary for the whole app shell.
 //
 // Per-segment loading.tsx files cannot work here: every route reads cookies, so
-// it is dynamic, and Next.js sends an empty prefetch payload for those — the
+// it is dynamic, and Next.js sends an empty prefetch payload for those. The
 // segment's own fallback only arrives together with the content it was meant to
 // cover. This boundary lives in the (app) layout instead, which the client
 // already holds, so it paints immediately on click.
