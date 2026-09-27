@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-mode="dark"], [data-mode="dark"] *));
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-soft: var(--soft);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-accent: var(--accent);
+  --color-line: var(--line);
+  --font-sans: var(--font-body), ui-rounded, system-ui, sans-serif;
+  --font-display: var(--font-display-face), var(--font-body), ui-rounded, sans-serif;
+  --radius-blob: 1.75rem;
+  --shadow-pop: 0 4px 0 0 color-mix(in oklab, var(--ink) 14%, transparent);
+  --shadow-soft: 0 10px 30px -12px color-mix(in oklab, var(--ink) 25%, transparent);
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--primary) 40%, transparent);
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 0.75rem;
+}
+
+/* ── Buttons that squish ─────────────────────────────── */
+.btn-pop {
+  box-shadow: var(--shadow-pop);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+.btn-pop:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+.btn-pop:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 color-mix(in oklab, var(--ink) 14%, transparent);
+}
+
+/* ── Vibe backgrounds ─────────────────────────────────── */
+.vibe-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.vibe-particle {
+  position: absolute;
+  top: -10%;
+  will-change: transform;
+}
+
+@keyframes vibe-rise {
+  from { transform: translate3d(0, 110vh, 0) scale(var(--s, 1)); opacity: 0; }
+  10% { opacity: 0.55; }
+  90% { opacity: 0.45; }
+  to { transform: translate3d(var(--dx, 0), -15vh, 0) scale(var(--s, 1)); opacity: 0; }
+}
+@keyframes vibe-fall {
+  from { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.8; }
+  to { transform: translate3d(var(--dx, 40px), 115vh, 0) rotate(var(--rot, 360deg)); opacity: 0.2; }
+}
+@keyframes vibe-twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.8); }
+  50% { opacity: 0.9; transform: scale(1.1); }
+}
+@keyframes vibe-rain {
+  from { transform: translate3d(0, -10vh, 0); }
+  to { transform: translate3d(-30px, 115vh, 0); }
+}
+
+/* ── Mascot ───────────────────────────────────────────── */
+@keyframes pet-breathe {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.02, 0.97); }
+}
+@keyframes pet-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+@keyframes pet-tail {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-6deg); }
+}
+@keyframes pet-float-z {
+  0% { transform: translate(0, 0); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translate(14px, -26px); opacity: 0; }
+}
+.pet-breathe { animation: pet-breathe 3.2s ease-in-out infinite; transform-origin: 50% 95%; transform-box: fill-box; }
+.pet-blink { animation: pet-blink 4.5s infinite; transform-origin: center; transform-box: fill-box; }
+.pet-tail { animation: pet-tail 2.4s ease-in-out infinite; transform-origin: 20% 90%; transform-box: fill-box; }
+.pet-z { animation: pet-float-z 2.6s ease-out infinite; }
+
+@keyframes flame-flicker {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50% { transform: scale(1.08, 1.12) rotate(2deg); }
+}
+.flame { animation: flame-flicker 1.4s ease-in-out infinite; transform-origin: 50% 90%; display: inline-block; }
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+.wiggle-hover:hover { animation: wiggle 400ms ease-in-out; }
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--soft) 25%, var(--card) 50%, var(--soft) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+/* Honour both the OS setting and the in-app toggle. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  .vibe-layer { display: none; }
+}
+[data-reduce-motion="true"] *,
+[data-reduce-motion="true"] *::before,
+[data-reduce-motion="true"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+[data-reduce-motion="true"] .vibe-layer { display: none; }
+
+/* Scrollbars */
+* { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
