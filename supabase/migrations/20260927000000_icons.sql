@@ -1,49 +1,80 @@
 -- Replace the stored emoji on notes and categories with icon keys.
 --
--- Run this once in the SQL Editor, after the initial schema. It renames the
--- columns, converts the emoji that were already saved, and drops the emoji from
--- the notification titles the reminder job writes.
+-- Run this once in the Supabase SQL Editor, after the initial schema. It renames
+-- the columns, converts the emoji that were already saved, and drops the emoji
+-- from the notification titles the reminder job writes.
+--
+-- Every step checks its own state first, so running the file twice is harmless.
 
-alter table public.notes rename column emoji to icon;
-alter table public.categories rename column emoji to icon;
+-- 1. The columns. The length checks that came with them are renamed too, so no
+--    constraint is left carrying the old name.
+do $rename_icon_columns$
+begin
+  if exists (select 1 from information_schema.columns
+              where table_schema = 'public' and table_name = 'notes' and column_name = 'emoji') then
+    alter table public.notes rename column emoji to icon;
+  end if;
+  if exists (select 1 from information_schema.columns
+              where table_schema = 'public' and table_name = 'categories' and column_name = 'emoji') then
+    alter table public.categories rename column emoji to icon;
+  end if;
+  if exists (select 1 from pg_constraint
+              where conrelid = 'public.notes'::regclass and conname = 'notes_emoji_check') then
+    alter table public.notes rename constraint notes_emoji_check to notes_icon_length;
+  end if;
+  if exists (select 1 from pg_constraint
+              where conrelid = 'public.categories'::regclass and conname = 'categories_emoji_check') then
+    alter table public.categories rename constraint categories_emoji_check to categories_icon_length;
+  end if;
+end
+$rename_icon_columns$;
 
--- Keys must match src/lib/icons.tsx.
-create function pg_temp.icon_key(e text, fallback text) returns text
-language sql immutable as $$
-  select coalesce(nullif(case e
-    when '📝' then 'note'          when '🛒' then 'shopping-cart'  when '✅' then 'check'
-    when '📅' then 'calendar'      when '📚' then 'book'           when '💼' then 'briefcase'
-    when '💡' then 'idea'          when '🎉' then 'party'          when '✈️' then 'plane'
-    when '💰' then 'wallet'        when '💪' then 'dumbbell'       when '🌱' then 'sprout'
-    when '🍳' then 'chef'          when '🎁' then 'gift'           when '🏠' then 'house'
-    when '🎮' then 'gamepad'       when '🎵' then 'music'          when '🎨' then 'palette'
-    when '🐶' then 'dog'           when '🧺' then 'laundry'        when '💊' then 'pill'
-    when '🧳' then 'luggage'       when '🎓' then 'graduation'     when '⭐' then 'star'
-    when '❤️' then 'heart'         when '🔥' then 'flame'          when '🌈' then 'rainbow'
-    when '🍀' then 'clover'        when '☕' then 'coffee'         when '🚗' then 'car'
-    when '📦' then 'package'       when '🧠' then 'brain'          when '🏷️' then 'tag'
-    when '🍔' then 'salad'         when '🐾' then 'dog'            when '🧘' then 'activity'
-    when '🎬' then 'clapper'       when '⚽' then 'trophy'         when '👶' then 'baby'
-    when '🧹' then 'house'         when '🔧' then 'wrench'         when '💻' then 'laptop'
-    else '' end, ''), fallback)
-$$;
+-- 2. The values that are already stored. Keys must match src/lib/icons.tsx, and
+--    the filter skips rows that hold an icon key already.
+update public.notes set icon = case icon
+  when '📝' then 'note'          when '🛒' then 'shopping-cart'  when '✅' then 'check'
+  when '📅' then 'calendar'      when '📚' then 'book'           when '💼' then 'briefcase'
+  when '💡' then 'idea'          when '🎉' then 'party'          when '✈️' then 'plane'
+  when '💰' then 'wallet'        when '💪' then 'dumbbell'       when '🌱' then 'sprout'
+  when '🍳' then 'chef'          when '🎁' then 'gift'           when '🏠' then 'house'
+  when '🎮' then 'gamepad'       when '🎵' then 'music'          when '🎨' then 'palette'
+  when '🐶' then 'dog'           when '🧺' then 'laundry'        when '💊' then 'pill'
+  when '🧳' then 'luggage'       when '🎓' then 'graduation'     when '⭐' then 'star'
+  when '❤️' then 'heart'         when '🔥' then 'flame'          when '🌈' then 'rainbow'
+  when '🍀' then 'clover'        when '☕' then 'coffee'         when '🚗' then 'car'
+  when '📦' then 'package'       when '🧠' then 'brain'          when '🏷️' then 'tag'
+  when '🍔' then 'salad'         when '🐾' then 'dog'            when '🧘' then 'activity'
+  when '🎬' then 'clapper'       when '⚽' then 'trophy'         when '👶' then 'baby'
+  when '🧹' then 'house'         when '🔧' then 'wrench'         when '💻' then 'laptop'
+  else 'note' end
+ where icon !~ '^[a-z][a-z0-9-]{0,30}$';
 
-update public.notes set icon = pg_temp.icon_key(icon, 'note');
-update public.categories set icon = pg_temp.icon_key(icon, 'tag');
+update public.categories set icon = case icon
+  when '🏷️' then 'tag'           when '🛒' then 'shopping-cart'  when '✅' then 'check'
+  when '💼' then 'briefcase'     when '📚' then 'book'           when '🎉' then 'party'
+  when '💪' then 'dumbbell'      when '💰' then 'wallet'         when '💡' then 'idea'
+  when '✈️' then 'plane'         when '🌱' then 'sprout'         when '📝' then 'note'
+  when '📅' then 'calendar'      when '🏠' then 'house'          when '🎨' then 'palette'
+  when '🎵' then 'music'         when '🎮' then 'gamepad'        when '🍳' then 'chef'
+  when '💊' then 'pill'          when '🚗' then 'car'            when '📦' then 'package'
+  when '🧠' then 'brain'         when '⭐' then 'star'           when '❤️' then 'heart'
+  else 'tag' end
+ where icon !~ '^[a-z][a-z0-9-]{0,30}$';
 
+-- 3. Defaults and shape. Icon keys are ascii slugs, so the column can be tight.
 alter table public.notes alter column icon set default 'note';
 alter table public.categories alter column icon set default 'tag';
 
--- Icon keys are ascii slugs, so tighten the shape the column accepts.
+alter table public.notes drop constraint if exists notes_icon_key;
+alter table public.categories drop constraint if exists categories_icon_key;
 alter table public.notes add constraint notes_icon_key check (icon ~ '^[a-z][a-z0-9-]{0,30}$');
 alter table public.categories add constraint categories_icon_key check (icon ~ '^[a-z][a-z0-9-]{0,30}$');
 
 grant update (icon) on public.notes to authenticated;
 grant update (icon) on public.categories to authenticated;
 
--- Seed new accounts with icon keys instead of emoji.
-create or replace function public.handle_new_user() returns trigger
-language plpgsql security definer set search_path = '' as $$
+-- 4. Seed new accounts with icon keys instead of emoji.
+create or replace function public.handle_new_user() returns trigger as $handle_new_user$
 begin
   insert into public.profiles (id, display_name)
   values (new.id, coalesce(left(new.raw_user_meta_data ->> 'display_name', 40), ''));
@@ -63,15 +94,15 @@ begin
   (new.id, 'Personal', 'sprout', '#D9F99D', '{personal,family,mom,dad,friend,friends,home,house,self,hobby,journal,gift,call mom,laundry,cook,cooking,keluarga,ibu,ayah,teman,rumah,hobi,hadiah,masak,cuci baju}', true);
 
   return new;
-end $$;
+end
+$handle_new_user$ language plpgsql security definer set search_path = '';
 
--- home_items() returned note_emoji; it now returns the icon key.
+-- 5. home_items() returned note_emoji; it now returns the icon key.
 drop function if exists public.home_items();
 create function public.home_items() returns table (
   id uuid, note_id uuid, note_title text, note_icon text, text text,
   due_at timestamptz, is_done boolean, bucket text
-)
-language sql stable security invoker set search_path = '' as $$
+) as $home_items$
   with me as (
     select (now() at time zone coalesce(p.timezone, 'UTC'))::date as today, coalesce(p.timezone, 'UTC') as tz
       from public.profiles p where p.id = auth.uid()
@@ -92,13 +123,13 @@ language sql stable security invoker set search_path = '' as $$
      and (i.due_at at time zone me.tz)::date <= me.today + 7
    order by i.due_at
    limit 50
-$$;
+$home_items$ language sql stable security invoker set search_path = '';
+
 revoke execute on function public.home_items() from public, anon;
 grant execute on function public.home_items() to authenticated;
 
--- Notification titles carried emoji too; the UI draws the icon now.
-create or replace function public._process_due(p_user uuid) returns int
-language plpgsql security definer set search_path = '' as $$
+-- 6. Notification titles carried emoji too; the UI draws the icon now.
+create or replace function public._process_due(p_user uuid) returns int as $process_due$
 declare
   created int := 0;
   n int;
@@ -160,5 +191,7 @@ begin
   created := created + n;
 
   return created;
-end $$;
+end
+$process_due$ language plpgsql security definer set search_path = '';
+
 revoke execute on function public._process_due(uuid) from public, anon, authenticated;
