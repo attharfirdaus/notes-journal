@@ -34,6 +34,7 @@ export default function SignupPage() {
           maxLength={40}
           placeholder="Nickname"
         />
+        <Input label="Birthday" name="birthday" type="date" autoComplete="bday" min="1900-01-01" required />
         <Input label="Email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" />
         <Input
           label="Password"

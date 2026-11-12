@@ -14,7 +14,14 @@ const password = z.string().min(8, "Use at least 8 characters").max(72, "That's 
 
 export async function signUp(_: FormState, form: FormData): Promise<FormState> {
   const parsed = z
-    .object({ email, password, display_name: z.string().trim().max(40).optional() })
+    .object({
+      email,
+      password,
+      display_name: z.string().trim().max(40).optional(),
+      birthday: z.iso
+        .date("Pick your birthday")
+        .refine((v) => v >= "1900-01-01" && v <= new Date().toISOString().slice(0, 10), "That birthday doesn't look right"),
+    })
     .safeParse(Object.fromEntries(form));
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
@@ -24,7 +31,10 @@ export async function signUp(_: FormState, form: FormData): Promise<FormState> {
     password: parsed.data.password,
     options: {
       emailRedirectTo: `${siteUrl()}/auth/confirm?next=/onboarding`,
-      data: { display_name: parsed.data.display_name ?? "" },
+      // The profile row is created by a database trigger before the user has a
+      // session, so the birthday rides along in the auth metadata and onboarding
+      // copies it into the profile.
+      data: { display_name: parsed.data.display_name ?? "", birthday: parsed.data.birthday },
     },
   });
   if (error) return { error: error.message };
