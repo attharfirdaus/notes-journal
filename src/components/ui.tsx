@@ -252,7 +252,7 @@ export function Segmented<T extends string>({
           aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
           className={clsx(
-            "relative flex-1 whitespace-nowrap rounded-xl px-3 py-1.5 text-sm font-bold transition",
+            "relative flex-1 whitespace-nowrap rounded-xl px-1.5 py-1.5 text-sm font-bold transition sm:px-3",
             value === o.value ? "text-ink" : "text-ink-soft hover:text-ink",
           )}
         >

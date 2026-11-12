@@ -78,7 +78,8 @@ export function QuickAdd() {
             ) : null}
             <Chip>“{plan.title}”</Chip>
             {plan.items.length > 1 ? <Chip>{plan.items.length} items</Chip> : null}
-            {plan.date ? <Chip> {formatDue(plan.date.iso, prefs.timezone)}</Chip> : null}
+            {plan.items[0]?.due_at ? <Chip>{formatDue(plan.items[0].due_at, prefs.timezone)}</Chip> : null}
+            {plan.recurrence ? <Chip>Repeats {plan.recurrence}</Chip> : null}
           </motion.div>
         ) : null}
       </AnimatePresence>

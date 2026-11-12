@@ -42,7 +42,7 @@ import { detectDate, type DateSuggestion } from "@/lib/smart-date";
 import { formatDue, isPast, isoToZonedInput, zonedInputToIso } from "@/lib/time";
 import { ICON_KEYS, Icon } from "@/lib/icons";
 import { NOTE_COLORS, NOTE_TYPES, REMINDER_PRESETS, reminderLabel } from "@/lib/note-meta";
-import type { Category, Note, NoteCategoryLink, NoteItem, NoteStatus, NoteType } from "@/lib/types";
+import type { Category, Note, NoteCategoryLink, NoteItem, NoteStatus, NoteType, Recurrence } from "@/lib/types";
 
 type Props = {
   initialNote: Note;
@@ -743,11 +743,12 @@ function ItemDetails({
             <Segmented
               label="Repeat"
               value={item.recurrence ?? "none"}
-              onChange={(v) => onSave(item, { recurrence: v === "none" ? null : (v as "daily" | "weekly") })}
+              onChange={(v) => onSave(item, { recurrence: v === "none" ? null : (v as Recurrence) })}
               options={[
                 { value: "none", label: "Never" },
                 { value: "daily", label: "Daily" },
                 { value: "weekly", label: "Weekly" },
+                { value: "monthly", label: "Monthly" },
               ]}
             />
           </div>
@@ -790,7 +791,9 @@ function AddItemBar({
     if (!raw || busy) return;
     // Pasting several lines adds several items.
     const lines = raw
-      .split(/\n+/)
+      // Plain lists also split on commas, like quick add ("butter, cheese"), but not
+      // inside a decimal quantity ("1,5 kg sugar"). Dated items keep their commas.
+      .split(showDue ? /\n+/ : /\n+|;|,(?!\d)/)
       .map((l) => l.trim())
       .filter(Boolean);
     let rows: { text: string; due_at?: string | null; quantity?: string | null }[];

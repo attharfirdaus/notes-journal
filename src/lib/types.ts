@@ -5,7 +5,7 @@ export type ColorMode = "light" | "dark" | "system";
 export type Vibe = "none" | "bubbles" | "leaves" | "stars" | "rain";
 export type NoteType = "checklist" | "tasks" | "schedule" | "free";
 export type NoteStatus = "active" | "completed" | "archived";
-export type Recurrence = "daily" | "weekly";
+export type Recurrence = "daily" | "weekly" | "monthly";
 
 export type Profile = {
   id: string;
