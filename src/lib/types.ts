@@ -17,6 +17,7 @@ export type Profile = {
   reduce_motion: boolean;
   sound_effects: boolean;
   pet_name: string;
+  birthday: string | null;
   reminder_defaults: number[];
   schedule_reminder: number;
   journal_nudge_time: string | null;

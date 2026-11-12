@@ -7,7 +7,7 @@ import { Mascot } from "@/components/mascot";
 import { usePrefs } from "@/components/prefs";
 import { useToast } from "@/components/toast";
 import { ProgressBar } from "@/components/ui";
-import { sfx } from "@/lib/fx";
+import { celebrate, sfx } from "@/lib/fx";
 import { pickMessage, renderMessage, type MessageContext } from "@/lib/messages";
 import { MOOD_LINES, type PetMood, type petStage } from "@/lib/pet";
 import { Snowflake } from "lucide-react";
@@ -21,6 +21,7 @@ export function PetCorner({
   recent,
   streak,
   usedFreeze,
+  birthday,
 }: {
   petName: string;
   stage: ReturnType<typeof petStage>;
@@ -30,6 +31,7 @@ export function PetCorner({
   recent: string[];
   streak: number;
   usedFreeze: boolean;
+  birthday: boolean;
 }) {
   const prefs = usePrefs();
   const { toast } = useToast();
@@ -41,6 +43,10 @@ export function PetCorner({
     if (usedFreeze)
       toast({ icon: Snowflake, title: "Streak saved!", body: "A streak freeze covered yesterday. Phew!" });
   }, [usedFreeze, toast]);
+
+  useEffect(() => {
+    if (birthday) celebrate("big");
+  }, [birthday]);
 
   const next = () => {
     const m = pickMessage(ctx, seen.current);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  addDays, daysBetween, dayPart, formatDue, isoToZonedInput, todayInTz, tzOffsetMinutes, zonedInputToIso,
+  addDays, daysBetween, dayPart, formatDue, isBirthday, isoToZonedInput, todayInTz, tzOffsetMinutes, zonedInputToIso,
 } from "../time";
 
 describe("time", () => {
@@ -10,6 +10,15 @@ describe("time", () => {
     expect(tzOffsetMinutes("Asia/Jakarta", at)).toBe(420);
     expect(tzOffsetMinutes("UTC", at)).toBe(0);
     expect(tzOffsetMinutes("America/New_York", at)).toBe(-240);
+  });
+
+  it("spots birthdays", () => {
+    expect(isBirthday("1999-11-12", "2026-11-12")).toBe(true);
+    expect(isBirthday("1999-11-12", "2026-11-13")).toBe(false);
+    expect(isBirthday(null, "2026-11-12")).toBe(false);
+    expect(isBirthday("2000-02-29", "2027-02-28")).toBe(true);
+    expect(isBirthday("2000-02-29", "2028-02-28")).toBe(false);
+    expect(isBirthday("2000-02-29", "2028-02-29")).toBe(true);
   });
 
   it("gets the local date", () => {

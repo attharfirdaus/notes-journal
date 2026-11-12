@@ -5,7 +5,7 @@ import { requireProfile } from "@/lib/auth";
 import { getActivity, getStreak } from "@/lib/home-data";
 import { pickMessage, renderMessage, type MessageContext } from "@/lib/messages";
 import { petMood, petStage } from "@/lib/pet";
-import { dayPart, formatDate, isoDaysAgo } from "@/lib/time";
+import { dayPart, formatDate, isBirthday, isoDaysAgo, todayInTz } from "@/lib/time";
 import { moodInfo } from "@/lib/journal";
 import type { HomeItem } from "@/lib/types";
 import { PetCorner } from "./pet-corner";
@@ -64,6 +64,9 @@ export default async function HomePage() {
   const msg = pickMessage(ctx, recent);
   await supabase.from("message_history").insert({ message_id: msg.id });
 
+  const birthday = isBirthday(profile.birthday, todayInTz(profile.timezone));
+  const who = profile.display_name || "friend";
+
   const stage = petStage(activity.total_active_days);
   const mood = petMood(activity);
   const today = activity.today || streak.today;
@@ -76,7 +79,7 @@ export default async function HomePage() {
           {today ? formatDate(today, { weekday: "long", month: "long", day: "numeric" }) : null}
         </p>
         <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-          {GREETINGS[part]}
+          {birthday ? "Happy birthday" : GREETINGS[part]}
           {profile.display_name ? `, ${profile.display_name}` : ""}!{" "}
           {part === "night" ? "" : part === "morning" ? "" : ""}
         </h1>
@@ -87,10 +90,22 @@ export default async function HomePage() {
           petName={profile.pet_name}
           stage={stage}
           mood={mood}
-          initialMessage={{
-            id: msg.id,
-            text: renderMessage(msg, { name: profile.display_name, pet: profile.pet_name, streak: streak.current }),
-          }}
+          birthday={birthday}
+          initialMessage={
+            birthday
+              ? {
+                  id: "birthday",
+                  text: `Happy birthday, ${who}! ${profile.pet_name} saved the biggest acorn for you. Wishing you a wonderful year ahead.`,
+                }
+              : {
+                  id: msg.id,
+                  text: renderMessage(msg, {
+                    name: profile.display_name,
+                    pet: profile.pet_name,
+                    streak: streak.current,
+                  }),
+                }
+          }
           ctx={ctx}
           recent={[msg.id, ...recent]}
           streak={streak.current}

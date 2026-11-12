@@ -95,6 +95,16 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
             onBlur={() => (pet.trim() ? pet !== p.pet_name && save({ pet_name: pet.trim() }) : setPet(p.pet_name))}
           />
         </div>
+        <Input
+          label="Birthday"
+          type="date"
+          min="1900-01-01"
+          defaultValue={p.birthday ?? ""}
+          onBlur={(e) => {
+            const v = e.target.value || null;
+            if (v !== p.birthday) save({ birthday: v });
+          }}
+        />
         <label className="block">
           <span className="mb-1.5 block text-sm font-bold text-ink-soft">Time zone</span>
           <select
