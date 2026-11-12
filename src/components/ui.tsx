@@ -165,7 +165,7 @@ export function Chip({
         className,
       )}
     >
-      <span className="truncate">{children}</span>
+      <span className="truncate [&>svg]:mr-1 [&>svg]:inline-block [&>svg]:align-[-0.15em]">{children}</span>
       {onRemove ? (
         <span
           role="button"
@@ -263,7 +263,7 @@ export function Segmented<T extends string>({
               transition={{ type: "spring", stiffness: 500, damping: 35 }}
             />
           ) : null}
-          <span className="relative">{o.label}</span>
+          <span className="relative inline-flex items-center justify-center gap-1.5">{o.label}</span>
         </button>
       ))}
     </div>

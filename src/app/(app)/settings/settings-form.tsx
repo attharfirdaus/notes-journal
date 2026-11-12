@@ -363,7 +363,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
         </div>
       </Section>
 
-      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete your account? ">
+      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete your account?">
         <form action={delAction} className="space-y-4">
           <p className="text-ink-soft">
             This permanently deletes your notes, journal, capsules and everything else. {p.pet_name} will miss you.

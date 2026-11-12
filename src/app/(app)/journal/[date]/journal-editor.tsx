@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Eye,
   Flame,
+  Lightbulb,
   Italic,
   List,
   Pencil,
@@ -236,7 +237,7 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
             exit={{ opacity: 0 }}
             className="mt-4 flex items-center gap-3 rounded-2xl border-2 border-dashed border-line bg-soft/60 p-3"
           >
-            <span className="text-2xl"></span>
+            <Lightbulb size={22} className="shrink-0 text-primary" aria-hidden />
             <p className="flex-1 font-semibold italic">{prompt}</p>
             <IconButton label="Another prompt" onClick={() => setPrompt(randomPrompt(prompt))}>
               <Shuffle size={18} />

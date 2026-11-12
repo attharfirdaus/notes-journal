@@ -31,7 +31,7 @@ export function NewNoteButton() {
       <Button onClick={() => setOpen(true)}>
         <Plus size={18} /> New note
       </Button>
-      <Modal open={open} onClose={() => setOpen(false)} title="New note ">
+      <Modal open={open} onClose={() => setOpen(false)} title="New note">
         <form
           onSubmit={(e) => {
             e.preventDefault();

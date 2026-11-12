@@ -11,7 +11,7 @@ import { StreakCard } from "@/components/streak-card";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { JournalCalendar } from "./journal-calendar";
 import { JournalFilters } from "./journal-filters";
-import { PenLine } from "lucide-react";
+import { Flame, PenLine } from "lucide-react";
 
 export const metadata: Metadata = { title: "Journal" };
 
@@ -44,7 +44,7 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
           href="/journal/today"
           className="btn-pop inline-flex h-11 items-center gap-2 rounded-2xl bg-primary px-4 font-bold text-primary-ink"
         >
-          {wroteToday ? " Continue today" : " Write today"}
+          <PenLine size={18} aria-hidden /> {wroteToday ? "Continue today" : "Write today"}
         </Link>
       </PageHeader>
 
@@ -99,7 +99,9 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
                             })}
                       </span>
                       {e.counts_for_streak ? (
-                        <span className="text-xs" title="Counted toward your streak"></span>
+                        <span title="Counted toward your streak">
+                          <Flame size={14} className="fill-[#FFC857] text-[#FF7A3D]" aria-label="Counted toward your streak" />
+                        </span>
                       ) : null}
                     </span>
                     <span className="mt-0.5 line-clamp-2 block text-sm text-ink-soft">

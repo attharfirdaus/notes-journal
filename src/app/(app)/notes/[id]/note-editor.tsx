@@ -54,11 +54,11 @@ type Props = {
 };
 
 const PROGRESS_LINES = [
-  [0, "Let's get started! "],
-  [0.01, "Nice start! "],
-  [0.34, "Making progress! "],
-  [0.67, "Almost there! "],
-  [1, "All done. Amazing! "],
+  [0, "Let's get started!"],
+  [0.01, "Nice start!"],
+  [0.34, "Making progress!"],
+  [0.67, "Almost there!"],
+  [1, "All done. Amazing!"],
 ] as const;
 
 function progressLine(p: number) {
@@ -283,7 +283,7 @@ export function NoteEditor(props: Props) {
             {links.length ? "Edit" : "+ Category"}
           </button>
           {!note.categories_locked ? (
-            <span className="text-xs font-semibold text-ink-soft"> auto-detecting</span>
+            <span className="text-xs font-semibold text-ink-soft">auto-detecting</span>
           ) : null}
         </div>
 
@@ -908,11 +908,11 @@ function CategoryModal({
   }, [open, links]);
 
   return (
-    <Modal open={open} onClose={onClose} title="Categories ">
+    <Modal open={open} onClose={onClose} title="Categories">
       <p className="mb-3 text-sm text-ink-soft">
         {locked
           ? "You're in charge. Auto-detect is paused for this note."
-          : " Auto-detected from your text. Changing them here switches to manual."}
+          : "Auto-detected from your text. Changing them here switches to manual."}
       </p>
       <div className="flex flex-wrap gap-2">
         {categories.map((c) => {
@@ -957,7 +957,7 @@ function PushNudge({ hasDue }: { hasDue: boolean }) {
       animate={{ opacity: 1, y: 0 }}
       className="mt-4 flex items-center gap-3 rounded-2xl border-2 border-line bg-card p-3 shadow-soft"
     >
-      <span className="text-2xl"></span>
+      <BellRing size={22} className="shrink-0 text-primary" aria-hidden />
       <p className="flex-1 text-sm font-semibold">Want a ping before deadlines, even when Tuckbury is closed?</p>
       <Button size="sm" onClick={() => void push.subscribe()} loading={push.busy}>
         Turn on

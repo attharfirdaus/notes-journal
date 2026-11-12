@@ -263,7 +263,7 @@ export function FocusTimer({
           <Mascot stage={stage} mood={running ? "happy" : justFinished ? "ecstatic" : mood} size={70} label={petName} />
           <div className="text-sm">
             <p className="font-bold">
-              Today: {minutesToday} min · × {round}
+              Today: {minutesToday} min · {round} session{round === 1 ? "" : "s"}
             </p>
             <p className="text-ink-soft">
               {running
