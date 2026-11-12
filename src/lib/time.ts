@@ -96,6 +96,16 @@ export function addDays(date: string, n: number): string {
   return t.toISOString().slice(0, 10);
 }
 
+/** Is `today` (YYYY-MM-DD) the anniversary of `birthday` (YYYY-MM-DD)? */
+export function isBirthday(birthday: string | null, today: string): boolean {
+  if (!birthday) return false;
+  const md = birthday.slice(5);
+  const t = today.slice(5);
+  if (md === t) return true;
+  // Born on Feb 29: celebrate on Feb 28 when the year has no leap day.
+  return md === "02-29" && t === "02-28" && addDays(today, 1).slice(5) === "03-01";
+}
+
 export function daysBetween(from: string, to: string): number {
   const a = Date.parse(`${from}T00:00:00Z`);
   const b = Date.parse(`${to}T00:00:00Z`);

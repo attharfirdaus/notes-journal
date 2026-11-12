@@ -10,6 +10,7 @@ const ProfilePatch = z
   .object({
     display_name: z.string().trim().max(40),
     pet_name: z.string().trim().min(1).max(20),
+    birthday: z.iso.date().nullable(),
     timezone: z.string().refine(isValidTimeZone, "Unknown time zone"),
     theme: z.enum(["sunny", "ocean", "forest", "candy", "midnight"]),
     color_mode: z.enum(["light", "dark", "system"]),
