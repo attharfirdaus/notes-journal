@@ -54,7 +54,15 @@ openssl rand -hex 32               # → CRON_SECRET
 2. Buka [`supabase/cron.sql`](supabase/cron.sql) dan ganti dua placeholder (URL app dan `CRON_SECRET`), lalu jalankan di SQL Editor. Script ini mengaktifkan `pg_cron` dan `pg_net`, lalu memanggil `/api/cron/reminders` setiap menit.
 3. Cek hasilnya: `select * from net._http_response order by created desc limit 5;` harus menunjukkan status `200`.
 
-### 5. Email untuk production
+### 5. Supaya project Supabase tidak ter-pause
+
+Project Supabase Free di-pause setelah sekitar 7 hari tanpa aktivitas. [`vercel.json`](vercel.json) menjadwalkan Vercel Cron yang memanggil `/api/cron/reminders` sekali sehari, dan endpoint itu menjalankan query ke Supabase, jadi project tetap dianggap aktif walaupun tidak ada yang membuka app.
+
+- Tidak perlu setup tambahan selain `CRON_SECRET` di Environment Variables Vercel. Vercel otomatis mengirimnya sebagai header `Authorization: Bearer ...`.
+- Cron hanya jalan di deployment **production**.
+- Cek di Vercel **Settings → Cron Jobs**. Tombol **Run** di sana harus menghasilkan status `200`.
+
+### 6. Email untuk production
 
 Email bawaan Supabase dibatasi ketat dan dimaksudkan untuk uji coba. Untuk user sungguhan, pasang SMTP sendiri (misalnya Resend) di **Authentication → Emails → SMTP Settings**.
 
