@@ -51,10 +51,11 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
 
   useEffect(() => {
     try {
+      const all = Intl.supportedValuesOf("timeZone");
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setZones(Intl.supportedValuesOf("timeZone"));
+      setZones(all.includes(profile.timezone) ? all : [profile.timezone, ...all]);
     } catch {}
-  }, []);
+  }, [profile.timezone]);
 
   const save = (patch: ProfilePatch, quiet = false) => {
     setP((x) => ({ ...x, ...patch }) as Profile);

@@ -240,6 +240,8 @@ export function Segmented<T extends string>({
   options: { value: T; label: ReactNode }[];
   label: string;
 }) {
+  // Per instance, so two groups with the same label never share the sliding pill.
+  const uid = useId();
   return (
     <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-1 rounded-2xl bg-soft p-1">
       {options.map((o) => (
@@ -256,7 +258,7 @@ export function Segmented<T extends string>({
         >
           {value === o.value ? (
             <motion.span
-              layoutId={`seg-${label}`}
+              layoutId={`seg-${uid}`}
               className="absolute inset-0 rounded-xl bg-card shadow"
               transition={{ type: "spring", stiffness: 500, damping: 35 }}
             />

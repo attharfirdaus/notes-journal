@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
-const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+// Origin only, same normalisation as src/lib/env.ts: a path here would narrow connect-src.
+const supabase = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim().replace(/\/(rest\/v1\/?)?$/, "");
 const supabaseWs = supabase.replace(/^http/, "ws");
 const dev = process.env.NODE_ENV !== "production";
 

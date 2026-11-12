@@ -741,7 +741,7 @@ function ItemDetails({
               <Repeat size={13} /> Repeat
             </span>
             <Segmented
-              label={`repeat-${item.id}`}
+              label="Repeat"
               value={item.recurrence ?? "none"}
               onChange={(v) => onSave(item, { recurrence: v === "none" ? null : (v as "daily" | "weekly") })}
               options={[

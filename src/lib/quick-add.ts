@@ -34,7 +34,9 @@ export function planQuickAdd(input: string, tz: string, now: Date = new Date()):
   const text = input.trim().slice(0, 500);
   if (!text) return null;
 
-  const colon = text.indexOf(":");
+  // The colon that separates a title from its list: not the one inside a clock
+  // time ("7:30") or a link ("https://").
+  const colon = text.search(/(?:(?<!\d):|:(?!\d))(?!\/\/)/);
   if (colon > 0 && colon < text.length - 1) {
     const title = text.slice(0, colon).trim();
     const items = splitList(text.slice(colon + 1));

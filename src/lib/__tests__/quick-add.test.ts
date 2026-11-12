@@ -12,6 +12,15 @@ describe("planQuickAdd", () => {
     expect(p.items.map((i) => i.text)).toEqual(["milk", "eggs", "bread"]);
   });
 
+  it("does not split on the colon of a clock time or a link", () => {
+    const p = planQuickAdd("dinner tomorrow at 7:30pm", tz, now)!;
+    expect(p.type).toBe("schedule");
+    expect(p.title).toBe("Dinner");
+    expect(p.items[0].due_at).toBe("2026-09-27T12:30:00.000Z");
+    expect(planQuickAdd("read https://example.com/a", tz, now)!.type).toBe("free");
+    expect(planQuickAdd("party at 7:30: cake, balloons", tz, now)!.title).toBe("Party at 7:30");
+  });
+
   it("builds a checklist from a bare comma list", () => {
     const p = planQuickAdd("milk, eggs", tz, now)!;
     expect(p.type).toBe("checklist");
