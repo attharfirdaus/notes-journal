@@ -253,7 +253,7 @@ function CreateCapsule({
     });
 
   return (
-    <Modal open={open} onClose={onClose} title="Dear future me… " wide>
+    <Modal open={open} onClose={onClose} title="Dear future me…" wide>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -266,7 +266,7 @@ function CreateCapsule({
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           maxLength={80}
-          placeholder="Open when you graduate "
+          placeholder="Open when you graduate"
           required
         />
         <label className="block">

@@ -108,7 +108,13 @@ export async function quickAdd(text: string): Promise<ActionResult<{ id: string;
       const { error: ie } = await supabase
         .from("note_items")
         .insert(
-          plan.items.map((it, i) => ({ note_id: note.id, text: it.text, due_at: it.due_at ?? null, position: i + 1 })),
+          plan.items.map((it, i) => ({
+            note_id: note.id,
+            text: it.text,
+            due_at: it.due_at ?? null,
+            recurrence: it.recurrence ?? null,
+            position: i + 1,
+          })),
         );
       if (ie) throw ie;
     }
@@ -143,6 +149,16 @@ export async function updateNote(
     const { supabase } = await authed();
     const { data: note, error } = await supabase.from("notes").update(data).eq("id", nid).select(NOTE_COLS).single();
     if (error) throw error;
+    if (data.type !== undefined) {
+      // Default reminders depend on the note type (schedule vs. the rest), and they
+      // are rebuilt by a trigger on the item, so nudge every item that uses defaults.
+      await supabase
+        .from("note_items")
+        .update({ remind_offsets: null })
+        .eq("note_id", nid)
+        .is("remind_offsets", null)
+        .not("due_at", "is", null);
+    }
     const categories =
       data.title !== undefined || data.description !== undefined ? await autoCategorize(supabase, nid) : null;
     return { ok: true, data: { note: note as Note, categories } };
@@ -263,7 +279,7 @@ const ItemPatch = z
     quantity: z.string().trim().max(20).nullable(),
     due_at: z.iso.datetime({ offset: true }).nullable(),
     remind_offsets: offsets,
-    recurrence: z.enum(["daily", "weekly"]).nullable(),
+    recurrence: z.enum(["daily", "weekly", "monthly"]).nullable(),
   })
   .partial();
 

@@ -80,8 +80,7 @@ export default async function HomePage() {
         </p>
         <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
           {birthday ? "Happy birthday" : GREETINGS[part]}
-          {profile.display_name ? `, ${profile.display_name}` : ""}!{" "}
-          {part === "night" ? "" : part === "morning" ? "" : ""}
+          {profile.display_name ? `, ${profile.display_name}` : ""}!
         </h1>
       </header>
 

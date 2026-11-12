@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { todayInTz } from "@/lib/time";
@@ -10,7 +11,8 @@ export const metadata: Metadata = { title: "Journal entry" };
 
 export default async function JournalEntryPage({ params }: PageProps<"/journal/[date]">) {
   const { date } = await params;
-  const isDate = /^\d{4}-\d{2}-\d{2}$/.test(date) && !Number.isNaN(Date.parse(date));
+  // A real calendar date: Date.parse alone accepts "2026-02-31" and rolls it into March.
+  const isDate = z.iso.date().safeParse(date).success;
   const supabase = await createClient();
 
   // Whether the date is in the future can only be decided once the profile's

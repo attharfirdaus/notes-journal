@@ -42,7 +42,7 @@ import { detectDate, type DateSuggestion } from "@/lib/smart-date";
 import { formatDue, isPast, isoToZonedInput, zonedInputToIso } from "@/lib/time";
 import { ICON_KEYS, Icon } from "@/lib/icons";
 import { NOTE_COLORS, NOTE_TYPES, REMINDER_PRESETS, reminderLabel } from "@/lib/note-meta";
-import type { Category, Note, NoteCategoryLink, NoteItem, NoteStatus, NoteType } from "@/lib/types";
+import type { Category, Note, NoteCategoryLink, NoteItem, NoteStatus, NoteType, Recurrence } from "@/lib/types";
 
 type Props = {
   initialNote: Note;
@@ -54,11 +54,11 @@ type Props = {
 };
 
 const PROGRESS_LINES = [
-  [0, "Let's get started! "],
-  [0.01, "Nice start! "],
-  [0.34, "Making progress! "],
-  [0.67, "Almost there! "],
-  [1, "All done. Amazing! "],
+  [0, "Let's get started!"],
+  [0.01, "Nice start!"],
+  [0.34, "Making progress!"],
+  [0.67, "Almost there!"],
+  [1, "All done. Amazing!"],
 ] as const;
 
 function progressLine(p: number) {
@@ -283,7 +283,7 @@ export function NoteEditor(props: Props) {
             {links.length ? "Edit" : "+ Category"}
           </button>
           {!note.categories_locked ? (
-            <span className="text-xs font-semibold text-ink-soft"> auto-detecting</span>
+            <span className="text-xs font-semibold text-ink-soft">auto-detecting</span>
           ) : null}
         </div>
 
@@ -741,13 +741,14 @@ function ItemDetails({
               <Repeat size={13} /> Repeat
             </span>
             <Segmented
-              label={`repeat-${item.id}`}
+              label="Repeat"
               value={item.recurrence ?? "none"}
-              onChange={(v) => onSave(item, { recurrence: v === "none" ? null : (v as "daily" | "weekly") })}
+              onChange={(v) => onSave(item, { recurrence: v === "none" ? null : (v as Recurrence) })}
               options={[
                 { value: "none", label: "Never" },
                 { value: "daily", label: "Daily" },
                 { value: "weekly", label: "Weekly" },
+                { value: "monthly", label: "Monthly" },
               ]}
             />
           </div>
@@ -790,7 +791,9 @@ function AddItemBar({
     if (!raw || busy) return;
     // Pasting several lines adds several items.
     const lines = raw
-      .split(/\n+/)
+      // Plain lists also split on commas, like quick add ("butter, cheese"), but not
+      // inside a decimal quantity ("1,5 kg sugar"). Dated items keep their commas.
+      .split(showDue ? /\n+/ : /\n+|;|,(?!\d)/)
       .map((l) => l.trim())
       .filter(Boolean);
     let rows: { text: string; due_at?: string | null; quantity?: string | null }[];
@@ -905,11 +908,11 @@ function CategoryModal({
   }, [open, links]);
 
   return (
-    <Modal open={open} onClose={onClose} title="Categories ">
+    <Modal open={open} onClose={onClose} title="Categories">
       <p className="mb-3 text-sm text-ink-soft">
         {locked
           ? "You're in charge. Auto-detect is paused for this note."
-          : " Auto-detected from your text. Changing them here switches to manual."}
+          : "Auto-detected from your text. Changing them here switches to manual."}
       </p>
       <div className="flex flex-wrap gap-2">
         {categories.map((c) => {
@@ -954,7 +957,7 @@ function PushNudge({ hasDue }: { hasDue: boolean }) {
       animate={{ opacity: 1, y: 0 }}
       className="mt-4 flex items-center gap-3 rounded-2xl border-2 border-line bg-card p-3 shadow-soft"
     >
-      <span className="text-2xl"></span>
+      <BellRing size={22} className="shrink-0 text-primary" aria-hidden />
       <p className="flex-1 text-sm font-semibold">Want a ping before deadlines, even when Tuckbury is closed?</p>
       <Button size="sm" onClick={() => void push.subscribe()} loading={push.busy}>
         Turn on

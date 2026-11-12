@@ -45,7 +45,14 @@ export function PetCorner({
   }, [usedFreeze, toast]);
 
   useEffect(() => {
-    if (birthday) celebrate("big");
+    if (!birthday) return;
+    // Once a day per device, not on every visit to Home.
+    const today = new Date().toDateString();
+    try {
+      if (localStorage.getItem("birthday-confetti") === today) return;
+      localStorage.setItem("birthday-confetti", today);
+    } catch {}
+    celebrate("big");
   }, [birthday]);
 
   const next = () => {

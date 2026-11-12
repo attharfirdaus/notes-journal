@@ -13,7 +13,7 @@ import { THEME_ICONS } from "@/lib/icons";
 
 const STEPS = ["hello", "pet", "theme", "hatch"] as const;
 
-export function Onboarding({ initialName }: { initialName: string }) {
+export function Onboarding({ initialName, birthday }: { initialName: string; birthday: string | null }) {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [name, setName] = useState(initialName);
@@ -35,6 +35,8 @@ export function Onboarding({ initialName }: { initialName: string }) {
 
   const finish = () =>
     start(async () => {
+      // Separate and unchecked: a birthday that fails to save must not block onboarding.
+      if (birthday) await updateProfile({ birthday });
       const res = await updateProfile({
         display_name: name.trim(),
         pet_name: pet.trim() || "Pip",

@@ -14,7 +14,14 @@ const password = z.string().min(8, "Use at least 8 characters").max(72, "That's 
 
 export async function signUp(_: FormState, form: FormData): Promise<FormState> {
   const parsed = z
-    .object({ email, password, display_name: z.string().trim().max(40).optional() })
+    .object({
+      email,
+      password,
+      display_name: z.string().trim().max(40).optional(),
+      birthday: z.iso
+        .date("Pick your birthday")
+        .refine((v) => v >= "1900-01-01" && v <= new Date().toISOString().slice(0, 10), "That birthday doesn't look right"),
+    })
     .safeParse(Object.fromEntries(form));
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
@@ -24,12 +31,15 @@ export async function signUp(_: FormState, form: FormData): Promise<FormState> {
     password: parsed.data.password,
     options: {
       emailRedirectTo: `${siteUrl()}/auth/confirm?next=/onboarding`,
-      data: { display_name: parsed.data.display_name ?? "" },
+      // The profile row is created by a database trigger before the user has a
+      // session, so the birthday rides along in the auth metadata and onboarding
+      // copies it into the profile.
+      data: { display_name: parsed.data.display_name ?? "", birthday: parsed.data.birthday },
     },
   });
   if (error) return { error: error.message };
   if (data.session) redirect("/onboarding");
-  return { message: "Check your inbox! We sent you a link to confirm your email. " };
+  return { message: "Check your inbox! We sent you a link to confirm your email." };
 }
 
 export async function signIn(_: FormState, form: FormData): Promise<FormState> {
@@ -60,7 +70,7 @@ export async function requestPasswordReset(_: FormState, form: FormData): Promis
   });
   if (error?.status === 429) return { error: "Too many requests. Please wait a minute and try again." };
   // Same answer whether or not the account exists, so emails can't be probed.
-  return { message: "If that email has an account, a reset link is on its way. " };
+  return { message: "If that email has an account, a reset link is on its way." };
 }
 
 export async function updatePassword(_: FormState, form: FormData): Promise<FormState> {
@@ -73,7 +83,7 @@ export async function updatePassword(_: FormState, form: FormData): Promise<Form
   const supabase = await createClient();
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
   if (error) return { error: error.message };
-  return { message: "Password updated! " };
+  return { message: "Password updated!" };
 }
 
 export async function signOut() {

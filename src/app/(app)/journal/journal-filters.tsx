@@ -73,7 +73,7 @@ export function JournalFilters({ q: initialQ, mood, view }: { q: string; mood: n
             type="button"
             aria-pressed={mood === m.value}
             onClick={() => set("mood", mood === m.value ? "" : String(m.value))}
-            className="rounded-full border-2 px-3 py-1 text-sm font-bold transition hover:-translate-y-0.5"
+            className="inline-flex items-center gap-1.5 rounded-full border-2 px-3 py-1 text-sm font-bold transition hover:-translate-y-0.5"
             style={
               mood === m.value
                 ? { borderColor: m.color, background: `${m.color}88` }

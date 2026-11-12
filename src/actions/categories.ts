@@ -26,6 +26,10 @@ export async function saveCategory(
   const parsed = CategoryInput.safeParse(input);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0].message };
   const { supabase } = await authed();
+  // The database constraint is case-sensitive, so "Pets" and "pets" would both get in.
+  const { data: all } = await supabase.from("categories").select("id,name");
+  const taken = (all ?? []).some((c) => c.id !== id && c.name.toLowerCase() === parsed.data.name.toLowerCase());
+  if (taken) return { ok: false, error: friendly("duplicate") };
   const q = id
     ? supabase.from("categories").update(parsed.data).eq("id", z.uuid().parse(id))
     : supabase.from("categories").insert(parsed.data);

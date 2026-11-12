@@ -165,7 +165,7 @@ export function Chip({
         className,
       )}
     >
-      <span className="truncate">{children}</span>
+      <span className="truncate [&>svg]:mr-1 [&>svg]:inline-block [&>svg]:align-[-0.15em]">{children}</span>
       {onRemove ? (
         <span
           role="button"
@@ -240,6 +240,8 @@ export function Segmented<T extends string>({
   options: { value: T; label: ReactNode }[];
   label: string;
 }) {
+  // Per instance, so two groups with the same label never share the sliding pill.
+  const uid = useId();
   return (
     <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-1 rounded-2xl bg-soft p-1">
       {options.map((o) => (
@@ -250,18 +252,18 @@ export function Segmented<T extends string>({
           aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
           className={clsx(
-            "relative flex-1 whitespace-nowrap rounded-xl px-3 py-1.5 text-sm font-bold transition",
+            "relative flex-1 whitespace-nowrap rounded-xl px-1.5 py-1.5 text-sm font-bold transition sm:px-3",
             value === o.value ? "text-ink" : "text-ink-soft hover:text-ink",
           )}
         >
           {value === o.value ? (
             <motion.span
-              layoutId={`seg-${label}`}
+              layoutId={`seg-${uid}`}
               className="absolute inset-0 rounded-xl bg-card shadow"
               transition={{ type: "spring", stiffness: 500, damping: 35 }}
             />
           ) : null}
-          <span className="relative">{o.label}</span>
+          <span className="relative inline-flex items-center justify-center gap-1.5">{o.label}</span>
         </button>
       ))}
     </div>

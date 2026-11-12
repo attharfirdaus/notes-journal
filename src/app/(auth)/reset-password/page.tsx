@@ -2,15 +2,17 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { updatePassword } from "@/actions/auth";
 import { AuthForm } from "@/components/auth-form";
+import { getProfile } from "@/lib/auth";
 import { Input } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Reset password" };
 
-export default function ResetPasswordPage() {
+export default async function ResetPasswordPage() {
+  const pet = (await getProfile())?.pet_name ?? "Pip";
   return (
     <>
       <h1 className="mb-1 font-display text-2xl font-bold">Pick a new password</h1>
-      <p className="mb-5 text-sm text-ink-soft">Make it something only you (and not Pip) would guess.</p>
+      <p className="mb-5 text-sm text-ink-soft">Make it something only you (and not {pet}) would guess.</p>
       <AuthForm
         action={updatePassword}
         submitLabel="Save new password"

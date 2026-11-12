@@ -1,4 +1,4 @@
-import { Snowflake } from "lucide-react";
+import { Flame, Snowflake } from "lucide-react";
 import type { StreakInfo } from "@/lib/types";
 
 const MILESTONES = [3, 7, 14, 30, 100, 365];
@@ -13,11 +13,12 @@ export function StreakCard({ streak }: { streak: StreakInfo }) {
   return (
     <div className="flex items-center gap-4 rounded-blob border-2 border-line bg-card p-4 shadow-soft">
       <div className="flex h-16 w-16 shrink-0 items-center justify-center">
-        <span
-          className={streak.current ? "flame" : "grayscale opacity-50"}
-          style={{ fontSize: `${2.2 * flameSize(streak.current)}rem`, lineHeight: 1 }}
+        <Flame
+          size={Math.round(35 * flameSize(streak.current))}
+          strokeWidth={2.25}
+          className={streak.current ? "flame fill-[#FFC857] text-[#FF7A3D]" : "text-ink-soft opacity-50"}
           aria-hidden
-        ></span>
+        />
       </div>
       <div className="min-w-0 flex-1">
         <p className="font-display text-2xl font-bold leading-none">
