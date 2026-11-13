@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/auth";
 import { getStreak } from "@/lib/home-data";
-import { MOODS, moodInfo } from "@/lib/journal";
+import { moodInfo } from "@/lib/journal";
 import { plainSnippet } from "@/lib/markdown";
 import { formatDate, todayInTz } from "@/lib/time";
 import type { JournalEntry } from "@/lib/types";
@@ -42,7 +42,7 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
       <PageHeader title="Journal" icon="ui-journal">
         <Link
           href="/journal/today"
-          className="btn-pop inline-flex h-11 items-center gap-2 rounded-2xl bg-primary px-4 font-bold text-primary-ink"
+          className="btn-pop inline-flex h-11 items-center gap-2 rounded-btn bg-primary px-4 font-bold text-primary-ink"
         >
           <PenLine size={18} aria-hidden /> {wroteToday ? "Continue today" : "Write today"}
         </Link>
@@ -78,10 +78,10 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
               <li key={e.id}>
                 <Link
                   href={`/journal/${e.entry_date}`}
-                  className="flex gap-3 rounded-blob border-2 border-line bg-card p-4 shadow-soft transition hover:-translate-y-0.5"
+                  className="flex gap-3 rounded-paper border border-line bg-card p-4 transition hover:border-edge"
                 >
                   <span
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-2xl"
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-paper text-2xl"
                     style={{ background: m ? `${m.color}66` : "var(--soft)" }}
                   >
                     {m ? <m.Icon size={22} aria-hidden /> : <PenLine size={22} aria-hidden />}
@@ -100,7 +100,7 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
                       </span>
                       {e.counts_for_streak ? (
                         <span title="Counted toward your streak">
-                          <Flame size={14} className="fill-[#FFC857] text-[#FF7A3D]" aria-label="Counted toward your streak" />
+                          <Flame size={14} className="fill-accent text-primary-text" aria-label="Counted toward your streak" />
                         </span>
                       ) : null}
                     </span>
@@ -123,7 +123,6 @@ export default async function JournalPage({ searchParams }: PageProps<"/journal"
           })}
         </ol>
       )}
-      <p className="mt-6 text-center text-xs text-ink-soft">Mood key: {MOODS.map((m) => m.label).join(" · ")}</p>
     </div>
   );
 }

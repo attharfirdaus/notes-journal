@@ -67,8 +67,7 @@ export function PetCorner({
   const displayMood: PetMood = taps > 0 && mood !== "sad" ? (taps % 3 === 0 ? "ecstatic" : "happy") : mood;
 
   return (
-    <section className="relative overflow-hidden rounded-blob border-2 border-line bg-card p-4 shadow-soft">
-      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-accent/30 blur-2xl" aria-hidden />
+    <section className="tape tape-left relative rounded-paper border border-line bg-card p-4">
       <div className="relative flex items-end gap-3">
         <Mascot
           stage={stage.stage}
@@ -82,11 +81,11 @@ export function PetCorner({
           <AnimatePresence mode="wait">
             <motion.div
               key={message.id + taps}
-              initial={{ opacity: 0, y: 10, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 26 }}
-              className="relative rounded-3xl rounded-bl-md bg-soft px-4 py-3 font-semibold leading-snug"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="hand relative text-ink"
               aria-live="polite"
             >
               {message.text}
@@ -99,7 +98,7 @@ export function PetCorner({
           <p className="font-bold">
             {petName} <span className="font-semibold text-ink-soft">{MOOD_LINES[mood]}</span>
           </p>
-          <p className="shrink-0 text-xs font-black uppercase tracking-wide text-ink-soft">{stage.label}</p>
+          <p className="shrink-0 text-sm font-bold text-ink-soft">{stage.label}</p>
         </div>
         {stage.next ? (
           <>

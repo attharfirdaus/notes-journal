@@ -75,9 +75,9 @@ export function Capsules({ capsules, tz }: { capsules: TimeCapsule[]; tz: string
             {ready.map((c) => (
               <motion.div
                 key={c.id}
-                className="rounded-blob border-2 border-primary bg-card p-4 shadow-soft"
+                className="rounded-paper border-2 border-primary-text bg-card p-4"
                 animate={!c.opened_at ? { rotate: [0, -1.5, 1.5, -1.5, 0] } : undefined}
-                transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2 }}
+                transition={{ duration: 0.6, repeat: 1, repeatDelay: 2 }}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
@@ -122,7 +122,7 @@ export function Capsules({ capsules, tz }: { capsules: TimeCapsule[]; tz: string
               return (
                 <div
                   key={c.id}
-                  className="relative overflow-hidden rounded-blob border-2 border-line bg-card p-4 shadow-soft"
+                  className="relative overflow-hidden rounded-paper border border-line bg-card p-4"
                 >
                   <div
                     className="absolute inset-0 bg-[repeating-linear-gradient(135deg,transparent,transparent_12px,var(--soft)_12px,var(--soft)_24px)] opacity-60"
@@ -182,7 +182,7 @@ export function Capsules({ capsules, tz }: { capsules: TimeCapsule[]; tz: string
               {formatDate(todayInTz(tz, new Date(reading.capsule.created_at)), { year: "numeric" })}
               {reading.capsule.mood ? `, feeling ${moodInfo(reading.capsule.mood)?.label?.toLowerCase()}` : ""}.
             </p>
-            <div className="rounded-2xl bg-soft p-4">
+            <div className="rounded-paper bg-soft p-4">
               <RichText text={reading.content} />
             </div>
           </motion.div>
@@ -291,7 +291,7 @@ function CreateCapsule({
                 aria-pressed={mood === m.value}
                 aria-label={m.label}
                 className={clsx(
-                  "rounded-2xl p-2 transition hover:scale-110",
+                  "rounded-paper p-2 transition hover:scale-110",
                   mood === m.value ? "scale-110" : "opacity-60",
                 )}
                 style={mood === m.value ? { background: `${m.color}88` } : undefined}
@@ -310,8 +310,8 @@ function CreateCapsule({
                 type="button"
                 onClick={() => setDate(addDays(today, p.days))}
                 className={clsx(
-                  "rounded-full border-2 px-3 py-1 text-sm font-bold",
-                  date === addDays(today, p.days) ? "border-primary bg-primary/25" : "border-line",
+                  "rounded-full border pointer-coarse:min-h-11 px-3 py-1 text-sm font-bold",
+                  date === addDays(today, p.days) ? "border-primary-text bg-primary/25" : "border-line",
                 )}
               >
                 {p.label}
@@ -323,12 +323,12 @@ function CreateCapsule({
             min={minDate}
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="h-11 rounded-2xl border-2 border-line bg-card px-3 font-bold outline-none focus:border-primary"
+            className="h-11 rounded-paper border border-edge bg-card px-3 font-bold outline-none focus:border-primary-text"
             aria-label="Unlock date"
             required
           />
         </div>
-        {error ? <p className="text-sm font-bold text-[#EF5B5B]">{error}</p> : null}
+        {error ? <p className="text-sm font-bold text-danger">{error}</p> : null}
         <Button
           type="submit"
           size="lg"

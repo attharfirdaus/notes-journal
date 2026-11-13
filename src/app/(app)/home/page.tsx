@@ -114,9 +114,9 @@ export default async function HomePage() {
           <StreakCard streak={streak} />
           <Link
             href="/journal/today"
-            className="flex items-center gap-3 rounded-blob border-2 border-line bg-card p-4 shadow-soft transition hover:-translate-y-0.5"
+            className="flex items-center gap-3 rounded-paper border border-line bg-card p-4 transition hover:border-edge"
           >
-            <span className="inline-flex rounded-2xl bg-soft p-2.5 text-primary">
+            <span className="inline-flex rounded-paper bg-soft p-2.5 text-primary-text">
               {todayMood ? <todayMood.Icon size={24} aria-hidden /> : <UI.journal size={24} aria-hidden />}
             </span>
             <span>
@@ -143,7 +143,7 @@ export default async function HomePage() {
               <Link
                 key={n.id}
                 href={`/notes/${n.id}`}
-                className="rounded-2xl border-2 border-line p-3 font-bold shadow-soft transition hover:-translate-y-1 hover:rotate-1"
+                className="rounded-paper border border-line p-3 font-bold transition hover:border-edge"
                 style={{ background: `color-mix(in oklab, ${n.color} var(--note-mix), var(--card))` }}
               >
                 <Icon name={n.icon} size={18} className="mr-1.5 inline-block align-[-3px]" />

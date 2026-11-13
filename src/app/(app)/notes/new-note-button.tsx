@@ -58,8 +58,8 @@ export function NewNoteButton() {
                   onClick={() => setType(t.value)}
                   aria-pressed={type === t.value}
                   className={clsx(
-                    "rounded-2xl border-2 p-3 text-left transition",
-                    type === t.value ? "border-primary scale-[1.02]" : "border-line",
+                    "rounded-paper border-2 p-3 text-left transition",
+                    type === t.value ? "border-primary-text scale-[1.02]" : "border-line",
                   )}
                   style={{ background: `color-mix(in oklab, ${t.color} var(--note-mix), var(--card))` }}
                 >
@@ -70,7 +70,7 @@ export function NewNoteButton() {
               ))}
             </div>
           </div>
-          {error ? <p className="text-sm font-bold text-[#EF5B5B]">{error}</p> : null}
+          {error ? <p className="text-sm font-bold text-danger">{error}</p> : null}
           <Button type="submit" className="w-full" size="lg" loading={pending} disabled={!title.trim()}>
             Create
           </Button>

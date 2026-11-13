@@ -200,7 +200,7 @@ export function FocusTimer({
 
   return (
     <div className="grid gap-5 lg:grid-cols-[1.2fr_1fr]">
-      <section className="flex flex-col items-center rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">
+      <section className="flex flex-col items-center rounded-paper border border-line bg-card p-5">
         <div className="w-full max-w-sm">
           <Segmented<Mode>
             label="Timer mode"
@@ -259,7 +259,7 @@ export function FocusTimer({
 
         <p className="mt-4 text-center text-sm text-ink-soft">{MODE_META[mode].line}</p>
 
-        <div className="mt-5 flex w-full items-center gap-3 rounded-2xl bg-soft p-3">
+        <div className="mt-5 flex w-full items-center gap-3 rounded-paper bg-soft p-3">
           <Mascot stage={stage} mood={running ? "happy" : justFinished ? "ecstatic" : mood} size={70} label={petName} />
           <div className="text-sm">
             <p className="font-bold">
@@ -277,12 +277,12 @@ export function FocusTimer({
       </section>
 
       <div className="space-y-5">
-        <section className="rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">
+        <section className="rounded-paper border border-line bg-card p-5">
           <h2 className="mb-2 font-display text-lg font-bold"> Working on</h2>
           <select
             value={taskId}
             onChange={(e) => setTaskId(e.target.value)}
-            className="h-11 w-full rounded-2xl border-2 border-line bg-card px-3 font-semibold outline-none focus:border-primary"
+            className="h-11 w-full rounded-paper border border-edge bg-card px-3 font-semibold outline-none focus:border-primary-text"
             aria-label="Link a task"
           >
             <option value="">Nothing specific</option>
@@ -309,7 +309,7 @@ export function FocusTimer({
           ) : null}
         </section>
 
-        <section className="rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">
+        <section className="rounded-paper border border-line bg-card p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="font-display text-lg font-bold"> Ambience</h2>
             <Button size="sm" variant={soundOn ? "primary" : "soft"} onClick={toggleSound}>
@@ -334,7 +334,7 @@ export function FocusTimer({
                   step={0.05}
                   value={volumes[l.id]}
                   onChange={(e) => setVolume(l.id, Number(e.target.value))}
-                  className="flex-1 accent-[var(--primary)]"
+                  className="flex-1 accent-[var(--primary)] pointer-coarse:h-11"
                   aria-label={`${l.label} volume`}
                 />
               </label>
@@ -345,7 +345,7 @@ export function FocusTimer({
           </p>
         </section>
 
-        <section className="rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">
+        <section className="rounded-paper border border-line bg-card p-5">
           <h2 className="mb-3 font-display text-lg font-bold"> Durations (minutes)</h2>
           <div className="grid grid-cols-3 gap-2">
             {(Object.keys(MODE_META) as Mode[]).map((m) => (
@@ -360,7 +360,7 @@ export function FocusTimer({
                     const v = Math.max(1, Math.min(m === "focus" ? 180 : 60, Number(e.target.value) || 1));
                     saveDurations({ ...durations, [m]: v });
                   }}
-                  className="mt-1 h-10 w-full rounded-xl border-2 border-line bg-card px-2 text-center font-bold text-ink outline-none focus:border-primary"
+                  className="mt-1 h-10 w-full rounded-paper border border-edge bg-card px-2 text-center font-bold text-ink outline-none focus:border-primary-text"
                 />
               </label>
             ))}

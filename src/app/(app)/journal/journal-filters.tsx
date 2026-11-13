@@ -36,7 +36,7 @@ export function JournalFilters({ q: initialQ, mood, view }: { q: string; mood: n
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search your entries…"
-            className="h-11 w-full rounded-2xl border-2 border-line bg-card pl-11 pr-10 outline-none focus:border-primary"
+            className="h-11 w-full rounded-paper border border-edge bg-card pl-11 pr-10 outline-none focus:border-primary-text"
           />
           {pending ? <Spinner className="absolute right-4 top-3.5 text-ink-soft" /> : null}
         </label>
@@ -73,11 +73,11 @@ export function JournalFilters({ q: initialQ, mood, view }: { q: string; mood: n
             type="button"
             aria-pressed={mood === m.value}
             onClick={() => set("mood", mood === m.value ? "" : String(m.value))}
-            className="inline-flex items-center gap-1.5 rounded-full border-2 px-3 py-1 text-sm font-bold transition hover:-translate-y-0.5"
+            className="inline-flex items-center gap-1.5 rounded-full border pointer-coarse:min-h-11 px-3 py-1 text-sm font-bold transition hover:border-edge"
             style={
               mood === m.value
                 ? { borderColor: m.color, background: `${m.color}88` }
-                : { borderColor: "var(--line)", background: "var(--card)" }
+                : { borderColor: "var(--color-edge)", background: "var(--card)" }
             }
           >
             <m.Icon size={16} aria-hidden /> {m.label}

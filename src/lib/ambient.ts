@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, CloudRain, Sparkles, Waves, Wind, type LucideIcon } from "lucide-react";
+import { Activity, AudioLines, CloudRain, Waves, Wind, type LucideIcon } from "lucide-react";
 
 // Procedurally generated ambience. No audio files, no licensing questions.
 
@@ -10,7 +10,7 @@ export const LAYERS: { id: LayerId; label: string; Icon: LucideIcon }[] = [
   { id: "rain", label: "Rain", Icon: CloudRain },
   { id: "wind", label: "Wind", Icon: Wind },
   { id: "brown", label: "Deep hum", Icon: Waves },
-  { id: "pink", label: "Soft static", Icon: Sparkles },
+  { id: "pink", label: "Soft static", Icon: AudioLines },
   { id: "white", label: "White noise", Icon: Activity },
 ];
 

@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
-import { Pencil, Plus, Sparkles, Tag, Trash2, TriangleAlert } from "lucide-react";
+import { Pencil, Plus, ScanSearch, Tag, Trash2, TriangleAlert } from "lucide-react";
 import { deleteCategory, saveCategory } from "@/actions/categories";
 import { Button, Chip, IconButton, Input, Modal } from "@/components/ui";
 import { useToast } from "@/components/toast";
@@ -38,15 +38,15 @@ export function CategoryManager({ initial, counts }: { initial: Category[]; coun
 
   return (
     <div className="space-y-6">
-      <section className="rounded-blob border-2 border-line bg-card p-4 shadow-soft">
+      <section className="rounded-paper border border-line bg-card p-4">
         <h2 className="mb-2 flex items-center gap-2 font-display text-lg font-bold">
-          <Sparkles size={18} /> Try the detector
+          <ScanSearch size={18} aria-hidden /> Try the detector
         </h2>
         <input
           value={probe}
           onChange={(e) => setProbe(e.target.value)}
           placeholder="Type something like “beli sabun dan shampoo” or “finish thesis chapter 2”"
-          className="h-11 w-full rounded-2xl border-2 border-line bg-card px-4 outline-none focus:border-primary"
+          className="h-11 w-full rounded-paper border border-edge bg-card px-4 outline-none focus:border-primary-text"
           aria-label="Test text"
         />
         <div className="mt-2 flex min-h-7 flex-wrap items-center gap-1.5 text-sm">
@@ -85,7 +85,7 @@ export function CategoryManager({ initial, counts }: { initial: Category[]; coun
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="rounded-blob border-2 p-4 shadow-soft"
+              className="rounded-paper border-2 p-4"
               style={{ borderColor: c.color, background: `color-mix(in oklab, ${c.color} 30%, var(--card))` }}
             >
               <div className="flex items-start gap-3">
@@ -94,7 +94,7 @@ export function CategoryManager({ initial, counts }: { initial: Category[]; coun
                   <p className="font-display text-lg font-bold">{c.name}</p>
                   <Link
                     href={`/notes?category=${c.id}&status=all`}
-                    className="text-xs font-bold text-ink-soft hover:underline"
+                    className="inline-flex items-center text-xs font-bold text-ink-soft hover:underline pointer-coarse:min-h-11"
                   >
                     {counts[c.id] ?? 0} note{counts[c.id] === 1 ? "" : "s"}
                   </Link>
@@ -216,7 +216,7 @@ function CategoryForm({
                 onClick={() => setIcon(key)}
                 aria-label={key.replace(/-/g, " ")}
                 title={key.replace(/-/g, " ")}
-                className={`rounded-xl p-2 transition hover:scale-110 ${icon === key ? "bg-primary/30 text-ink" : "text-ink-soft"}`}
+                className={`rounded-paper p-2 transition hover:scale-110 ${icon === key ? "bg-primary/30 text-ink" : "text-ink-soft"}`}
               >
                 <Icon name={key} size={18} />
               </button>
@@ -251,7 +251,7 @@ function CategoryForm({
                 }
               }}
               placeholder="Type a word and press Enter"
-              className="h-10 min-w-0 flex-1 rounded-xl border-2 border-line bg-card px-3 outline-none focus:border-primary"
+              className="h-10 min-w-0 flex-1 rounded-paper border border-edge bg-card px-3 outline-none focus:border-primary-text"
               aria-label="Add keyword"
             />
             <Button type="button" size="sm" variant="soft" onClick={addKw} className="h-10">
@@ -266,7 +266,7 @@ function CategoryForm({
             ))}
           </div>
         </div>
-        {error ? <p className="text-sm font-bold text-[#EF5B5B]">{error}</p> : null}
+        {error ? <p className="text-sm font-bold text-danger">{error}</p> : null}
         <Button type="submit" size="lg" className="w-full" loading={pending} disabled={!name.trim()}>
           Save
         </Button>

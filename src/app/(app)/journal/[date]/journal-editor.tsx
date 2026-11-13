@@ -147,7 +147,7 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
       <div className="mb-3 flex items-center justify-between gap-2">
         <Link
           href="/journal"
-          className="inline-flex items-center gap-1 rounded-xl px-2 py-1.5 text-sm font-bold text-ink-soft hover:bg-soft hover:text-ink"
+          className="inline-flex items-center gap-1 rounded-paper px-2 py-1.5 text-sm font-bold text-ink-soft hover:bg-soft hover:text-ink pointer-coarse:min-h-11"
         >
           <ChevronLeft size={18} /> Journal
         </Link>
@@ -175,7 +175,7 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
         ) : null}
       </header>
 
-      <section className="rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">
+      <section className="rounded-paper border border-line bg-card p-5">
         <p className="mb-3 font-bold">How are you feeling?</p>
         <div className="flex justify-between gap-1 sm:justify-start sm:gap-3" role="radiogroup" aria-label="Mood">
           {MOODS.map((m) => {
@@ -195,7 +195,7 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
                 whileTap={{ scale: 0.9 }}
                 animate={on ? { scale: [1, 1.35, 1.15] } : { scale: 1 }}
                 className={clsx(
-                  "flex flex-col items-center gap-1 rounded-2xl border-2 p-2 transition sm:w-20",
+                  "flex flex-col items-center gap-1 rounded-paper border-2 p-2 transition sm:w-20",
                   on ? "border-transparent" : "border-transparent opacity-70 hover:opacity-100",
                 )}
                 style={on ? { background: `${m.color}88` } : undefined}
@@ -218,8 +218,8 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
                 aria-pressed={on}
                 onClick={() => setFeelings((xs) => (on ? xs.filter((x) => x !== f) : [...xs, f].slice(0, 10)))}
                 className={clsx(
-                  "rounded-full border-2 px-3 py-1 text-sm font-bold transition hover:-translate-y-0.5",
-                  on ? "border-primary bg-primary/25" : "border-line bg-card text-ink-soft",
+                  "rounded-full border pointer-coarse:min-h-11 px-3 py-1 text-sm font-bold transition hover:border-edge",
+                  on ? "border-primary-text bg-primary/25" : "border-line bg-card text-ink-soft",
                 )}
               >
                 {f}
@@ -235,9 +235,9 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="mt-4 flex items-center gap-3 rounded-2xl border-2 border-dashed border-line bg-soft/60 p-3"
+            className="mt-4 flex items-center gap-3 rounded-paper border-2 border-dashed border-line bg-soft/60 p-3"
           >
-            <Lightbulb size={22} className="shrink-0 text-primary" aria-hidden />
+            <Lightbulb size={22} className="shrink-0 text-primary-text" aria-hidden />
             <p className="flex-1 font-semibold italic">{prompt}</p>
             <IconButton label="Another prompt" onClick={() => setPrompt(randomPrompt(prompt))}>
               <Shuffle size={18} />
@@ -246,7 +246,7 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
         ) : null}
       </AnimatePresence>
 
-      <section className="mt-4 rounded-[2rem] border-2 border-line bg-card shadow-soft">
+      <section className="mt-4 rounded-paper border border-line bg-card">
         <div className="flex items-center gap-1 border-b-2 border-line px-3 py-2">
           <IconButton label="Bold" onClick={() => wrap("**")} disabled={preview} className="h-9 w-9">
             <Bold size={17} />
@@ -285,7 +285,7 @@ export function JournalEditor({ date, today, entry }: { date: string; today: str
             maxLength={20000}
             placeholder={prompt ? "Start with the prompt above, or write anything…" : "Dear diary…"}
             aria-label="Journal entry"
-            className="min-h-64 w-full resize-y rounded-b-[2rem] bg-transparent px-5 py-4 text-[16px] leading-relaxed outline-none placeholder:text-ink-soft/70"
+            className="min-h-64 w-full resize-y rounded-b-[2rem] bg-transparent px-5 py-4 text-[16px] leading-relaxed outline-none placeholder:text-ink-soft"
           />
         )}
       </section>
