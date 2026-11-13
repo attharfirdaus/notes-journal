@@ -63,7 +63,7 @@ export default async function Landing({ searchParams }: PageProps<"/">) {
 
       <header className="relative mx-auto flex max-w-5xl items-center justify-between px-4 py-5">
         <span className="flex items-center gap-2 font-display text-2xl font-bold">
-          <Nut size={22} strokeWidth={2.5} className="text-primary" aria-hidden /> Tuckbury
+          <Nut size={22} strokeWidth={2.5} className="text-primary" aria-hidden /> Keepsake
         </span>
         <nav className="flex items-center gap-2">
           <Link href="/login" className="rounded-2xl px-4 py-2 font-bold hover:bg-soft">
@@ -102,7 +102,7 @@ export default async function Landing({ searchParams }: PageProps<"/">) {
         <section className="mt-16 rounded-[2.5rem] border-2 border-line bg-card p-8 text-center shadow-soft">
           <h2 className="font-display text-3xl font-bold">Your brain is for having ideas, not holding them.</h2>
           <p className="mx-auto mt-2 max-w-xl text-ink-soft">
-            Tuck them away in Tuckbury. Free, private, and a little bit silly.
+            Keep them safe in Keepsake. Free, private, and a little bit silly.
           </p>
           <Link
             href="/signup"
@@ -112,7 +112,7 @@ export default async function Landing({ searchParams }: PageProps<"/">) {
           </Link>
         </section>
       </main>
-      <footer className="pb-8 text-center text-xs text-ink-soft">Tuckbury</footer>
+      <footer className="pb-8 text-center text-xs text-ink-soft">Keepsake</footer>
     </div>
   );
 }

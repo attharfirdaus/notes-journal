@@ -277,16 +277,16 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
           <p className="font-bold"> Push notifications on this device</p>
           <p className="mt-1 text-sm text-ink-soft">
             {push.state === "subscribed"
-              ? "On. You'll get reminders even when Tuckbury is closed."
+              ? "On. You'll get reminders even when Keepsake is closed."
               : push.state === "denied"
                 ? "Blocked in your browser settings. Allow notifications for this site to turn them on."
                 : push.state === "unsupported"
                   ? isIos() && !isStandalone()
-                    ? "On iPhone/iPad: tap Share → “Add to Home Screen”, open Tuckbury from there, then turn this on."
+                    ? "On iPhone/iPad: tap Share → “Add to Home Screen”, open Keepsake from there, then turn this on."
                     : "This browser doesn't support push notifications. In-app reminders still work."
                   : push.state === "unconfigured"
                     ? "Push isn't configured on the server yet (VAPID keys missing). In-app reminders still work."
-                    : "Off. In-app reminders still work while Tuckbury is open."}
+                    : "Off. In-app reminders still work while Keepsake is open."}
           </p>
           {push.error ? <p className="mt-1 text-sm font-bold text-[#EF5B5B]">{push.error}</p> : null}
           <div className="mt-3 flex flex-wrap gap-2">

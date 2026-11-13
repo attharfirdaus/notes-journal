@@ -22,7 +22,7 @@ export default async function ResetPasswordPage() {
             href="/home"
             className="font-bold text-ink underline decoration-primary decoration-2 underline-offset-2"
           >
-            Go to Tuckbury →
+            Go to Keepsake →
           </Link>
         }
       >

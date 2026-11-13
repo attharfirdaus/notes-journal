@@ -77,9 +77,9 @@ export function Onboarding({ initialName, birthday }: { initialName: string; bir
               <div className="flex justify-center">
                 <Mascot stage="acorn" mood="happy" size={130} label="An acorn" />
               </div>
-              <h1 className="mt-2 font-display text-3xl font-bold">Welcome to Tuckbury!</h1>
+              <h1 className="mt-2 font-display text-3xl font-bold">Welcome to Keepsake!</h1>
               <p className="mt-2 text-ink-soft">
-                The cozy place to tuck away lists, plans and feelings, so your brain can relax.
+                The cozy place to keep your lists, plans and feelings, so your brain can relax.
               </p>
               <div className="mt-5 text-left">
                 <Input

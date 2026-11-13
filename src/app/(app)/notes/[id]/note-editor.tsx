@@ -958,7 +958,7 @@ function PushNudge({ hasDue }: { hasDue: boolean }) {
       className="mt-4 flex items-center gap-3 rounded-2xl border-2 border-line bg-card p-3 shadow-soft"
     >
       <BellRing size={22} className="shrink-0 text-primary" aria-hidden />
-      <p className="flex-1 text-sm font-semibold">Want a ping before deadlines, even when Tuckbury is closed?</p>
+      <p className="flex-1 text-sm font-semibold">Want a ping before deadlines, even when Keepsake is closed?</p>
       <Button size="sm" onClick={() => void push.subscribe()} loading={push.busy}>
         Turn on
       </Button>
