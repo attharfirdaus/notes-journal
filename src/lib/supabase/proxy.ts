@@ -6,6 +6,14 @@ const PUBLIC_PATHS = ["/", "/login", "/signup", "/forgot-password"];
 const GUEST_ONLY = ["/login", "/signup", "/forgot-password"];
 
 export async function updateSession(request: NextRequest) {
+  // Supabase falls back to the project's Site URL ("/?code=...") when the
+  // redirect it was given isn't on its allow list. Finish the sign-in anyway.
+  if (request.nextUrl.pathname === "/" && request.nextUrl.searchParams.has("code")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/confirm";
+    return NextResponse.redirect(url);
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
