@@ -24,7 +24,7 @@ export function LandingHero() {
           animate={{ opacity: 1, y: 0 }}
           className="font-display text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl"
         >
-          Tuck it away.
+          Keep it close.
           <br />
           <span className="text-primary">Never forget.</span>
         </motion.h1>

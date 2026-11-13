@@ -30,7 +30,7 @@ export function QuickAdd() {
       celebrate("small");
       toast({
         icon: Nut,
-        title: `Tucked away: ${res.data.title}`,
+        title: `Kept: ${res.data.title}`,
         body: res.data.items > 1 ? `${res.data.items} items added` : "Tap to open",
         href: `/notes/${res.data.id}`,
       });
@@ -58,7 +58,7 @@ export function QuickAdd() {
           className="h-11 min-w-0 flex-1 bg-transparent text-[16px] font-semibold outline-none placeholder:font-normal placeholder:text-ink-soft/80"
         />
         <Button type="submit" loading={pending} disabled={!text.trim()}>
-          Tuck it
+          Keep it
         </Button>
       </form>
       <AnimatePresence>

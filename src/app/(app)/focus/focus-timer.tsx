@@ -146,7 +146,7 @@ export function FocusTimer({
   }, [endsAt, finish]);
 
   useEffect(() => {
-    document.title = running ? `${fmt(remaining)} · ${MODE_META[mode].label}` : "Focus · Tuckbury";
+    document.title = running ? `${fmt(remaining)} · ${MODE_META[mode].label}` : "Focus · Keepsake";
   }, [running, remaining, mode]);
 
   const toggle = () => {

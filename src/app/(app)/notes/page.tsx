@@ -96,7 +96,7 @@ export default async function NotesPage({ searchParams }: PageProps<"/notes">) {
             </EmptyState>
           ) : (
             <EmptyState icon="ui-nut" title="No notes yet">
-              Tuck away your first list: groceries, homework, anything!
+              Keep your first list here: groceries, homework, anything!
             </EmptyState>
           )}
         </div>

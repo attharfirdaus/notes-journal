@@ -1,4 +1,4 @@
-/* Tuckbury service worker: push notifications only (no offline caching). */
+/* Keepsake service worker: push notifications only (no offline caching). */
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
 
@@ -7,9 +7,9 @@ self.addEventListener("push", (event) => {
   try {
     data = event.data ? event.data.json() : {};
   } catch {
-    data = { title: "Tuckbury", body: event.data ? event.data.text() : "" };
+    data = { title: "Keepsake", body: event.data ? event.data.text() : "" };
   }
-  const title = data.title || "Tuckbury";
+  const title = data.title || "Keepsake";
   event.waitUntil(
     self.registration.showNotification(title, {
       body: data.body || "",

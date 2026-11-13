@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Sign up" };
 export default function SignupPage() {
   return (
     <>
-      <h1 className="mb-1 font-display text-2xl font-bold">Join Tuckbury</h1>
+      <h1 className="mb-1 font-display text-2xl font-bold">Join Keepsake</h1>
       <p className="mb-5 text-sm text-ink-soft">A cozy home for your lists, plans and feelings.</p>
       <AuthForm
         action={signUp}

@@ -21,7 +21,7 @@ export default async function CategoriesPage() {
     <div>
       <PageHeader title="Categories" icon="ui-categories" />
       <p className="-mt-3 mb-5 text-ink-soft">
-        Tuckbury sorts your notes automatically using these keywords. Add your own words to teach it, in English or
+        Keepsake sorts your notes automatically using these keywords. Add your own words to teach it, in English or
         Bahasa Indonesia.
       </p>
       <CategoryManager initial={(cats ?? []) as Category[]} counts={counts} />

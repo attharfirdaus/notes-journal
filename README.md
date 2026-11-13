@@ -1,6 +1,6 @@
-# Tuckbury
+# Keepsake
 
-> Tuck it away. Never forget.
+> Keep it close. Never forget.
 
 Note taker dan jurnal harian dengan sidekick tupai. Fiturnya: list untuk segala hal, deteksi kategori otomatis, pengingat deadline (in-app dan push), jurnal dengan mood dan streak, tema dan vibe, pesan penyemangat, maskot yang berevolusi, focus timer dengan ambience, Year in Pixels, dan Time Capsule.
 
@@ -43,7 +43,7 @@ openssl rand -hex 32               # → CRON_SECRET
 ### 3. Vercel
 
 1. **Add New → Project**, import repo ini. Framework akan terdeteksi otomatis sebagai Next.js.
-2. Di **Environment Variables**, isi semua variabel dari [`.env.example`](.env.example). `NEXT_PUBLIC_SITE_URL` diisi domain Vercel Anda, misalnya `https://tuckbury.vercel.app`.
+2. Di **Environment Variables**, isi semua variabel dari [`.env.example`](.env.example). `NEXT_PUBLIC_SITE_URL` diisi domain Vercel Anda, misalnya `https://keepsake.vercel.app`.
 3. Klik **Deploy**. Kalau domain baru diketahui setelah deploy pertama, perbarui `NEXT_PUBLIC_SITE_URL`, lalu **Redeploy**.
 
 ### 4. Hubungkan Supabase ke domain

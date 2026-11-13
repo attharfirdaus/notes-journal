@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Tuckbury",
-    short_name: "Tuckbury",
+    name: "Keepsake",
+    short_name: "Keepsake",
     description: "Cozy notes, reminders and a daily journal with a squirrel sidekick.",
     start_url: "/home",
     display: "standalone",

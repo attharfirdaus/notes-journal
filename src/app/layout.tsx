@@ -9,11 +9,11 @@ const display = Fredoka({ variable: "--font-display-face", subsets: ["latin"], w
 const body = Nunito({ variable: "--font-body", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: { default: "Tuckbury: tuck it away, never forget", template: "%s · Tuckbury" },
+  title: { default: "Keepsake: keep it close, never forget", template: "%s · Keepsake" },
   description:
     "A cozy note taker and daily journal with a squirrel sidekick. Lists, reminders, streaks, moods and tiny joys.",
-  applicationName: "Tuckbury",
-  appleWebApp: { capable: true, title: "Tuckbury", statusBarStyle: "default" },
+  applicationName: "Keepsake",
+  appleWebApp: { capable: true, title: "Keepsake", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {

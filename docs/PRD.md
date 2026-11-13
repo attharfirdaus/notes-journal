@@ -1,4 +1,4 @@
-# PRD Tuckbury
+# PRD Keepsake
 
 > Note taker + daily journal yang terasa seperti main, bukan kerja.
 
@@ -341,7 +341,7 @@ NEXT_PUBLIC_SITE_URL
 ## 11. Yang dibutuhkan dari Anda
 
 1. **Akun Supabase dan Vercel** (gratis). Saya tidak bisa membuat akun atas nama Anda. Kode akan berisi migrasi SQL dan panduan setup step-by-step. Anda cukup membuat project, lalu mengisi env vars.
-2. ~~Konfirmasi nama app~~ → **Tuckbury** (tuck away + -bury, “tempat menyimpan”); maskot tupai, nama default *Pip*.
+2. ~~Konfirmasi nama app~~ → **Keepsake** (kenang-kenangan yang disimpan karena berarti; sebelumnya Keepsake); maskot tupai, nama default *Pip*.
 3. Review PRD ini, terutama prioritas P0/P1.
 
 ## 12. Status Implementasi v1
