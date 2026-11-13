@@ -73,19 +73,19 @@ export function HomeItems({ items: initial }: { items: HomeItem[] }) {
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, x: 60, transition: { duration: 0.25 } }}
-                    className="flex items-center gap-3 rounded-2xl border-2 border-line bg-card p-2.5 shadow-soft"
+                    className="flex items-center gap-3 rounded-paper border border-line bg-card p-2.5"
                   >
                     <button
                       type="button"
                       onClick={(e) => complete(item, e)}
                       aria-label={`Mark “${item.text}” as done`}
-                      className="h-7 w-7 shrink-0 rounded-[0.6rem] border-[2.5px] border-ink/30 bg-card transition hover:border-primary hover:bg-primary/20"
+                      className="relative pointer-coarse:after:absolute pointer-coarse:after:-inset-2 pointer-coarse:after:content-[''] h-7 w-7 shrink-0 rounded border-[2.5px] border-ink/30 bg-card transition hover:border-primary-text hover:bg-primary/20"
                     />
-                    <Link href={`/notes/${item.note_id}`} className="min-w-0 flex-1">
+                    <Link href={`/notes/${item.note_id}`} className="flex min-h-11 min-w-0 flex-1 flex-col justify-center">
                       <span className="block truncate font-semibold">{item.text}</span>
                       <span className="block truncate text-xs text-ink-soft">
                         <span
-                          className={s.key === "overdue" ? "font-bold text-[#C0392B] dark:text-[#FF8A80]" : "font-bold"}
+                          className={s.key === "overdue" ? "font-bold text-danger" : "font-bold"}
                         >
                           {formatDue(item.due_at, prefs.timezone)}
                         </span>{" "}

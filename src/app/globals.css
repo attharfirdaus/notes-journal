@@ -10,13 +10,23 @@
   --color-ink-soft: var(--ink-soft);
   --color-primary: var(--primary);
   --color-primary-ink: var(--primary-ink);
+  /* The primary hue dark enough to be read: text and icons use this, never --primary. */
+  --color-primary-text: var(--primary-text);
+  --color-danger: var(--danger);
+  --color-danger-ink: var(--danger-ink);
+  /* Boundary of a control (3:1 against the paper), stronger than the decorative --line. */
+  --color-edge: color-mix(in oklab, var(--ink) 55%, var(--card));
   --color-accent: var(--accent);
   --color-line: var(--line);
   --font-sans: var(--font-body), ui-rounded, system-ui, sans-serif;
-  --font-display: var(--font-display-face), var(--font-body), ui-rounded, sans-serif;
-  --radius-blob: 1.75rem;
-  --shadow-pop: 0 4px 0 0 color-mix(in oklab, var(--ink) 14%, transparent);
-  --shadow-soft: 0 10px 30px -12px color-mix(in oklab, var(--ink) 25%, transparent);
+  --font-display: var(--font-display-face), Georgia, serif;
+  --font-hand: var(--font-hand-face), "Bradley Hand", cursive;
+  /* Paper for surfaces, a little rounder for buttons, full pills only for chips. */
+  --radius-paper: 6px;
+  --radius-btn: 10px;
+  --shadow-pop: 0 4px 0 0 color-mix(in oklab, var(--ink) 22%, transparent);
+  /* Only for things that sit above the page: dialogs, toasts, menus, a dragged item. */
+  --shadow-lift: 0 12px 28px -14px color-mix(in oklab, var(--ink) 45%, transparent);
 }
 
 html {
@@ -35,9 +45,58 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--primary-text);
   outline-offset: 2px;
-  border-radius: 0.75rem;
+}
+
+/* Anything you can press says so. */
+a[href],
+button,
+summary,
+select,
+label[for],
+[role="button"],
+[role="radio"],
+[role="switch"],
+[role="tab"],
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+}
+:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* ── Scrapbook pieces ─────────────────────────────────── */
+/* A strip of washi tape holding a piece of paper to the page. One per screen. */
+.tape {
+  position: relative;
+}
+.tape::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  width: 92px;
+  height: 22px;
+  translate: -50% 0;
+  rotate: -2deg;
+  background: color-mix(in oklab, var(--accent) 72%, transparent);
+  border-inline: 1px dashed color-mix(in oklab, var(--ink) 18%, transparent);
+  pointer-events: none;
+}
+.tape-left::before {
+  left: 44px;
+  translate: 0 0;
+  rotate: -5deg;
+}
+/* Handwritten margin notes. Never below 20px, the face is thin. */
+.hand {
+  font-family: var(--font-hand);
+  font-size: 1.375rem;
+  line-height: 1.15;
+  font-weight: 600;
 }
 
 /* ── Buttons that squish ─────────────────────────────── */
@@ -115,7 +174,8 @@ body {
   0%, 100% { transform: scale(1) rotate(-2deg); }
   50% { transform: scale(1.08, 1.12) rotate(2deg); }
 }
-.flame { animation: flame-flicker 1.4s ease-in-out infinite; transform-origin: 50% 90%; display: inline-block; }
+/* Flickers a few times when it appears, then rests. */
+.flame { animation: flame-flicker 1.4s ease-in-out 3; transform-origin: 50% 90%; display: inline-block; }
 
 @keyframes wiggle {
   0%, 100% { transform: rotate(0); }

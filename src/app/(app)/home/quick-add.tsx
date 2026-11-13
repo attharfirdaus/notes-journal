@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
-import { Nut, Sparkles, TriangleAlert } from "lucide-react";
+import { Nut, PenLine, TriangleAlert } from "lucide-react";
 import { quickAdd } from "@/actions/notes";
 import { Button, Chip } from "@/components/ui";
 import { usePrefs } from "@/components/prefs";
@@ -40,7 +40,7 @@ export function QuickAdd() {
   const meta = plan ? NOTE_TYPES.find((t) => t.value === plan.type) : null;
 
   return (
-    <section className="rounded-blob border-2 border-line bg-card p-4 shadow-soft">
+    <section className="rounded-paper border border-line bg-card p-4">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -48,14 +48,14 @@ export function QuickAdd() {
         }}
         className="flex items-center gap-2"
       >
-        <Sparkles className="shrink-0 text-primary" size={22} aria-hidden />
+        <PenLine className="shrink-0 text-primary-text" size={20} aria-hidden />
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
           maxLength={500}
           placeholder="Quick add… “Groceries: milk, eggs” or “Essay due friday 5pm”"
           aria-label="Quick add"
-          className="h-11 min-w-0 flex-1 bg-transparent text-[16px] font-semibold outline-none placeholder:font-normal placeholder:text-ink-soft/80"
+          className="h-11 min-w-0 flex-1 bg-transparent text-[16px] font-semibold outline-none placeholder:font-normal placeholder:text-ink-soft"
         />
         <Button type="submit" loading={pending} disabled={!text.trim()}>
           Keep it

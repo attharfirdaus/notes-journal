@@ -41,6 +41,7 @@ export function Onboarding({ initialName, birthday }: { initialName: string; bir
         display_name: name.trim(),
         pet_name: pet.trim() || "Pip",
         theme,
+        vibe: "none",
         timezone,
         onboarded: true,
       });
@@ -70,7 +71,7 @@ export function Onboarding({ initialName, birthday }: { initialName: string; bir
           initial={{ opacity: 0, y: 20, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.97 }}
-          className="w-full max-w-md rounded-[2rem] border-2 border-line bg-card p-6 text-center shadow-soft"
+          className="w-full max-w-md rounded-paper border border-line bg-card p-6 text-center"
         >
           {step === 0 ? (
             <>
@@ -92,7 +93,7 @@ export function Onboarding({ initialName, birthday }: { initialName: string; bir
                 />
               </div>
               <Button className="mt-5 w-full" size="lg" onClick={() => setStep(1)}>
-                Nice to meet you →
+                Nice to meet you
               </Button>
             </>
           ) : null}
@@ -102,7 +103,7 @@ export function Onboarding({ initialName, birthday }: { initialName: string; bir
               <div className="flex justify-center">
                 <motion.div
                   animate={{ rotate: [0, -4, 4, -4, 0] }}
-                  transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 1 }}
+                  transition={{ duration: 1.2, repeat: 2, repeatDelay: 1 }}
                 >
                   <Mascot stage="acorn" mood="ecstatic" progress={0.8} size={130} label="The acorn wiggles" />
                 </motion.div>
@@ -126,7 +127,7 @@ export function Onboarding({ initialName, birthday }: { initialName: string; bir
                   Back
                 </Button>
                 <Button className="flex-1" onClick={() => setStep(2)} disabled={!pet.trim()}>
-                  Next →
+                  Next
                 </Button>
               </div>
             </>
@@ -143,7 +144,7 @@ export function Onboarding({ initialName, birthday }: { initialName: string; bir
                     type="button"
                     onClick={() => setTheme(t.id)}
                     aria-pressed={theme === t.id}
-                    className={`rounded-2xl border-2 p-3 text-left transition ${theme === t.id ? "border-primary scale-[1.03]" : "border-line"}`}
+                    className={`rounded-paper border-2 p-3 text-left transition ${theme === t.id ? "border-primary-text scale-[1.03]" : "border-line"}`}
                     style={{ background: t.light.bg }}
                   >
                     <div className="flex gap-1">
@@ -166,7 +167,7 @@ export function Onboarding({ initialName, birthday }: { initialName: string; bir
                 ))}
               </div>
               <p className="mt-4 text-xs text-ink-soft">Time zone detected: {timezone}</p>
-              {error ? <p className="mt-2 text-sm font-bold text-[#EF5B5B]">{error}</p> : null}
+              {error ? <p className="mt-2 text-sm font-bold text-danger">{error}</p> : null}
               <div className="mt-5 flex gap-2">
                 <Button variant="soft" className="flex-1" onClick={() => setStep(1)}>
                   Back

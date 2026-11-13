@@ -77,15 +77,15 @@ export function NotificationList({ initial }: { initial: AppNotification[] }) {
               layout
               exit={{ opacity: 0, x: 60 }}
               className={clsx(
-                "flex items-start gap-3 rounded-2xl border-2 bg-card p-3 shadow-soft transition",
-                n.read_at ? "border-line opacity-75" : "border-primary",
+                "flex items-start gap-3 rounded-paper border-2 bg-card p-3 transition",
+                n.read_at ? "border-line opacity-75" : "border-primary-text",
               )}
             >
               <button type="button" onClick={() => open(n)} className="flex min-w-0 flex-1 items-start gap-3 text-left">
                 {(() => {
                   const I = KIND_ICON[n.kind];
                   return (
-                    <span className="inline-flex shrink-0 rounded-xl bg-soft p-2 text-primary">
+                    <span className="inline-flex shrink-0 rounded-paper bg-soft p-2 text-primary-text">
                       <I size={18} strokeWidth={2.5} aria-hidden />
                     </span>
                   );

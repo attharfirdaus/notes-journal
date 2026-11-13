@@ -39,7 +39,7 @@ export function AuthForm({
             role="alert"
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: [0, -6, 6, -3, 0] }}
-            className="rounded-2xl bg-[#EF5B5B]/15 px-4 py-2.5 text-sm font-bold text-ink"
+            className="rounded-paper bg-danger/15 px-4 py-2.5 text-sm font-bold text-ink"
           >
             {state.error}
           </motion.p>
@@ -50,7 +50,7 @@ export function AuthForm({
             role="status"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl bg-primary/20 px-4 py-3 text-sm font-bold"
+            className="rounded-paper bg-primary/20 px-4 py-3 text-sm font-bold"
           >
             {state.message}
           </motion.p>

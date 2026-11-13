@@ -40,7 +40,7 @@ export function NoteCard({
       <Link
         href={`/notes/${note.id}`}
         className={clsx(
-          "block rounded-blob border-2 border-line p-4 shadow-soft transition",
+          "block rounded-paper border border-line p-4 transition",
           note.status === "archived" && "opacity-70",
         )}
         style={{ background: `color-mix(in oklab, ${note.color} var(--note-mix), var(--card))` }}
@@ -82,7 +82,7 @@ export function NoteCard({
           <p
             className={clsx(
               "mt-2 flex items-center gap-1 text-xs font-bold",
-              note.overdue ? "text-[#C0392B] dark:text-[#FF8A80]" : "text-ink-soft",
+              note.overdue ? "text-danger" : "text-ink-soft",
             )}
           >
             <CalendarClock size={14} /> {formatDue(note.nextDue, tz)}

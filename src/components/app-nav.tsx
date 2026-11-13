@@ -13,13 +13,13 @@ import {
   Hourglass,
   House,
   NotebookPen,
-  Nut,
   Settings,
   Tags,
   Timer,
 } from "lucide-react";
 import { NotificationBell, useNotificationPoller } from "./notification-bell";
 import { ServiceWorker } from "./service-worker";
+import { Wordmark } from "./wordmark";
 
 const PRIMARY = [
   { href: "/home", label: "Home", icon: House },
@@ -69,9 +69,9 @@ export function AppNav() {
     <>
       <ServiceWorker />
       {/* Desktop sidebar */}
-      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-1 border-r-2 border-line bg-card/70 p-4 backdrop-blur md:flex">
-        <Link href="/home" className="mb-4 flex items-center gap-2 px-2 font-display text-2xl font-bold">
-          <Nut size={22} strokeWidth={2.5} className="wiggle-hover text-primary" aria-hidden /> Keepsake
+      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-1 border-r border-line bg-card p-4 md:flex">
+        <Link href="/home" className="mb-4 px-3 text-[1.7rem]">
+          <Wordmark />
         </Link>
         {[...PRIMARY, ...SECONDARY].map((item) => {
           const active = isActive(path, item.href);
@@ -81,14 +81,14 @@ export function AppNav() {
               key={item.href}
               href={item.href}
               className={clsx(
-                "relative flex items-center gap-3 rounded-2xl px-3 py-2.5 font-bold transition",
+                "relative flex items-center gap-3 rounded-paper px-3 py-2.5 font-bold transition",
                 active ? "text-ink" : "text-ink-soft hover:bg-soft hover:text-ink",
               )}
             >
               {active ? (
                 <motion.span
                   layoutId="nav-pill"
-                  className="absolute inset-0 rounded-2xl bg-primary/25"
+                  className="absolute inset-0 rounded-paper border border-line bg-soft"
                   transition={{ type: "spring", stiffness: 500, damping: 38 }}
                 />
               ) : null}
@@ -105,18 +105,18 @@ export function AppNav() {
 
       {/* Mobile top bar */}
       <header
-        className="fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b-2 border-line bg-card/90 px-4 backdrop-blur md:hidden"
+        className="fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b border-line bg-card px-4 md:hidden"
         style={{ paddingTop: "env(safe-area-inset-top)", height: "calc(3.5rem + env(safe-area-inset-top))" }}
       >
-        <Link href="/home" className="flex items-center gap-1.5 font-display text-xl font-bold">
-          <Nut size={20} strokeWidth={2.5} className="text-primary" aria-hidden /> Keepsake
+        <Link href="/home" className="inline-flex min-h-11 items-center text-2xl">
+          <Wordmark />
         </Link>
         <NotificationBell variant="topbar" unread={unread} />
       </header>
 
       {/* Mobile bottom nav */}
       <nav
-        className="fixed inset-x-3 bottom-3 z-40 rounded-[1.75rem] border-2 border-line bg-card/95 px-2 py-1.5 shadow-soft backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-card px-2 pt-1.5 md:hidden"
         style={{ paddingBottom: "max(0.375rem, env(safe-area-inset-bottom))" }}
         aria-label="Main"
       >
@@ -129,12 +129,12 @@ export function AppNav() {
                 <Link
                   href={item.href}
                   className={clsx(
-                    "relative flex w-16 flex-col items-center gap-0.5 rounded-2xl py-1.5 text-[11px] font-bold",
+                    "relative flex w-16 flex-col items-center gap-0.5 rounded-paper py-1.5 text-[11px] font-bold",
                     active ? "text-ink" : "text-ink-soft",
                   )}
                 >
                   {active ? (
-                    <motion.span layoutId="tab-pill" className="absolute inset-0 rounded-2xl bg-primary/25" />
+                    <motion.span layoutId="tab-pill" className="absolute inset-0 rounded-paper border border-line bg-soft" />
                   ) : null}
                   <Icon size={22} className="relative" />
                   <span className="relative">{item.label}</span>
@@ -150,11 +150,11 @@ export function AppNav() {
               onClick={() => setMoreOpen((v) => !v)}
               aria-expanded={moreOpen}
               className={clsx(
-                "relative flex w-16 flex-col items-center gap-0.5 rounded-2xl py-1.5 text-[11px] font-bold",
+                "relative flex w-16 flex-col items-center gap-0.5 rounded-paper py-1.5 text-[11px] font-bold",
                 moreActive || moreOpen ? "text-ink" : "text-ink-soft",
               )}
             >
-              {moreActive ? <span className="absolute inset-0 rounded-2xl bg-primary/25" /> : null}
+              {moreActive ? <span className="absolute inset-0 rounded-paper border border-line bg-soft" /> : null}
               <Ellipsis size={22} className="relative" />
               <span className="relative">More</span>
             </button>
@@ -168,7 +168,7 @@ export function AppNav() {
                 <motion.ul
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  className="absolute bottom-16 right-0 w-56 rounded-2xl border-2 border-line bg-card p-2 shadow-soft"
+                  className="absolute bottom-16 right-0 w-56 rounded-paper border border-edge bg-card p-2 shadow-lift"
                 >
                   {SECONDARY.map((item) => {
                     const Icon = item.icon;
@@ -178,8 +178,8 @@ export function AppNav() {
                           href={item.href}
                           onClick={() => setMoreOpen(false)}
                           className={clsx(
-                            "flex items-center gap-3 rounded-xl px-3 py-2.5 font-bold",
-                            isActive(path, item.href) ? "bg-primary/25" : "hover:bg-soft",
+                            "flex items-center gap-3 rounded-paper px-3 py-2.5 font-bold",
+                            isActive(path, item.href) ? "bg-soft" : "hover:bg-soft",
                           )}
                         >
                           <Icon size={18} /> {item.label}

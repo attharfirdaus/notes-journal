@@ -11,12 +11,12 @@ export function flameSize(streak: number) {
 export function StreakCard({ streak }: { streak: StreakInfo }) {
   const next = MILESTONES.find((m) => m > streak.current);
   return (
-    <div className="flex items-center gap-4 rounded-blob border-2 border-line bg-card p-4 shadow-soft">
+    <div className="flex items-center gap-4 rounded-paper border border-line bg-card p-4">
       <div className="flex h-16 w-16 shrink-0 items-center justify-center">
         <Flame
           size={Math.round(35 * flameSize(streak.current))}
           strokeWidth={2.25}
-          className={streak.current ? "flame fill-[#FFC857] text-[#FF7A3D]" : "text-ink-soft opacity-50"}
+          className={streak.current ? "flame fill-accent text-primary-text" : "text-ink-soft opacity-50"}
           aria-hidden
         />
       </div>

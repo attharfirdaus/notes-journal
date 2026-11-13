@@ -29,7 +29,7 @@ export function JournalCalendar({
   };
 
   return (
-    <div className="rounded-blob border-2 border-line bg-card p-4 shadow-soft">
+    <div className="rounded-paper border border-line bg-card p-4">
       <div className="mb-3 flex items-center justify-between">
         <IconButton label="Previous month" onClick={() => shift(-1)}>
           <ChevronLeft />
@@ -41,7 +41,7 @@ export function JournalCalendar({
       </div>
       <div className="grid grid-cols-7 gap-1.5 text-center">
         {WEEKDAYS.map((d) => (
-          <div key={d} className="pb-1 text-xs font-black uppercase text-ink-soft">
+          <div key={d} className="pb-1 text-xs font-bold text-ink-soft">
             {d}
           </div>
         ))}
@@ -55,8 +55,8 @@ export function JournalCalendar({
           const future = date > today;
           const cell = (
             <div
-              className={`flex aspect-square flex-col items-center justify-center rounded-2xl border-2 text-sm font-bold transition ${
-                date === today ? "border-primary" : "border-transparent"
+              className={`flex aspect-square flex-col items-center justify-center rounded-paper border-2 text-sm font-bold transition ${
+                date === today ? "border-primary-text" : "border-transparent"
               } ${future ? "opacity-30" : "hover:scale-105"}`}
               style={{ background: mood ? `${mood.color}88` : entry ? "var(--soft)" : "transparent" }}
             >

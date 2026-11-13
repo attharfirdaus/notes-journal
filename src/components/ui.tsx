@@ -22,12 +22,12 @@ const variantClass: Record<Variant, string> = {
   accent: "bg-accent text-ink btn-pop",
   soft: "bg-soft text-ink hover:brightness-95",
   ghost: "bg-transparent text-ink hover:bg-soft",
-  danger: "bg-[#EF5B5B] text-white btn-pop",
+  danger: "bg-danger text-danger-ink btn-pop",
 };
 const sizeClass: Record<Size, string> = {
-  sm: "h-9 px-3 text-sm rounded-xl gap-1.5",
-  md: "h-11 px-4 text-[15px] rounded-2xl gap-2",
-  lg: "h-13 px-6 text-base rounded-2xl gap-2",
+  sm: "h-9 px-3 text-sm rounded-btn gap-1.5 pointer-coarse:h-11",
+  md: "h-11 px-4 text-[15px] rounded-btn gap-2",
+  lg: "h-13 px-6 text-base rounded-btn gap-2",
 };
 
 export const Button = forwardRef<
@@ -39,7 +39,7 @@ export const Button = forwardRef<
       ref={ref}
       disabled={disabled || loading}
       className={clsx(
-        "inline-flex select-none items-center justify-center font-bold transition disabled:cursor-not-allowed disabled:opacity-60",
+        "inline-flex select-none items-center justify-center font-bold transition active:brightness-95 disabled:opacity-60",
         variantClass[variant],
         sizeClass[size],
         className,
@@ -63,7 +63,7 @@ export function IconButton({
       aria-label={label}
       title={label}
       className={clsx(
-        "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-ink-soft transition hover:bg-soft hover:text-ink disabled:opacity-50",
+        "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-btn pointer-coarse:h-11 pointer-coarse:w-11 text-ink-soft transition hover:bg-soft hover:text-ink disabled:opacity-50",
         className,
       )}
       {...rest}
@@ -98,7 +98,7 @@ export const Input = forwardRef<
         ref={ref}
         id={inputId}
         className={clsx(
-          "h-12 w-full rounded-2xl border-2 border-line bg-card px-4 text-[15px] text-ink placeholder:text-ink-soft/70 outline-none transition focus:border-primary",
+          "h-12 w-full rounded-paper border border-edge bg-card px-4 text-[15px] text-ink placeholder:text-ink-soft outline-none transition focus:border-primary-text",
           className,
         )}
         {...rest}
@@ -116,7 +116,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
     <textarea
       ref={ref}
       className={clsx(
-        "w-full rounded-2xl border-2 border-line bg-card px-4 py-3 text-[15px] text-ink placeholder:text-ink-soft/70 outline-none transition focus:border-primary",
+        "w-full rounded-paper border border-edge bg-card px-4 py-3 text-[15px] text-ink placeholder:text-ink-soft outline-none transition focus:border-primary-text",
         className,
       )}
       {...rest}
@@ -126,7 +126,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
 
 export function Card({ className, children, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx("rounded-blob border-2 border-line bg-card p-5 shadow-soft", className)} {...rest}>
+    <div className={clsx("rounded-paper border border-line bg-card p-5", className)} {...rest}>
       {children}
     </div>
   );
@@ -159,9 +159,9 @@ export function Chip({
       aria-pressed={onClick ? Boolean(active) : undefined}
       style={style}
       className={clsx(
-        "inline-flex max-w-full items-center gap-1 rounded-full border-2 px-2.5 py-0.5 text-[13px] font-bold text-ink transition",
-        !color && (active ? "border-primary bg-primary/25" : "border-line bg-soft"),
-        onClick && "hover:-translate-y-0.5",
+        "inline-flex max-w-full items-center gap-1 rounded-full border px-2.5 py-0.5 text-[13px] font-bold text-ink transition",
+        !color && (active ? "border-primary-text bg-primary/25" : "border-line bg-soft"),
+        onClick && "hover:border-edge pointer-coarse:min-h-11 pointer-coarse:px-3.5",
         className,
       )}
     >
@@ -207,7 +207,7 @@ export function Switch({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className="flex w-full items-center justify-between gap-4 rounded-2xl py-2 text-left"
+      className="flex w-full items-center justify-between gap-4 rounded-paper py-2 text-left"
     >
       <span>
         <span className="block font-bold">{label}</span>
@@ -216,13 +216,16 @@ export function Switch({
       <span
         className={clsx(
           "relative h-7 w-12 shrink-0 rounded-full border-2 transition",
-          checked ? "border-primary bg-primary" : "border-line bg-soft",
+          checked ? "border-primary-text bg-primary" : "border-edge bg-soft",
         )}
       >
         <motion.span
           layout
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className={clsx("absolute top-0.5 h-5 w-5 rounded-full bg-card shadow", checked ? "right-0.5" : "left-0.5")}
+          className={clsx(
+            "absolute top-0.5 h-5 w-5 rounded-full border border-edge bg-card",
+            checked ? "right-0.5" : "left-0.5",
+          )}
         />
       </span>
     </button>
@@ -243,7 +246,7 @@ export function Segmented<T extends string>({
   // Per instance, so two groups with the same label never share the sliding pill.
   const uid = useId();
   return (
-    <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-1 rounded-2xl bg-soft p-1">
+    <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-1 rounded-paper bg-soft p-1">
       {options.map((o) => (
         <button
           key={o.value}
@@ -252,14 +255,14 @@ export function Segmented<T extends string>({
           aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
           className={clsx(
-            "relative flex-1 whitespace-nowrap rounded-xl px-1.5 py-1.5 text-sm font-bold transition sm:px-3",
+            "relative flex-1 whitespace-nowrap rounded-paper px-1.5 py-1.5 text-sm font-bold transition pointer-coarse:min-h-11 sm:px-3",
             value === o.value ? "text-ink" : "text-ink-soft hover:text-ink",
           )}
         >
           {value === o.value ? (
             <motion.span
               layoutId={`seg-${uid}`}
-              className="absolute inset-0 rounded-xl bg-card shadow"
+              className="absolute inset-0 rounded-paper border border-edge bg-card"
               transition={{ type: "spring", stiffness: 500, damping: 35 }}
             />
           ) : null}
@@ -309,7 +312,7 @@ export function Modal({
             exit={{ y: 60, scale: 0.96, opacity: 0 }}
             transition={{ type: "spring", stiffness: 380, damping: 30 }}
             className={clsx(
-              "max-h-[90dvh] w-full overflow-y-auto rounded-t-[2rem] border-2 border-line bg-card p-5 shadow-soft sm:rounded-[2rem]",
+              "max-h-[90dvh] w-full overflow-y-auto rounded-t-btn border border-line bg-card p-5 shadow-lift sm:rounded-paper",
               wide ? "sm:max-w-2xl" : "sm:max-w-md",
             )}
           >
@@ -343,16 +346,9 @@ export function ProgressBar({ value, className, color }: { value: number; classN
 
 export function EmptyState({ icon, title, children }: { icon: IconName; title: string; children?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center gap-2 rounded-blob border-2 border-dashed border-line px-6 py-10 text-center">
-      <motion.div
-        className="rounded-3xl bg-soft p-4 text-ink-soft"
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-        aria-hidden
-      >
-        <Icon name={icon} size={34} strokeWidth={2} />
-      </motion.div>
-      <p className="font-display text-lg font-bold">{title}</p>
+    <div className="flex flex-col items-center gap-2 rounded-paper border border-dashed border-edge px-6 py-10 text-center">
+      <Icon name={icon} size={30} strokeWidth={2} className="text-ink-soft" aria-hidden />
+      <p className="hand text-ink">{title}</p>
       {children ? <div className="text-sm text-ink-soft">{children}</div> : null}
     </div>
   );
@@ -371,9 +367,7 @@ export function PageHeader({
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
       <h1 className="flex items-center gap-2.5 font-display text-3xl font-bold tracking-tight">
         {icon ? (
-          <span className="wiggle-hover inline-flex rounded-2xl bg-soft p-2 text-primary">
-            <Icon name={icon} size={24} strokeWidth={2.5} />
-          </span>
+          <Icon name={icon} size={26} strokeWidth={2.25} className="text-primary-text" aria-hidden />
         ) : null}
         {title}
       </h1>

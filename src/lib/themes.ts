@@ -8,6 +8,8 @@ type Palette = {
   inkSoft: string;
   primary: string;
   primaryInk: string;
+  /** Light mode only: the primary hue darkened to 4.5:1 on bg, soft and card. */
+  primaryText?: string;
   accent: string;
   line: string;
   pet: string;
@@ -28,6 +30,7 @@ export const THEMES: Theme[] = [
       ink: "#3B2F2A",
       inkSoft: "#6E5D52",
       primary: "#FF8A3D",
+      primaryText: "#A84A0B",
       primaryInk: "#2B1A0E",
       accent: "#FFD166",
       line: "#F1E1BD",
@@ -60,6 +63,7 @@ export const THEMES: Theme[] = [
       ink: "#16324F",
       inkSoft: "#4B6886",
       primary: "#38BDF8",
+      primaryText: "#0B6796",
       primaryInk: "#08243A",
       accent: "#FF9F9F",
       line: "#CBE3F5",
@@ -92,6 +96,7 @@ export const THEMES: Theme[] = [
       ink: "#1F3324",
       inkSoft: "#526A57",
       primary: "#5DBB63",
+      primaryText: "#2B6E31",
       primaryInk: "#0D210F",
       accent: "#F4C06A",
       line: "#D0E2C4",
@@ -124,6 +129,7 @@ export const THEMES: Theme[] = [
       ink: "#4A1D3A",
       inkSoft: "#814E6F",
       primary: "#FF6FB5",
+      primaryText: "#B3125F",
       primaryInk: "#34061F",
       accent: "#7FE3F7",
       line: "#F6CBE0",
@@ -156,6 +162,7 @@ export const THEMES: Theme[] = [
       ink: "#221E4A",
       inkSoft: "#57528A",
       primary: "#8B7CF6",
+      primaryText: "#5340C4",
       primaryInk: "#120E33",
       accent: "#5EEAD4",
       line: "#D6D2FA",
@@ -199,6 +206,10 @@ function vars(p: Palette, dark: boolean): string {
     `--ink-soft:${p.inkSoft}`,
     `--primary:${p.primary}`,
     `--primary-ink:${p.primaryInk}`,
+    // On dark paper the primary itself is light enough to read.
+    `--primary-text:${p.primaryText ?? p.primary}`,
+    `--danger:${dark ? "#FF9B91" : "#B3261E"}`,
+    `--danger-ink:${dark ? "#3A0B07" : "#FFFFFF"}`,
     `--accent:${p.accent}`,
     `--line:${p.line}`,
     `--pet:${p.pet}`,

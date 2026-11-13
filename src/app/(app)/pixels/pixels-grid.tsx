@@ -56,7 +56,7 @@ export function PixelsGrid({
         </IconButton>
       </div>
 
-      <div className="rounded-blob border-2 border-line bg-card p-3 shadow-soft sm:p-5">
+      <div className="rounded-paper border border-line bg-card p-3 sm:p-5">
         <div className="grid gap-[3px] sm:gap-1" style={{ gridTemplateColumns: "1.5rem repeat(12, minmax(0, 1fr))" }}>
           <div />
           {MONTHS.map((m, i) => (
@@ -70,7 +70,7 @@ export function PixelsGrid({
         </div>
       </div>
 
-      <div className="min-h-16 rounded-2xl border-2 border-dashed border-line p-3 text-sm" aria-live="polite">
+      <div className="min-h-16 rounded-paper border-2 border-dashed border-line p-3 text-sm" aria-live="polite">
         {hover ? (
           <p>
             <span className="font-bold">
@@ -84,7 +84,7 @@ export function PixelsGrid({
         )}
       </div>
 
-      <div className="rounded-blob border-2 border-line bg-card p-4 shadow-soft">
+      <div className="rounded-paper border border-line bg-card p-4">
         <h3 className="mb-3 font-display text-lg font-bold">Mood mix {withMood ? `· ${withMood} days` : ""}</h3>
         <div className="space-y-2">
           {[...MOODS].reverse().map((m) => {

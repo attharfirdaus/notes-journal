@@ -1,17 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Fredoka, Nunito } from "next/font/google";
+import { Caveat, Fraunces, Nunito } from "next/font/google";
 import { getProfile } from "@/lib/auth";
 import { themeCss } from "@/lib/themes";
 import { ToastProvider } from "@/components/toast";
 import "./globals.css";
 
-const display = Fredoka({ variable: "--font-display-face", subsets: ["latin"], weight: ["500", "600", "700"] });
+// See DESIGN.md: Fraunces for headings (album warmth), Caveat for margin notes, Nunito for reading.
+const display = Fraunces({ variable: "--font-display-face", subsets: ["latin"], style: ["normal", "italic"] });
+const hand = Caveat({ variable: "--font-hand-face", subsets: ["latin"], weight: ["600"] });
 const body = Nunito({ variable: "--font-body", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: { default: "Keepsake: keep it close, never forget", template: "%s · Keepsake" },
   description:
-    "A cozy note taker and daily journal with a squirrel sidekick. Lists, reminders, streaks, moods and tiny joys.",
+    "A scrapbook for your days: lists, reminders, a daily journal and a squirrel who keeps them with you.",
   applicationName: "Keepsake",
   appleWebApp: { capable: true, title: "Keepsake", statusBarStyle: "default" },
 };
@@ -36,7 +38,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       data-theme={profile?.theme ?? "sunny"}
       data-mode={profile?.color_mode ?? "system"}
       data-reduce-motion={profile?.reduce_motion ? "true" : "false"}
-      className={`${display.variable} ${body.variable} h-full antialiased`}
+      className={`${display.variable} ${hand.variable} ${body.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

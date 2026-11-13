@@ -6,6 +6,9 @@
 
 import { createElement } from "react";
 import {
+  Squirrel,
+  AudioLines,
+  Candy,
   Activity, Apple, Baby, Banknote, Bed, Bell, BellRing, Bike, Book, BookHeart, BookOpen, Brain,
   Briefcase, Bug, Calendar, CalendarClock, CalendarDays, Camera, Car, CheckCheck, ChefHat,
   CircleCheckBig, Clapperboard, Clock, Clover, CloudRain, CloudSun, Coffee, Compass, CreditCard,
@@ -15,7 +18,7 @@ import {
   Palette, PartyPopper, PenLine, Phone, PiggyBank, Pill, Plane, Rainbow, Receipt, Rocket, Salad,
   Scissors, Search, Settings, Shirt, ShoppingCart, Smile, Snowflake, Sparkles, Sprout, Star, Stars,
   Stethoscope, StickyNote, Sun, Sunrise, Tag, Tags, Target, Tent, Timer, Trash2, TreePine, Trophy,
-  Wallet, WandSparkles, WashingMachine, Waves, Wind, Wrench, Frown, Angry, Lock, LockOpen, Repeat,
+  Wallet, WashingMachine, Waves, Wind, Wrench, Frown, Angry, Lock, LockOpen, Repeat,
   type LucideIcon,
 } from "lucide-react";
 
@@ -98,9 +101,9 @@ export function Icon({
 export const UI = {
   home: House, notes: NotebookPen, journal: BookHeart, focus: Timer, pixels: Grid3x3,
   capsules: Hourglass, categories: Tags, notifications: Bell, settings: Settings, inbox: Inbox,
-  brand: Nut, pet: Sparkles, streak: Flame, freeze: Snowflake, reminder: BellRing,
+  brand: Nut, pet: Squirrel, streak: Flame, freeze: Snowflake, reminder: BellRing,
   due: CalendarClock, repeat: Repeat, locked: Lock, unlocked: LockOpen, mail: Mail,
-  trash: Trash2, search: Search, done: CheckCheck, magic: WandSparkles, calendar: Calendar,
+  trash: Trash2, search: Search, done: CheckCheck, magic: Tags, calendar: Calendar,
   book: Book, sunrise: Sunrise, cloudSun: CloudSun, moon: Moon, sun: Sun,
 } satisfies Record<string, LucideIcon>;
 
@@ -111,9 +114,9 @@ export const VIBE_ICONS = {
 } satisfies Record<string, LucideIcon>;
 
 export const THEME_ICONS = {
-  sunny: Sun, ocean: Waves, forest: TreePine, candy: Sparkles, midnight: Moon,
+  sunny: Sun, ocean: Waves, forest: TreePine, candy: Candy, midnight: Moon,
 } satisfies Record<string, LucideIcon>;
 
 export const AMBIENT_ICONS = {
-  rain: CloudRain, wind: Wind, brown: Waves, pink: Sparkles, white: Activity,
+  rain: CloudRain, wind: Wind, brown: Waves, pink: AudioLines, white: Activity,
 } satisfies Record<string, LucideIcon>;

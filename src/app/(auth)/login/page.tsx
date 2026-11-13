@@ -15,7 +15,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
       <h1 className="mb-1 font-display text-2xl font-bold">Welcome back!</h1>
       <p className="mb-5 text-sm text-ink-soft">Your acorns missed you.</p>
       {linkError ? (
-        <p className="mb-4 rounded-2xl bg-[#EF5B5B]/15 px-4 py-2.5 text-sm font-bold">
+        <p className="mb-4 rounded-paper bg-danger/15 px-4 py-2.5 text-sm font-bold">
           That link has expired or was already used. Please try again.
         </p>
       ) : null}
@@ -27,7 +27,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
             New here?{" "}
             <Link
               href="/signup"
-              className="font-bold text-ink underline decoration-primary decoration-2 underline-offset-2"
+              className="inline-flex min-h-11 items-center font-bold text-ink underline decoration-primary-text decoration-2 underline-offset-2"
             >
               Create an account
             </Link>
@@ -45,7 +45,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           placeholder="••••••••"
         />
         <div className="-mt-1 text-right">
-          <Link href="/forgot-password" className="text-sm font-bold text-ink-soft hover:text-ink">
+          <Link href="/forgot-password" className="inline-flex min-h-11 items-center text-sm font-bold text-ink-soft hover:text-ink">
             Forgot password?
           </Link>
         </div>

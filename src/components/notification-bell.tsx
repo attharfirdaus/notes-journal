@@ -70,8 +70,8 @@ export function NotificationBell({ unread, variant }: { unread: number; variant:
       className={clsx(
         "relative flex items-center gap-3 font-bold",
         variant === "sidebar"
-          ? "rounded-2xl px-3 py-2.5 text-ink-soft hover:bg-soft hover:text-ink"
-          : "h-10 w-10 justify-center rounded-full hover:bg-soft",
+          ? "rounded-paper px-3 py-2.5 text-ink-soft hover:bg-soft hover:text-ink"
+          : "h-11 w-11 justify-center rounded-full hover:bg-soft",
       )}
     >
       <motion.span
@@ -87,7 +87,7 @@ export function NotificationBell({ unread, variant }: { unread: number; variant:
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
-              className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#EF5B5B] px-1 text-[11px] font-black text-white"
+              className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-[11px] font-black text-danger-ink"
             >
               {unread > 99 ? "99+" : unread}
             </motion.span>

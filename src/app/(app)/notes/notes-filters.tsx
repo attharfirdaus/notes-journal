@@ -10,7 +10,7 @@ import { Icon } from "@/lib/icons";
 type Value = { q: string; category: string; status: string; type: string; sort: string };
 
 const selectClass =
-  "h-10 rounded-xl border-2 border-line bg-card px-3 text-sm font-bold text-ink outline-none focus:border-primary";
+  "h-11 rounded-paper border border-edge bg-card px-3 text-sm font-bold text-ink outline-none focus:border-primary-text";
 
 export function NotesFilters({ categories, value }: { categories: Category[]; value: Value }) {
   const router = useRouter();
@@ -41,7 +41,7 @@ export function NotesFilters({ categories, value }: { categories: Category[]; va
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search titles and items…"
-          className="h-12 w-full rounded-2xl border-2 border-line bg-card pl-11 pr-10 text-[15px] outline-none focus:border-primary"
+          className="h-12 w-full rounded-paper border border-edge bg-card pl-11 pr-10 text-[15px] outline-none focus:border-primary-text"
         />
         {pending ? <Spinner className="absolute right-4 top-4 text-ink-soft" /> : null}
       </label>
@@ -49,7 +49,7 @@ export function NotesFilters({ categories, value }: { categories: Category[]; va
         <button
           type="button"
           onClick={() => set("category", "")}
-          className={`shrink-0 rounded-full border-2 px-3 py-1 text-sm font-bold ${!value.category ? "border-primary bg-primary/25" : "border-line bg-card"}`}
+          className={`shrink-0 rounded-full border pointer-coarse:min-h-11 px-3 py-1 text-sm font-bold ${!value.category ? "border-primary-text bg-primary/25" : "border-line bg-card"}`}
         >
           All
         </button>
@@ -58,11 +58,11 @@ export function NotesFilters({ categories, value }: { categories: Category[]; va
             key={c.id}
             type="button"
             onClick={() => set("category", value.category === c.id ? "" : c.id)}
-            className="shrink-0 rounded-full border-2 px-3 py-1 text-sm font-bold transition"
+            className="shrink-0 rounded-full border pointer-coarse:min-h-11 px-3 py-1 text-sm font-bold transition"
             style={
               value.category === c.id
                 ? { borderColor: c.color, background: `${c.color}88` }
-                : { borderColor: "var(--line)", background: "var(--card)" }
+                : { borderColor: "var(--color-edge)", background: "var(--card)" }
             }
           >
             <Icon name={c.icon} size={14} className="mr-1 inline-block align-[-3px]" />

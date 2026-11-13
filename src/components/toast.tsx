@@ -34,14 +34,15 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       <div
         aria-live="polite"
-        className="pointer-events-none fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top))] z-[60] md:top-3 flex flex-col items-center gap-2 px-3"
+        // Bottom of the screen, clear of the page title: above the tab bar on a phone, bottom right on a desktop.
+        className="pointer-events-none fixed inset-x-0 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-[60] flex flex-col items-center gap-2 px-3 md:bottom-4 md:items-end md:px-4"
       >
         <AnimatePresence>
           {toasts.map((t) => {
             const inner = (
               <>
                 {t.icon ? (
-                  <span className="inline-flex shrink-0 rounded-xl bg-soft p-2 text-primary">
+                  <span className="inline-flex shrink-0 text-primary-text">
                     <t.icon size={20} strokeWidth={2.5} aria-hidden />
                   </span>
                 ) : null}
@@ -55,9 +56,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <motion.div
                 key={t.id}
                 layout
-                initial={{ y: -30, opacity: 0, scale: 0.9 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                exit={{ y: -20, opacity: 0, scale: 0.9 }}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 10, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 420, damping: 28 }}
                 className="pointer-events-auto w-full max-w-sm"
                 onClick={() => dismiss(t.id)}
@@ -65,12 +66,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 {t.href ? (
                   <Link
                     href={t.href}
-                    className="flex items-center gap-3 rounded-2xl border-2 border-line bg-card px-4 py-3 shadow-soft"
+                    className="flex items-center gap-3 rounded-paper border border-edge bg-card px-4 py-3 shadow-lift"
                   >
                     {inner}
                   </Link>
                 ) : (
-                  <div className="flex items-center gap-3 rounded-2xl border-2 border-line bg-card px-4 py-3 shadow-soft">
+                  <div className="flex items-center gap-3 rounded-paper border border-edge bg-card px-4 py-3 shadow-lift">
                     {inner}
                   </div>
                 )}

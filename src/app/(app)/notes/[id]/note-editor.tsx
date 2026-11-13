@@ -18,7 +18,7 @@ import {
   PinOff,
   Plus,
   Repeat,
-  Sparkles,
+  Tags,
   Trash2,
   TriangleAlert,
   X,
@@ -201,7 +201,7 @@ export function NoteEditor(props: Props) {
       <div className="mb-3 flex items-center justify-between gap-2">
         <Link
           href="/notes"
-          className="inline-flex items-center gap-1 rounded-xl px-2 py-1.5 text-sm font-bold text-ink-soft hover:bg-soft hover:text-ink"
+          className="inline-flex items-center gap-1 rounded-paper px-2 py-1.5 text-sm font-bold text-ink-soft hover:bg-soft hover:text-ink pointer-coarse:min-h-11"
         >
           <ChevronLeft size={18} /> Notes
         </Link>
@@ -229,14 +229,14 @@ export function NoteEditor(props: Props) {
 
       <motion.section
         layout
-        className="rounded-[2rem] border-2 border-line p-5 shadow-soft"
+        className="rounded-paper border border-line p-5"
         style={{ background: `color-mix(in oklab, ${note.color} var(--note-mix), var(--card))` }}
       >
         <div className="flex items-start gap-3">
           <button
             type="button"
             onClick={() => setStyleOpen(true)}
-            className="wiggle-hover flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-card/70 text-3xl"
+            className="wiggle-hover flex h-14 w-14 shrink-0 items-center justify-center rounded-paper bg-card/70 text-3xl"
             aria-label="Change icon and color"
           >
             <Icon name={note.icon} size={26} />
@@ -271,14 +271,14 @@ export function NoteEditor(props: Props) {
               <Chip key={c.id} color={c.color} title={l.source === "auto" ? "Auto-detected" : "Added by you"}>
                 <Icon name={c.icon} size={13} className="mr-1 inline-block align-[-2px]" />
                 {c.name}
-                {l.source === "auto" ? <Sparkles size={11} className="ml-0.5 inline" aria-label="auto" /> : null}
+                {l.source === "auto" ? <span className="ml-1 text-[11px] font-semibold text-ink-soft">auto</span> : null}
               </Chip>
             );
           })}
           <button
             type="button"
             onClick={() => setCatOpen(true)}
-            className="rounded-full border-2 border-dashed border-ink/25 px-2.5 py-0.5 text-[13px] font-bold text-ink-soft hover:border-ink/50 hover:text-ink"
+            className="rounded-full border pointer-coarse:min-h-11 border-dashed border-ink/25 px-2.5 py-0.5 text-[13px] font-bold text-ink-soft hover:border-ink/50 hover:text-ink"
           >
             {links.length ? "Edit" : "+ Category"}
           </button>
@@ -346,7 +346,7 @@ export function NoteEditor(props: Props) {
             <button
               type="button"
               onClick={() => setShowDone((v) => !v)}
-              className="mb-2 flex items-center gap-1 text-sm font-bold text-ink-soft hover:text-ink"
+              className="mb-2 flex items-center gap-1 text-sm font-bold text-ink-soft hover:text-ink pointer-coarse:min-h-11"
               aria-expanded={showDone}
             >
               <ChevronDown size={16} className={clsx("transition", !showDone && "-rotate-90")} />
@@ -405,7 +405,7 @@ export function NoteEditor(props: Props) {
             setNote((n) => ({ ...n, categories_locked: false }));
             setCatOpen(false);
             toast({
-              icon: Sparkles,
+              icon: Tags,
               title: res.data.length ? "Categories detected!" : "No match found",
               body: res.data.length ? undefined : "Try adding keywords in Categories.",
             });
@@ -422,7 +422,7 @@ export function NoteEditor(props: Props) {
               type="button"
               onClick={() => patchNote({ icon: key })}
               className={clsx(
-                "flex items-center justify-center rounded-xl p-2 transition hover:scale-110",
+                "flex items-center justify-center rounded-paper p-2 transition hover:scale-110",
                 note.icon === key ? "bg-primary/30 text-ink" : "text-ink-soft",
               )}
               aria-label={key.replace(/-/g, " ")}
@@ -484,8 +484,8 @@ function Check({ checked }: { checked: boolean }) {
   return (
     <motion.span
       className={clsx(
-        "flex h-7 w-7 shrink-0 items-center justify-center rounded-[0.6rem] border-[2.5px] transition-colors",
-        checked ? "border-primary bg-primary" : "border-ink/30 bg-card",
+        "flex h-7 w-7 shrink-0 items-center justify-center rounded border-[2.5px] transition-colors",
+        checked ? "border-primary-text bg-primary" : "border-ink/30 bg-card",
       )}
       animate={checked ? { scale: [1, 1.25, 1] } : { scale: 1 }}
       transition={{ duration: 0.3 }}
@@ -548,7 +548,7 @@ function ItemRow({
 
   const body = (
     <div
-      className={clsx("rounded-2xl border-2 bg-card shadow-soft transition", open ? "border-primary" : "border-line")}
+      className={clsx("rounded-paper border-2 bg-card transition", open ? "border-primary-text" : "border-line")}
     >
       <div className="flex items-center gap-2 p-2 pl-2.5">
         {draggable ? (
@@ -564,7 +564,7 @@ function ItemRow({
           type="button"
           onClick={(e) => onToggle(item, e)}
           aria-label={item.is_done ? "Mark as not done" : "Mark as done"}
-          className="rounded-xl p-0.5"
+          className="rounded-paper p-0.5 pointer-coarse:p-2"
         >
           <Check checked={item.is_done} />
         </button>
@@ -587,7 +587,7 @@ function ItemRow({
               onClick={onOpen}
               className={clsx(
                 "flex items-center gap-1 text-xs font-bold",
-                overdue ? "text-[#C0392B] dark:text-[#FF8A80]" : "text-ink-soft",
+                overdue ? "text-danger" : "text-ink-soft",
               )}
             >
               <CalendarClock size={13} /> {formatDue(item.due_at, prefs.timezone)}
@@ -603,7 +603,7 @@ function ItemRow({
             placeholder="qty"
             maxLength={20}
             aria-label="Quantity"
-            className="w-14 rounded-lg bg-soft px-2 py-1 text-center text-sm font-bold outline-none placeholder:text-ink-soft/60 focus:ring-2 focus:ring-primary"
+            className="w-14 rounded-lg bg-soft px-2 py-1 text-center text-sm font-bold outline-none placeholder:text-ink-soft focus:ring-2 focus:ring-primary"
           />
         ) : null}
         <IconButton label="Item details" onClick={onOpen} className="h-8 w-8">
@@ -691,7 +691,7 @@ function ItemDetails({
   return (
     <div className="space-y-3 border-t-2 border-line px-3 pb-3 pt-3">
       <label className="block">
-        <span className="mb-1 block text-xs font-black uppercase tracking-wide text-ink-soft">
+        <span className="mb-1 block text-sm font-bold text-ink-soft">
           {noteType === "schedule" ? "When" : "Deadline"}
         </span>
         <div className="flex gap-2">
@@ -699,7 +699,7 @@ function ItemDetails({
             type="datetime-local"
             value={due}
             onChange={(e) => commitDue(e.target.value)}
-            className="h-10 flex-1 rounded-xl border-2 border-line bg-card px-3 text-sm font-bold outline-none focus:border-primary"
+            className="h-10 flex-1 rounded-paper border border-edge bg-card px-3 text-sm font-bold outline-none focus:border-primary-text"
           />
           {due ? (
             <IconButton label="Clear date" onClick={() => commitDue("")}>
@@ -712,7 +712,7 @@ function ItemDetails({
       {item.due_at ? (
         <>
           <div>
-            <span className="mb-1 flex items-center gap-1 text-xs font-black uppercase tracking-wide text-ink-soft">
+            <span className="mb-1 flex items-center gap-1 text-sm font-bold text-ink-soft">
               <BellRing size={13} /> Remind me {offsets === null ? "(using your defaults)" : ""}
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -737,7 +737,7 @@ function ItemDetails({
             </div>
           </div>
           <div>
-            <span className="mb-1 flex items-center gap-1 text-xs font-black uppercase tracking-wide text-ink-soft">
+            <span className="mb-1 flex items-center gap-1 text-sm font-bold text-ink-soft">
               <Repeat size={13} /> Repeat
             </span>
             <Segmented
@@ -756,7 +756,7 @@ function ItemDetails({
       ) : null}
 
       <div className="flex justify-end">
-        <Button variant="ghost" size="sm" onClick={() => onDelete(item)} className="text-[#C0392B] dark:text-[#FF8A80]">
+        <Button variant="ghost" size="sm" onClick={() => onDelete(item)} className="text-danger">
           <Trash2 size={15} /> Delete item
         </Button>
       </div>
@@ -819,7 +819,7 @@ function AddItemBar({
 
   return (
     <div className="mt-3">
-      <div className="flex items-center gap-2 rounded-2xl border-2 border-dashed border-line bg-card/60 p-2 pl-3 focus-within:border-primary focus-within:bg-card">
+      <div className="flex items-center gap-2 rounded-paper border-2 border-dashed border-line bg-card/60 p-2 pl-3 focus-within:border-primary-text focus-within:bg-card">
         <Plus size={20} className="shrink-0 text-ink-soft" />
         <input
           ref={inputRef}
@@ -852,7 +852,7 @@ function AddItemBar({
               : "Add another…"
           }
           aria-label="New item"
-          className="h-10 min-w-0 flex-1 bg-transparent text-[15px] font-semibold outline-none placeholder:font-normal placeholder:text-ink-soft/80"
+          className="h-10 min-w-0 flex-1 bg-transparent text-[15px] font-semibold outline-none placeholder:font-normal placeholder:text-ink-soft"
         />
         <Button size="sm" onClick={() => void submit()} loading={busy} disabled={!text.trim()}>
           Add
@@ -923,8 +923,8 @@ function CategoryModal({
               type="button"
               aria-pressed={on}
               onClick={() => setSelected((s) => (on ? s.filter((x) => x !== c.id) : [...s, c.id]))}
-              className="rounded-full border-2 px-3 py-1.5 text-sm font-bold transition hover:-translate-y-0.5"
-              style={on ? { borderColor: c.color, background: `${c.color}99` } : { borderColor: "var(--line)" }}
+              className="rounded-full border pointer-coarse:min-h-11 px-3 py-1.5 text-sm font-bold transition hover:border-edge"
+              style={on ? { borderColor: c.color, background: `${c.color}99` } : { borderColor: "var(--color-edge)" }}
             >
               <Icon name={c.icon} size={14} className="mr-1.5 inline-block align-[-3px]" />
               {c.name}
@@ -933,11 +933,11 @@ function CategoryModal({
         })}
       </div>
       <Link href="/categories" className="mt-3 inline-block text-sm font-bold text-ink-soft underline">
-        Manage categories →
+        Manage categories
       </Link>
       <div className="mt-5 flex gap-2">
         <Button variant="soft" className="flex-1" onClick={onRedetect}>
-          <Sparkles size={16} /> Auto-detect
+          <Tags size={16} aria-hidden /> Auto-detect
         </Button>
         <Button className="flex-1" onClick={() => onSave(selected)}>
           Save
@@ -955,9 +955,9 @@ function PushNudge({ hasDue }: { hasDue: boolean }) {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mt-4 flex items-center gap-3 rounded-2xl border-2 border-line bg-card p-3 shadow-soft"
+      className="mt-4 flex items-center gap-3 rounded-paper border border-line bg-card p-3"
     >
-      <BellRing size={22} className="shrink-0 text-primary" aria-hidden />
+      <BellRing size={22} className="shrink-0 text-primary-text" aria-hidden />
       <p className="flex-1 text-sm font-semibold">Want a ping before deadlines, even when Keepsake is closed?</p>
       <Button size="sm" onClick={() => void push.subscribe()} loading={push.busy}>
         Turn on

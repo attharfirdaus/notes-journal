@@ -30,9 +30,9 @@ import { THEME_ICONS, VIBE_ICONS } from "@/lib/icons";
 
 function Section({ title, icon: Icon, children }: { title: string; icon: LucideIcon; children: ReactNode }) {
   return (
-    <section className="rounded-[2rem] border-2 border-line bg-card p-5 shadow-soft">
+    <section className="rounded-paper border border-line bg-card p-5">
       <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-        <span className="inline-flex rounded-xl bg-soft p-1.5 text-primary">
+        <span className="inline-flex rounded-paper bg-soft p-1.5 text-primary-text">
           <Icon size={18} strokeWidth={2.5} aria-hidden />
         </span>
         {title}
@@ -111,7 +111,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
           <select
             value={p.timezone}
             onChange={(e) => save({ timezone: e.target.value })}
-            className="h-12 w-full rounded-2xl border-2 border-line bg-card px-3 font-semibold outline-none focus:border-primary"
+            className="h-12 w-full rounded-paper border border-edge bg-card px-3 font-semibold outline-none focus:border-primary-text"
           >
             {zones.map((z) => (
               <option key={z} value={z}>
@@ -132,8 +132,8 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
               onClick={() => save({ theme: t.id }, true)}
               aria-pressed={p.theme === t.id}
               className={clsx(
-                "rounded-2xl border-2 p-3 text-left transition hover:-translate-y-0.5",
-                p.theme === t.id ? "border-primary ring-2 ring-primary" : "border-line",
+                "rounded-paper border-2 p-3 text-left transition hover:border-edge",
+                p.theme === t.id ? "border-primary-text ring-2 ring-primary" : "border-line",
               )}
               style={{ background: t.light.bg }}
             >
@@ -246,7 +246,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
           <select
             value={p.schedule_reminder}
             onChange={(e) => save({ schedule_reminder: Number(e.target.value) }, true)}
-            className="h-11 rounded-2xl border-2 border-line bg-card px-3 font-semibold outline-none focus:border-primary"
+            className="h-11 rounded-paper border border-edge bg-card px-3 font-semibold outline-none focus:border-primary-text"
           >
             {REMINDER_PRESETS.map((r) => (
               <option key={r.value} value={r.value}>
@@ -267,13 +267,13 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
               type="time"
               value={p.journal_nudge_time.slice(0, 5)}
               onChange={(e) => e.target.value && save({ journal_nudge_time: e.target.value }, true)}
-              className="h-11 rounded-2xl border-2 border-line bg-card px-3 font-bold outline-none focus:border-primary"
+              className="h-11 rounded-paper border border-edge bg-card px-3 font-bold outline-none focus:border-primary-text"
               aria-label="Nudge time"
             />
           ) : null}
         </div>
 
-        <div className="rounded-2xl bg-soft p-4">
+        <div className="rounded-paper bg-soft p-4">
           <p className="font-bold"> Push notifications on this device</p>
           <p className="mt-1 text-sm text-ink-soft">
             {push.state === "subscribed"
@@ -288,7 +288,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
                     ? "Push isn't configured on the server yet (VAPID keys missing). In-app reminders still work."
                     : "Off. In-app reminders still work while Keepsake is open."}
           </p>
-          {push.error ? <p className="mt-1 text-sm font-bold text-[#EF5B5B]">{push.error}</p> : null}
+          {push.error ? <p className="mt-1 text-sm font-bold text-danger">{push.error}</p> : null}
           <div className="mt-3 flex flex-wrap gap-2">
             {push.state === "subscribed" ? (
               <>
@@ -345,7 +345,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
               aria-label="Confirm password"
             />
           </div>
-          {pwState?.error ? <p className="text-sm font-bold text-[#EF5B5B]">{pwState.error}</p> : null}
+          {pwState?.error ? <p className="text-sm font-bold text-danger">{pwState.error}</p> : null}
           {pwState?.message ? <p className="text-sm font-bold">{pwState.message}</p> : null}
           <Button type="submit" size="sm" variant="soft" loading={pwPending}>
             Update password
@@ -357,7 +357,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
               <LogOut size={16} /> Log out
             </Button>
           </form>
-          <Button variant="ghost" onClick={() => setDeleteOpen(true)} className="text-[#C0392B] dark:text-[#FF8A80]">
+          <Button variant="ghost" onClick={() => setDeleteOpen(true)} className="!text-danger">
             Delete account
           </Button>
         </div>
@@ -369,7 +369,7 @@ export function SettingsForm({ profile, email }: { profile: Profile; email: stri
             This permanently deletes your notes, journal, capsules and everything else. {p.pet_name} will miss you.
           </p>
           <Input name="confirm" label='Type "DELETE" to confirm' autoComplete="off" required />
-          {delState?.error ? <p className="text-sm font-bold text-[#EF5B5B]">{delState.error}</p> : null}
+          {delState?.error ? <p className="text-sm font-bold text-danger">{delState.error}</p> : null}
           <Button type="submit" variant="danger" className="w-full" loading={delPending}>
             Delete everything
           </Button>
