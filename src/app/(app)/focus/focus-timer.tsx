@@ -103,9 +103,9 @@ export function FocusTimer({
       setRound((r) => r + 1);
       setJustFinished(true);
       celebrate("big");
-      toast({ icon: Timer, title: `${minutes} focused minutes!`, body: `${petName} is impressed. Time for a break.` });
+      toast({ icon: Timer, title: `${minutes} focused minutes!`, body: `${petName} is impressed. Time for a break.`, duration: 15000 });
       if (document.visibilityState !== "visible" && "Notification" in window && Notification.permission === "granted") {
-        new Notification(" Focus session complete!", { body: "Take a break. You earned it.", icon: "/icons/192" });
+        new Notification(" Focus session complete!", { body: "Take a break. You earned it.", icon: "/icons/192", requireInteraction: true });
       }
       const res = await saveFocusSession({
         started_at: startedAt ?? new Date(Date.now() - minutes * 60000).toISOString(),
@@ -117,9 +117,9 @@ export function FocusTimer({
       setMode(nextMode);
       setRemaining(durations[nextMode] * 60000);
     } else {
-      toast({ icon: AlarmClock, title: "Break's over!", body: "Ready for another round?" });
+      toast({ icon: AlarmClock, title: "Break's over!", body: "Ready for another round?", duration: 15000 });
       if (document.visibilityState !== "visible" && "Notification" in window && Notification.permission === "granted") {
-        new Notification("⏰ Break's over!", { body: "Ready for another round?", icon: "/icons/192" });
+        new Notification("⏰ Break's over!", { body: "Ready for another round?", icon: "/icons/192", requireInteraction: true });
       }
       // Break selesai langsung lanjut ke sesi focus berikutnya.
       setMode("focus");

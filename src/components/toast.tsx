@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from "react";
 
-type Toast = { id: number; title: string; body?: string; icon?: LucideIcon; href?: string };
+type Toast = { id: number; title: string; body?: string; icon?: LucideIcon; href?: string; duration?: number };
 type ToastApi = { toast: (t: Omit<Toast, "id">) => void };
 
 const ToastContext = createContext<ToastApi>({ toast: () => {} });
@@ -23,7 +23,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     (t: Omit<Toast, "id">) => {
       const id = next.current++;
       setToasts((ts) => [...ts.slice(-3), { ...t, id }]);
-      setTimeout(() => dismiss(id), 4500);
+      setTimeout(() => dismiss(id), t.duration ?? 4500);
     },
     [dismiss],
   );
