@@ -178,20 +178,25 @@ export class AmbientEngine {
     this.master.gain.setTargetAtTime(v, this.ctx.currentTime, 0.2);
   }
 
-  chime() {
-    const t = this.ctx.currentTime;
-    [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
-      const o = this.ctx.createOscillator();
-      const g = this.ctx.createGain();
-      o.type = "triangle";
-      o.frequency.value = f;
-      g.gain.setValueAtTime(0.0001, t + i * 0.15);
-      g.gain.exponentialRampToValueAtTime(0.25, t + i * 0.15 + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.15 + 0.9);
-      o.connect(g).connect(this.ctx.destination);
-      o.start(t + i * 0.15);
-      o.stop(t + i * 0.15 + 1);
-    });
+  // Arpeggio diulang 3x (~4 detik) supaya terdengar meski sedang tidak di depan layar.
+  chime(repeats = 3) {
+    const t0 = this.ctx.currentTime;
+    for (let r = 0; r < repeats; r++) {
+      [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+        const t = t0 + r * 1.3 + i * 0.15;
+        const decay = r === repeats - 1 && i === 3 ? 2 : 0.9;
+        const o = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        o.type = "triangle";
+        o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.25, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + decay);
+        o.connect(g).connect(this.ctx.destination);
+        o.start(t);
+        o.stop(t + decay + 0.1);
+      });
+    }
   }
 
   close() {

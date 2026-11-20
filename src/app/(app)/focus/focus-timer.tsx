@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import {
   AlarmClock,
-  Check,
   Pause,
   Play,
   RotateCcw,
@@ -16,7 +15,6 @@ import {
   VolumeX,
 } from "lucide-react";
 import { saveFocusSession } from "@/actions/focus";
-import { updateItem } from "@/actions/notes";
 import { Mascot } from "@/components/mascot";
 import { Button, IconButton, Segmented } from "@/components/ui";
 import { useToast } from "@/components/toast";
@@ -40,13 +38,11 @@ function fmt(ms: number) {
 }
 
 export function FocusTimer({
-  tasks,
   focusToday,
   petName,
   stage,
   mood,
 }: {
-  tasks: { id: string; text: string; note: string }[];
   focusToday: number;
   petName: string;
   stage: PetStage;
@@ -60,7 +56,6 @@ export function FocusTimer({
   const [startedAt, setStartedAt] = useState<string | null>(null);
   const [round, setRound] = useState(0);
   const [minutesToday, setMinutesToday] = useState(focusToday);
-  const [taskId, setTaskId] = useState<string>("");
   const [justFinished, setJustFinished] = useState(false);
   const [volumes, setVolumes] = useState<Record<LayerId, number>>({ rain: 0, wind: 0, brown: 0, pink: 0, white: 0 });
   const [soundOn, setSoundOn] = useState(false);
@@ -108,29 +103,33 @@ export function FocusTimer({
       setRound((r) => r + 1);
       setJustFinished(true);
       celebrate("big");
-      toast({ icon: Timer, title: `${minutes} focused minutes!`, body: `${petName} is impressed. Time for a break.` });
+      toast({ icon: Timer, title: `${minutes} focused minutes!`, body: `${petName} is impressed. Time for a break.`, duration: 15000 });
       if (document.visibilityState !== "visible" && "Notification" in window && Notification.permission === "granted") {
-        new Notification(" Focus session complete!", { body: "Take a break. You earned it.", icon: "/icons/192" });
+        new Notification(" Focus session complete!", { body: "Take a break. You earned it.", icon: "/icons/192", requireInteraction: true });
       }
       const res = await saveFocusSession({
         started_at: startedAt ?? new Date(Date.now() - minutes * 60000).toISOString(),
         duration_min: minutes,
-        item_id: taskId || null,
+        item_id: null,
       });
       if (!res.ok) toast({ icon: TriangleAlert, title: "Session not saved", body: res.error });
       const nextMode: Mode = (round + 1) % 4 === 0 ? "long" : "short";
       setMode(nextMode);
       setRemaining(durations[nextMode] * 60000);
     } else {
-      toast({ icon: AlarmClock, title: "Break's over!", body: "Ready for another round?" });
+      toast({ icon: AlarmClock, title: "Break's over!", body: "Ready for another round?", duration: 15000 });
       if (document.visibilityState !== "visible" && "Notification" in window && Notification.permission === "granted") {
-        new Notification("⏰ Break's over!", { body: "Ready for another round?", icon: "/icons/192" });
+        new Notification("⏰ Break's over!", { body: "Ready for another round?", icon: "/icons/192", requireInteraction: true });
       }
+      // Break selesai langsung lanjut ke sesi focus berikutnya.
       setMode("focus");
       setRemaining(durations.focus * 60000);
+      setEndsAt(Date.now() + durations.focus * 60000);
+      setStartedAt(new Date().toISOString());
+      return;
     }
     setStartedAt(null);
-  }, [mode, durations, startedAt, taskId, round, petName, toast]);
+  }, [mode, durations, startedAt, round, petName, toast]);
 
   // Timestamp-based ticking stays accurate in background tabs.
   useEffect(() => {
@@ -196,7 +195,6 @@ export function FocusTimer({
   const progress = 1 - remaining / total;
   const R = 108;
   const C = 2 * Math.PI * R;
-  const task = tasks.find((t) => t.id === taskId);
 
   return (
     <div className="grid gap-5 lg:grid-cols-[1.2fr_1fr]">
@@ -277,38 +275,6 @@ export function FocusTimer({
       </section>
 
       <div className="space-y-5">
-        <section className="rounded-paper border border-line bg-card p-5">
-          <h2 className="mb-2 font-display text-lg font-bold"> Working on</h2>
-          <select
-            value={taskId}
-            onChange={(e) => setTaskId(e.target.value)}
-            className="h-11 w-full rounded-paper border border-edge bg-card px-3 font-semibold outline-none focus:border-primary-text"
-            aria-label="Link a task"
-          >
-            <option value="">Nothing specific</option>
-            {tasks.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.text} · {t.note}
-              </option>
-            ))}
-          </select>
-          {task && justFinished ? (
-            <Button
-              variant="soft"
-              className="mt-3 w-full"
-              onClick={async () => {
-                const res = await updateItem(task.id, { is_done: true });
-                if (!res.ok) return toast({ icon: TriangleAlert, title: "Couldn't update", body: res.error });
-                celebrate("small");
-                toast({ icon: Check, title: `Done: ${task.text}` });
-                setTaskId("");
-              }}
-            >
-              Mark “{task.text}” as done
-            </Button>
-          ) : null}
-        </section>
-
         <section className="rounded-paper border border-line bg-card p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="font-display text-lg font-bold"> Ambience</h2>
